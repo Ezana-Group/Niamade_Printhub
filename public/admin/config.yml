@@ -1,0 +1,102 @@
+backend:
+  name: github
+  repo: Ezana-Group/Niamade_Printhub
+  branch: main
+
+# Media uploaded through the CMS goes here
+media_folder: public/products
+public_folder: /products
+
+collections:
+  # ─── Products ─────────────────────────────────────────────────────────────
+  - name: products
+    label: Products
+    label_singular: Product
+    folder: src/content/products
+    create: true
+    delete: true
+    identifier_field: slug
+    slug: "{{fields.slug}}"
+    extension: json
+    format: json
+    fields:
+      - { label: Slug, name: slug, widget: string, hint: "URL-safe ID, e.g. geometric-spiral-vase (must be unique)" }
+      - { label: Name, name: name, widget: string }
+      - label: Category
+        name: cat
+        widget: select
+        options:
+          - "Home & decor"
+          - "Desk & tech"
+          - "Kenya"
+          - "Gifts"
+          - "Business"
+          - "Prototypes"
+          - "Education"
+          - "Parts"
+          - "Toys & fun"
+      - { label: Price, name: price, widget: string, hint: "e.g. KES 1,600 or From KES 2,500" }
+      - { label: Short note (card subtitle), name: note, widget: string, hint: "One-liner shown on the product card" }
+      - { label: Material, name: material, widget: string, hint: "e.g. PLA, PETG, TPU, PLA or PETG" }
+      - { label: Finish, name: finish, widget: string, hint: "e.g. Smooth, Matte, Hand-painted" }
+      - label: Occasions (tags)
+        name: tags
+        widget: select
+        multiple: true
+        options:
+          - { label: "Birthdays & gifts", value: gift }
+          - { label: "Weddings & events", value: events }
+          - { label: "Business & branding", value: business }
+          - { label: "Kenya souvenirs", value: kenya }
+          - { label: "Home & office", value: home }
+          - { label: "Schools & learning", value: learn }
+          - { label: "Parts & prototypes", value: parts }
+      - { label: "Description (blurb)", name: blurb, widget: text, hint: "Full product description shown on the product page" }
+      - label: "Use cases"
+        name: uses
+        widget: list
+        hint: "Short use-case phrases, e.g. Housewarming gift"
+        field: { label: Use, name: use, widget: string }
+      - { label: "Care / ordering note", name: care, widget: text, hint: "Care instructions or ordering guidance shown on product page" }
+
+  # ─── FAQs ─────────────────────────────────────────────────────────────────
+  - name: faqs
+    label: FAQs
+    files:
+      - label: All FAQs
+        name: faqs
+        file: src/content/faqs.json
+        fields:
+          - label: FAQs
+            name: faqs
+            widget: list
+            fields:
+              - label: Group
+                name: group
+                widget: select
+                options:
+                  - "Ordering"
+                  - "Payment"
+                  - "Delivery"
+                  - "Materials & care"
+              - { label: Question, name: q, widget: string }
+              - { label: Answer, name: a, widget: text }
+
+  # ─── Business settings ────────────────────────────────────────────────────
+  - name: settings
+    label: Business Settings
+    files:
+      - label: Business Info
+        name: site_settings
+        file: src/content/settings.json
+        fields:
+          - { label: Business Name, name: name, widget: string }
+          - { label: Phone, name: phone, widget: string, hint: "e.g. +254 792 732 929" }
+          - { label: "WhatsApp number (digits only)", name: whatsapp, widget: string, hint: "e.g. 254792732929 — no spaces, no plus sign" }
+          - { label: Email, name: email, widget: string }
+          - { label: City, name: city, widget: string }
+          - label: Business Hours
+            name: hours
+            widget: list
+            hint: "One line per entry, e.g. Mon–Fri 8:00 – 18:00"
+            field: { label: Hours line, name: line, widget: string }

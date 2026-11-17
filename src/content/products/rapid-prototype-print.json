@@ -1,0 +1,13 @@
+{
+  "slug": "rapid-prototype-print",
+  "name": "Rapid Prototype Print",
+  "cat": "Prototypes",
+  "price": "From KES 800",
+  "note": "Dimensional verification in your hands",
+  "material": "PLA, PETG or TPU",
+  "finish": "As printed or sanded",
+  "tags": ["parts", "business"],
+  "blurb": "Simulations lie. Physics does not. Hold your part, test bolt hole tolerances, check clearances, and catch design flaws before ordering tooling.",
+  "uses": ["Tolerance checks", "Fit testing", "Investor demos"],
+  "care": "Send STEP, STL or 3MF. We verify manifold geometry and wall thickness before slicing."
+}

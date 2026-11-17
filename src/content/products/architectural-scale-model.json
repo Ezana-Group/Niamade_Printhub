@@ -1,0 +1,13 @@
+{
+  "slug": "architectural-scale-model",
+  "name": "Architectural Scale Model",
+  "cat": "Business",
+  "price": "From KES 8,000",
+  "note": "Buildings and site layouts",
+  "material": "PLA",
+  "finish": "Detailed, painted on request",
+  "tags": ["business"],
+  "blurb": "Scale models from floor plans and BIM exports. Tangible volume and sightline verification for client pitches, planning reviews and public exhibits.",
+  "uses": ["Architects", "Developers", "Exhibition showrooms"],
+  "care": "Send DWG, IFC, or 3D CAD files for a structural estimate."
+}

@@ -1,0 +1,13 @@
+{
+  "slug": "custom-petg-bracket",
+  "name": "Custom PETG Bracket",
+  "cat": "Parts",
+  "price": "From KES 700",
+  "note": "Engineered to load specifications",
+  "material": "PETG",
+  "finish": "Functional",
+  "tags": ["parts"],
+  "blurb": "Structural mounting brackets printed in chemical and UV-resistant PETG, oriented along the stress axis for maximum layer adhesion.",
+  "uses": ["Equipment mounting", "Vehicle brackets", "Industrial repairs"],
+  "care": "Send force load requirements and bolt dimensions."
+}

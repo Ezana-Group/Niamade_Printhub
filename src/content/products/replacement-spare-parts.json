@@ -1,0 +1,13 @@
+{
+  "slug": "replacement-spare-parts",
+  "name": "Replacement Spare Parts",
+  "cat": "Parts",
+  "price": "From KES 500",
+  "note": "Gears, brackets, clips & knobs",
+  "material": "PLA, PETG or TPU",
+  "finish": "Functional engineering grade",
+  "tags": ["parts"],
+  "blurb": "Manufacturers want you to discard a perfectly good machine because a 50-shilling nylon gear broke. We disagree. Send the broken fragment.",
+  "uses": ["Appliances", "Workshop machinery", "Vehicle trim"],
+  "care": "Bring or courier the broken original so we can gauge dimensions with vernier calipers."
+}

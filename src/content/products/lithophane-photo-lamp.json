@@ -1,0 +1,13 @@
+{
+  "slug": "lithophane-photo-lamp",
+  "name": "Lithophane Photo Lamp",
+  "cat": "Gifts",
+  "price": "From KES 2,800",
+  "note": "Your photo revealed by backlight",
+  "material": "PLA, white",
+  "finish": "Smooth",
+  "tags": ["gift", "events"],
+  "blurb": "Optical physics in action: variable layer thickness translates grayscale photo pixels into light density. An unassuming white relief until the light turns on.",
+  "uses": ["Anniversaries", "Memorials", "Keepsakes"],
+  "care": "Send a clear, high-contrast photo. Backlit LEDs included."
+}

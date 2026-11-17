@@ -1,0 +1,18 @@
+{
+  "faqs": [
+    { "group": "Ordering", "q": "How do I get a quote?", "a": "Message us on WhatsApp with your idea, a photo or your 3D model. We look at the size, how it will print, the material and the finish, then send your quote in KES." },
+    { "group": "Ordering", "q": "I don't have a 3D model. Can you make one?", "a": "Yes. Share a sketch, photos, measurements, or the part you want copied. Design work is billed separately and paid before we send the full print quote, which comes once the design is finished." },
+    { "group": "Ordering", "q": "Which file types can I send?", "a": "STL, OBJ, STEP and 3MF. STEP is best when dimensions must be exact. If you only have a sketch or a photo, send that and we will take it from there." },
+    { "group": "Ordering", "q": "Can I change the size, colour or design?", "a": "Message us with what you would like and we will confirm what is possible and the price. Custom work is quoted after we assess your request." },
+    { "group": "Ordering", "q": "How big can a print be?", "a": "Tell us the size you need and we will confirm. Larger objects can often be printed in sections and joined together." },
+    { "group": "Payment", "q": "How do I pay?", "a": "By M-Pesa. Design work is paid before we issue the print quote. Custom print jobs usually need a deposit before printing starts, with the balance due before dispatch." },
+    { "group": "Payment", "q": "How is a print priced?", "a": "By the material used and the print time, plus finishing and quantity. We confirm your price after we have assessed what you need." },
+    { "group": "Payment", "q": "Are the prices in the shop final?", "a": "Shop prices are a guide. Custom work and any changes are quoted after we assess your request, so you always know the price before you commit." },
+    { "group": "Payment", "q": "Is it cheaper to order in bulk?", "a": "Usually, yes. Larger batches cost less per piece, so ask about batch pricing for events, teams and shops." },
+    { "group": "Delivery", "q": "Do you deliver?", "a": "Yes. We send by courier or parcel service to Nairobi, Mombasa, Kisumu, Nakuru and other towns. Delivery is charged at cost." },
+    { "group": "Delivery", "q": "Can I collect in Eldoret?", "a": "Yes, collection in Eldoret is free and by appointment. Please message us first so we can have it ready." },
+    { "group": "Delivery", "q": "How long will my order take?", "a": "We confirm timing when we send your quote, based on the size, the material, the finish and our print queue." },
+    { "group": "Materials & care", "q": "Which material should I choose?", "a": "Not sure? Tell us what it is for and where it will live, and we will suggest one. PLA suits gifts and décor, PETG suits everyday and outdoor parts, and TPU is for flexible pieces." },
+    { "group": "Materials & care", "q": "How do I look after my print?", "a": "Keep PLA away from hot cars and direct sun for long periods. Wipe with a damp cloth. Prints are not watertight unless we made them to be, so check with us for anything that must hold liquid." }
+  ]
+}

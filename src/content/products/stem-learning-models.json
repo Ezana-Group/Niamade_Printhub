@@ -1,0 +1,13 @@
+{
+  "slug": "stem-learning-models",
+  "name": "STEM Learning Models",
+  "cat": "Education",
+  "price": "From KES 600",
+  "note": "Geometry, mechanisms & anatomy",
+  "material": "PLA",
+  "finish": "Smooth, durable",
+  "tags": ["learn"],
+  "blurb": "Physical mechanics you can disassemble: planetary gearboxes, crystal lattices, and anatomical cross-sections that make abstract physics obvious.",
+  "uses": ["Classrooms", "Makerspaces", "Science clubs"],
+  "care": "Curriculum-aligned bulk sets available on request."
+}
