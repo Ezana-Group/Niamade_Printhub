@@ -265,7 +265,19 @@ export async function fetchLegalPageFromSanity(slug: string): Promise<SanityLega
     const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
     if (!res.ok) return null;
     const { result } = await res.json();
-    return result || null;
+    if (!result) return null;
+
+    const sections = Array.isArray(result.sections)
+      ? result.sections.map((s: any) => ({
+          title: s.title || "",
+          content: typeof s.content === "string" ? s.content : (blocksToHtml(s.content) || blocksToPlainText(s.content) || ""),
+        }))
+      : [];
+
+    return {
+      ...result,
+      sections,
+    };
   } catch (err) {
     return null;
   }
