@@ -29,6 +29,7 @@ export const site = {
   gtmId: "GTM-MJQKD9BZ",
   googleSiteVerification: "wCWYBxjCrZbXaBiDU1aioTUMNUC7wAjEBIpVFX5rrwk",
   googleAnalyticsId: "G-DPPDS1G5P1",
+  googleAdsId: "AW-18115096382",
 };
 
 export const wa = (msg = "Hi PrintHub, I'd like to ask about a 3D print.") => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;

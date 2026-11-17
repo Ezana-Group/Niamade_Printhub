@@ -53,14 +53,30 @@ const websiteLd = {
     <meta property="og:type" content="website" /><meta property="og:site_name" content="PrintHub Africa" /><meta property="og:locale" content="en_KE" />
     <meta property="og:title" content={full} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={full} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={ogImage} />
-    {site.googleAnalyticsId && (
+    {(site.googleAnalyticsId || site.googleAdsId) && (
       <>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.googleAnalyticsId}`}></script>
-        <script is:inline define:vars={{ gaId: site.googleAnalyticsId }}>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.googleAdsId || site.googleAnalyticsId}`}></script>
+        <script is:inline define:vars={{ gaId: site.googleAnalyticsId, adsId: site.googleAdsId }}>
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', gaId, { page_path: window.location.pathname });
+          if (gaId) gtag('config', gaId, { page_path: window.location.pathname });
+          if (adsId) gtag('config', adsId);
+
+          // Track WhatsApp quote clicks as conversions for Google Ads & Analytics
+          document.addEventListener('click', function(e) {
+            var target = e.target && e.target.closest ? e.target.closest('a[href*="wa.me"], .btn-wa') : null;
+            if (target) {
+              gtag('event', 'generate_lead', {
+                event_category: 'Contact',
+                event_label: 'WhatsApp Chat',
+                send_to: adsId || undefined
+              });
+              if (adsId) {
+                gtag('event', 'conversion', { send_to: adsId });
+              }
+            }
+          });
         </script>
       </>
     )}
