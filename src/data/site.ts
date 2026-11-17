@@ -28,7 +28,7 @@ export const site = {
   // SEO, Analytics & Tag Manager
   gtmId: "GTM-MJQKD9BZ",
   googleSiteVerification: "wCWYBxjCrZbXaBiDU1aioTUMNUC7wAjEBIpVFX5rrwk",
-  googleAnalyticsId: "",      // Optional direct GA4 ID (or managed inside GTM)
+  googleAnalyticsId: "G-DPPDS1G5P1",
 };
 
 export const wa = (msg = "Hi PrintHub, I'd like to ask about a 3D print.") => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;
