@@ -68,9 +68,12 @@ export interface SanityPageContent {
   ctaBody?: string;
 }
 
-const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || import.meta.env.SANITY_PROJECT_ID || "m7x6icn3";
-const SANITY_DATASET = process.env.SANITY_DATASET || import.meta.env.SANITY_DATASET || "production";
+const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || import.meta.env?.SANITY_PROJECT_ID || "m7x6icn3";
+const SANITY_DATASET = process.env.SANITY_DATASET || import.meta.env?.SANITY_DATASET || "production";
 const SANITY_API_VERSION = "2023-08-01";
+const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN || import.meta.env?.SANITY_API_TOKEN || "skp15SlfYE3FgACPAzAs3OBaF25BczPvwGmrWPAvKOFfc2rM3flSm5QrL7xgqOlYfQxpX3Gndm2RzyqL741V8hRkXCngh7zEC22su8ngplxR9GhKuS0MnHDKi1BNfXk3vBrPyjvAFXMnhEwk4T18g9osdfA6MEM1HBblMBFJRdOyee80hYwG";
+
+const authHeaders: Record<string, string> = SANITY_API_TOKEN ? { Authorization: `Bearer ${SANITY_API_TOKEN}` } : {};
 
 function urlForImage(source: any): string | null {
   if (!source) return null;
@@ -134,7 +137,7 @@ export function blocksToPlainText(blocks: any): string {
 }
 
 export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null> {
-  const query = encodeURIComponent(`*[_type == "product"]{
+  const query = encodeURIComponent(`*[_type == "product" && !(_id in path("drafts.**"))]{
     _id,
     name,
     "slug": slug.current,
@@ -158,8 +161,7 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
 
   try {
     const res = await fetch(endpoint, {
-      headers: { Accept: "application/json" },
-      ...(process.env.SANITY_API_TOKEN ? { Authorization: `Bearer ${process.env.SANITY_API_TOKEN}` } : {}),
+      headers: { Accept: "application/json", ...authHeaders },
     });
 
     if (!res.ok) return null;
@@ -211,7 +213,7 @@ export async function fetchFaqsFromSanity(): Promise<SanityFaq[] | null> {
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
 
   try {
-    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    const res = await fetch(endpoint, { headers: { Accept: "application/json", ...authHeaders } });
     if (!res.ok) return null;
     const { result } = await res.json();
     if (!Array.isArray(result) || !result.length) return null;
@@ -239,7 +241,7 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
 
   try {
-    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    const res = await fetch(endpoint, { headers: { Accept: "application/json", ...authHeaders } });
     if (!res.ok) return null;
     const { result } = await res.json();
     return result || null;
@@ -262,7 +264,7 @@ export async function fetchLegalPageFromSanity(slug: string): Promise<SanityLega
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
 
   try {
-    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    const res = await fetch(endpoint, { headers: { Accept: "application/json", ...authHeaders } });
     if (!res.ok) return null;
     const { result } = await res.json();
     if (!result) return null;
@@ -329,7 +331,7 @@ export async function fetchPageContentFromSanity(page: string): Promise<SanityPa
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
 
   try {
-    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    const res = await fetch(endpoint, { headers: { Accept: "application/json", ...authHeaders } });
     if (!res.ok) return null;
     const { result } = await res.json();
     if (!result) return null;
@@ -358,7 +360,7 @@ export async function fetchMaterialsFromSanity(): Promise<SanityMaterial[] | nul
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
 
   try {
-    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    const res = await fetch(endpoint, { headers: { Accept: "application/json", ...authHeaders } });
     if (!res.ok) return null;
     const { result } = await res.json();
     if (!Array.isArray(result) || !result.length) return null;
@@ -384,7 +386,7 @@ export async function fetchServicesFromSanity(type?: 'printing' | 'design'): Pro
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
 
   try {
-    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    const res = await fetch(endpoint, { headers: { Accept: "application/json", ...authHeaders } });
     if (!res.ok) return null;
     const { result } = await res.json();
     if (!Array.isArray(result) || !result.length) return null;
@@ -410,7 +412,7 @@ export async function fetchOccasionsFromSanity(): Promise<SanityOccasion[] | nul
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
 
   try {
-    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    const res = await fetch(endpoint, { headers: { Accept: "application/json", ...authHeaders } });
     if (!res.ok) return null;
     const { result } = await res.json();
     if (!Array.isArray(result) || !result.length) return null;
