@@ -25,9 +25,10 @@ export const site = {
     { id: "linkedin", label: "LinkedIn", handle: "PrintHub Africa", href: "https://www.linkedin.com/company/printhub-africa" },
   ],
   googleBusinessProfile: "https://www.google.com/search?q=PrinthubAfrica&stick=H4sIAAAAAAAA_-NgU1I1qDA0tzA0MLSwtDQ3MTA2NEuyMqgwSTI2NTM1t7A0TLY0tTBKXsTKF1CUmVeSUZrkmFaUmZwIAIsxzsY6AAAA",
-  // SEO & Webmaster Verification
-  googleSiteVerification: "", // Paste Google Search Console verification token here
-  googleAnalyticsId: "",      // Paste Google Analytics 4 Measurement ID here (e.g. "G-XXXXXXXXXX")
+  // SEO, Analytics & Tag Manager
+  gtmId: "GTM-MJQKD9BZ",
+  googleSiteVerification: "wCWYBxjCrZbXaBiDU1aioTUMNUC7wAjEBIpVFX5rrwk",
+  googleAnalyticsId: "",      // Optional direct GA4 ID (or managed inside GTM)
 };
 
 export const wa = (msg = "Hi PrintHub, I'd like to ask about a 3D print.") => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;
