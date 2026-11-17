@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="800" height="800">
+  <rect width="200" height="200" fill="#FFE4D2"/>
+  <style>
+    .a { fill: #F26B3A; }
+    .b { fill: #FFC857; }
+    .c { fill: #2F9E6E; }
+    .k { fill: #2B1D16; }
+    .w { fill: #FFFDF8; }
+    .s, .sc, .sw { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+    .s { stroke: #2B1D16; }
+    .sc { stroke: #2F9E6E; }
+    .sw { stroke: #FFFDF8; }
+    .sh { fill: #2B1D16; opacity: 0.09; }
+  </style>
+  <g><ellipse class="sh" cx="100" cy="173" rx="62" ry="6"/><path class="a" d="M26 128h42l-5 42H31z"/><path class="b" d="M78 108h54l-7 62H85z"/><path class="a" d="M138 122h40l-5 48h-30z"/><path class="c" d="M47 128c-14-10-12-26-2-32 8 8 10 20 2 32zM47 128c14-8 20-20 14-30-12 2-18 14-14 30z"/><path class="c" d="M105 108c-22-8-26-30-18-44 14 6 24 20 18 44zM105 108c22-6 30-26 22-42-14 4-26 18-22 42zM105 108c-4-20-2-40 0-52 4 12 6 32 0 52z"/><path class="c" d="M158 122c-12-12-12-26-4-34 10 6 14 18 4 34zM158 122c12-10 16-22 10-32-10 4-16 14-10 32z"/></g>
+</svg>

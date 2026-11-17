@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="800" height="800">
+  <rect width="200" height="200" fill="#D8F1E4"/>
+  <style>
+    .a { fill: #2F9E6E; }
+    .b { fill: #FFC857; }
+    .c { fill: #F26B3A; }
+    .k { fill: #2B1D16; }
+    .w { fill: #FFFDF8; }
+    .s, .sc, .sw { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+    .s { stroke: #2B1D16; }
+    .sc { stroke: #F26B3A; }
+    .sw { stroke: #FFFDF8; }
+    .sh { fill: #2B1D16; opacity: 0.09; }
+  </style>
+  <g><ellipse class="sh" cx="100" cy="173" rx="62" ry="6"/><path class="c" d="M88 98l-18-42 38 24zM118 114l10-46 22 38z"/><circle class="a" cx="22" cy="132" r="8"/><circle class="b" cx="40" cy="112" r="11"/><circle class="a" cx="58" cy="98" r="14"/><circle class="b" cx="76" cy="104" r="16"/><circle class="a" cx="94" cy="124" r="17"/><circle class="b" cx="112" cy="140" r="16"/><circle class="a" cx="130" cy="138" r="14"/><circle class="b" cx="148" cy="120" r="12"/><circle class="a" cx="166" cy="104" r="9"/><path class="a" d="M172 92l24 12-24 16z"/><circle class="k n" cx="178" cy="104" r="3"/></g>
+</svg>

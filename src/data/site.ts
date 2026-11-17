@@ -14,21 +14,28 @@ const _cmsStock = Object.values(_productModules).map((m) => m.default ?? m) as A
 
 import _faqsData from "../content/faqs.json";
 import _settingsData from "../content/settings.json";
-import { fetchProductsFromSanity } from "../lib/sanity";
+import { fetchProductsFromSanity, fetchFaqsFromSanity, fetchSettingsFromSanity } from "../lib/sanity";
+import { fetchProductsFromGoogleSheets } from "../lib/sheets";
 import { fetchProductsFromNotion } from "../lib/notion";
 
+// Live content from Sanity (with fallback to local files)
+const _sanitySettings = await fetchSettingsFromSanity();
+const _sanityFaqs = await fetchFaqsFromSanity();
+
+export const faqs = _sanityFaqs || _faqsData.faqs;
+
 export const site = {
-  name: _settingsData.name,
+  name: _sanitySettings?.name || _settingsData.name,
   businessName: "Niamade Hub",
   endorsement: "A Niamade Hub Company",
   relationship: "PrintHub Africa — A Niamade Hub Company",
   url: "https://printhub.africa", // CHANGE if the live domain differs (canonical links, sitemap, social previews)
-  city: _settingsData.city,
-  phone: _settingsData.phone,
-  whatsapp: _settingsData.whatsapp,
-  email: _settingsData.email,
+  city: _sanitySettings?.city || _settingsData.city,
+  phone: _sanitySettings?.phone || _settingsData.phone,
+  whatsapp: _sanitySettings?.whatsapp || _settingsData.whatsapp,
+  email: _sanitySettings?.email || _settingsData.email,
   parent: "Niamade Hub",
-  hours: _settingsData.hours,
+  hours: _sanitySettings?.hours || _settingsData.hours,
   // Same hours in machine-readable form (0 = Sunday). Drives the live "Open now" badge and search-engine data.
   hoursSpec: [{ days: [1, 2, 3, 4, 5], open: "08:00", close: "18:00" }, { days: [6], open: "09:00", close: "15:00" }],
   tz: "Africa/Nairobi",
@@ -60,10 +67,11 @@ export const occasions = [
   { id: "parts", label: "Parts & prototypes", blurb: "Brackets, spares and test pieces for makers and engineers.", art: "rapid-prototype-print", tone: "sand" },
 ] as const;
 
-// Priority: Sanity Studio -> Notion -> local JSON content
+// Priority: Sanity Studio -> Google Sheet Backup -> Notion -> local JSON content
 const _sanityProducts = await fetchProductsFromSanity();
-const _notionProducts = _sanityProducts ? null : await fetchProductsFromNotion();
-const stock = _sanityProducts || _notionProducts || _cmsStock;
+const _sheetProducts = _sanityProducts ? null : await fetchProductsFromGoogleSheets();
+const _notionProducts = (_sanityProducts || _sheetProducts) ? null : await fetchProductsFromNotion();
+const stock = _sanityProducts || _sheetProducts || _notionProducts || _cmsStock;
 
 // Your own photos win automatically: drop <slug>-1.jpg, <slug>-2.jpg (jpg/jpeg/png/webp/avif) into public/products/.
 const ownDir = path.join(process.cwd(), "public", "products");
@@ -89,8 +97,7 @@ export const steps = [
   { n: 3, title: "Pay by M-Pesa, then receive", text: "Custom jobs usually need a deposit before printing, with the balance before dispatch. Collect in Eldoret or we courier it." },
 ];
 
-// FAQs are managed via the Decap CMS at /admin — edit src/content/faqs.json
-export const faqs = _faqsData.faqs;
+// FAQs are managed via Sanity Studio / Google Sheets / src/content/faqs.json
 
 export const printServices = [
   { title: "Printing from your file", text: "Send your 3D model and we print it in PLA, PETG or TPU, after checking it will print well." },

@@ -18,15 +18,25 @@ export interface SanityProduct {
   photos?: string[];
 }
 
+export interface SanityFaq {
+  group: string;
+  q: string;
+  a: string;
+}
+
+export interface SanitySettings {
+  name?: string;
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
+  city?: string;
+  hours?: string[];
+}
+
 const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || import.meta.env.SANITY_PROJECT_ID || "m7x6icn3";
 const SANITY_DATASET = process.env.SANITY_DATASET || import.meta.env.SANITY_DATASET || "production";
 const SANITY_API_VERSION = "2023-08-01";
 
-/**
- * Converts Sanity image asset references to fast global CDN URLs.
- * Example ref: "image-Tb9Ew8CXIwaY6R1kjMvI0uRR-2000x3000-jpg"
- * CDN URL: "https://cdn.sanity.io/images/m7x6icn3/production/Tb9Ew8CXIwaY6R1kjMvI0uRR-2000x3000.jpg"
- */
 function urlForImage(source: any): string | null {
   if (!source) return null;
   if (typeof source === "string") return source;
@@ -63,19 +73,13 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
   try {
     const res = await fetch(endpoint, {
       headers: { Accept: "application/json" },
-      // Optional Sanity API read token if dataset is private
       ...(process.env.SANITY_API_TOKEN ? { Authorization: `Bearer ${process.env.SANITY_API_TOKEN}` } : {}),
     });
 
-    if (!res.ok) {
-      console.warn(`[Sanity Warning] Query returned status ${res.status}`);
-      return null;
-    }
+    if (!res.ok) return null;
 
     const { result } = await res.json();
-    if (!result || !Array.isArray(result) || result.length === 0) {
-      return null;
-    }
+    if (!result || !Array.isArray(result) || result.length === 0) return null;
 
     return result.map((item: any) => {
       const photos: string[] = [];
@@ -103,6 +107,47 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     });
   } catch (err) {
     console.error("[Sanity Query Error]", err);
+    return null;
+  }
+}
+
+export async function fetchFaqsFromSanity(): Promise<SanityFaq[] | null> {
+  const query = encodeURIComponent(`*[_type == "faq"] | order(order asc){
+    group,
+    "q": question,
+    "a": answer
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    return Array.isArray(result) && result.length ? result : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> {
+  const query = encodeURIComponent(`*[_type == "siteSettings"][0]{
+    name,
+    phone,
+    whatsapp,
+    email,
+    city,
+    hours
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    return result || null;
+  } catch (err) {
     return null;
   }
 }

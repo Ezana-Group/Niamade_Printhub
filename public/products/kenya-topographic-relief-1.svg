@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="800" height="800">
+  <rect width="200" height="200" fill="#D8F1E4"/>
+  <style>
+    .a { fill: #2F9E6E; }
+    .b { fill: #F5C542; }
+    .c { fill: #E04F39; }
+    .k { fill: #2B1D16; }
+    .w { fill: #FFFDF8; }
+    .s, .sc, .sw { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+    .s { stroke: #2B1D16; }
+    .sc { stroke: #E04F39; }
+    .sw { stroke: #FFFDF8; }
+    .sh { fill: #2B1D16; opacity: 0.09; }
+  </style>
+  <g><ellipse class="sh" cx="100" cy="173" rx="62" ry="6"/><path class="a" d="M92 40l26 12 8 32 20 18-10 18-26 18-10 20-16-6-24-32 6-24 18-16z" transform="translate(0 16)"/><path class="b" d="M92 40l26 12 8 32 20 18-10 18-26 18-10 20-16-6-24-32 6-24 18-16z" transform="translate(10 8) scale(.9)"/><path class="c" d="M92 40l26 12 8 32 20 18-10 18-26 18-10 20-16-6-24-32 6-24 18-16z" transform="translate(20 0) scale(.8)"/></g>
+</svg>
