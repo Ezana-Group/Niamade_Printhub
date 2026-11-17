@@ -1,2 +1,0 @@
-# Cloudflare Pages SPA Routing for Sanity Studio Admin
-/admin/*  /admin/index.html  200
