@@ -197,6 +197,35 @@ export async function fetchLegalPageFromSanity(slug: string): Promise<SanityLega
   }
 }
 
+export interface SanityMaterial {
+  name: string;
+  fullName?: string;
+  heatResistance?: string;
+  finish?: string;
+  durability?: string;
+  bestFor?: string;
+  sampleImage?: string;
+  tone?: string;
+  order?: number;
+}
+
+export interface SanityService {
+  title: string;
+  type: 'printing' | 'design';
+  description: string;
+  sampleImage?: string;
+  order?: number;
+}
+
+export interface SanityOccasion {
+  label: string;
+  tagId: string;
+  blurb?: string;
+  featuredImage?: string;
+  tone?: string;
+  order?: number;
+}
+
 export async function fetchPageContentFromSanity(page: string): Promise<SanityPageContent | null> {
   const query = encodeURIComponent(`*[_type == "pageContent" && page == "${page}"][0]{
     page,
@@ -207,7 +236,8 @@ export async function fetchPageContentFromSanity(page: string): Promise<SanityPa
     values,
     steps,
     ctaHeading,
-    ctaBody
+    ctaBody,
+    heroImage
   }`);
 
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
@@ -216,7 +246,92 @@ export async function fetchPageContentFromSanity(page: string): Promise<SanityPa
     const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
     if (!res.ok) return null;
     const { result } = await res.json();
-    return result || null;
+    if (!result) return null;
+    return {
+      ...result,
+      heroImage: urlForImage(result.heroImage) || undefined,
+    };
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchMaterialsFromSanity(): Promise<SanityMaterial[] | null> {
+  const query = encodeURIComponent(`*[_type == "material"] | order(order asc){
+    name,
+    fullName,
+    heatResistance,
+    finish,
+    durability,
+    bestFor,
+    tone,
+    order,
+    sampleImage
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    if (!Array.isArray(result) || !result.length) return null;
+    return result.map((m: any) => ({
+      ...m,
+      sampleImage: urlForImage(m.sampleImage) || undefined,
+    }));
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchServicesFromSanity(type?: 'printing' | 'design'): Promise<SanityService[] | null> {
+  const filter = type ? ` && type == "${type}"` : '';
+  const query = encodeURIComponent(`*[_type == "service"${filter}] | order(order asc){
+    title,
+    type,
+    description,
+    order,
+    sampleImage
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    if (!Array.isArray(result) || !result.length) return null;
+    return result.map((s: any) => ({
+      ...s,
+      sampleImage: urlForImage(s.sampleImage) || undefined,
+    }));
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchOccasionsFromSanity(): Promise<SanityOccasion[] | null> {
+  const query = encodeURIComponent(`*[_type == "occasion"] | order(order asc){
+    label,
+    tagId,
+    blurb,
+    tone,
+    order,
+    featuredImage
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    if (!Array.isArray(result) || !result.length) return null;
+    return result.map((o: any) => ({
+      ...o,
+      featuredImage: urlForImage(o.featuredImage) || undefined,
+    }));
   } catch (err) {
     return null;
   }
