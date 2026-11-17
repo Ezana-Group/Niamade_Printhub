@@ -6,28 +6,34 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>PrintHub Africa — Content Manager</title>
     <style>
+      * { box-sizing: border-box; }
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background: #f7f9fc;
-        color: #1e293b;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #f1f5f9;
+        color: #0f172a;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
       }
-      #cf-status {
-        display: none;
-        max-width: 520px;
-        margin: 60px auto;
-        padding: 32px;
+      .card {
         background: #ffffff;
         border-radius: 16px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        padding: 32px;
+        max-width: 540px;
+        width: 100%;
       }
       .badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
         padding: 4px 12px;
-        background: #e0f2fe;
-        color: #0369a1;
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
         border-radius: 999px;
         font-size: 13px;
         font-weight: 600;
@@ -35,7 +41,8 @@
       }
       h1 {
         font-size: 22px;
-        margin: 0 0 12px;
+        font-weight: 700;
+        margin: 0 0 10px;
         color: #0f172a;
       }
       p {
@@ -44,192 +51,192 @@
         color: #475569;
         margin: 0 0 16px;
       }
-      .steps {
+      .box {
         background: #f8fafc;
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
+        border-radius: 10px;
         padding: 16px;
         margin: 16px 0;
         font-size: 13px;
       }
-      .steps ol {
-        margin: 0;
+      .box ol {
+        margin: 8px 0 0;
         padding-left: 20px;
       }
-      .steps li {
-        margin-bottom: 8px;
-      }
-      .steps li:last-child {
-        margin-bottom: 0;
+      .box li {
+        margin-bottom: 6px;
       }
       code {
         background: #e2e8f0;
         padding: 2px 6px;
         border-radius: 4px;
-        font-family: monospace;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 12px;
+        color: #b45309;
       }
-      .btn {
-        display: inline-block;
-        padding: 10px 18px;
-        background: #f97316;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        border: none;
-        cursor: pointer;
-      }
-      .input-row {
+      .input-group {
         display: flex;
         gap: 8px;
-        margin-top: 16px;
+        margin-top: 14px;
       }
-      .input-row input {
+      input[type="password"], input[type="text"] {
         flex: 1;
         padding: 10px 14px;
         border: 1px solid #cbd5e1;
         border-radius: 8px;
-        font-size: 13px;
+        font-size: 14px;
+        outline: none;
       }
-      #loader {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 80vh;
-        color: #64748b;
-        font-size: 15px;
+      input:focus {
+        border-color: #f97316;
+      }
+      button.btn {
+        padding: 10px 18px;
+        background: #f97316;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.15s;
+        white-space: nowrap;
+      }
+      button.btn:hover {
+        background: #ea580c;
       }
       .spinner {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border: 3px solid #e2e8f0;
         border-top-color: #f97316;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
-        margin-bottom: 16px;
+        margin: 0 auto 16px;
       }
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
+      #loader {
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+      }
+      #app-root {
+        width: 100%;
+      }
     </style>
   </head>
   <body>
-    <div id="loader">
-      <div class="spinner"></div>
-      <div>Authenticating via Cloudflare Access...</div>
-    </div>
-
-    <div id="cf-status">
+    <div id="setup-card" class="card" style="display: none;">
       <div class="badge">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
         Cloudflare Access Verified
       </div>
-      <h1>Almost Ready! Connect to GitHub</h1>
-      <p id="user-info">Logged in successfully via Cloudflare Access.</p>
+      <h1>Connect PrintHub CMS</h1>
+      <p id="user-display">You are authenticated via Cloudflare Access.</p>
       
-      <div class="steps">
-        <strong>To enable automatic one-click editing:</strong>
+      <p>Because this site saves products to your GitHub repository, we just need a <b>GitHub Token</b> to authorize edits without forcing you to use GitHub login.</p>
+
+      <div class="box">
+        <strong>Option A (Permanent for all team members):</strong>
         <ol>
-          <li>Create a GitHub Personal Access Token (classic or fine-grained with <code>repo</code> write permission).</li>
-          <li>In Cloudflare Dashboard &rarr; <b>Workers & Pages</b> &rarr; <b>Niamade_Printhub</b> &rarr; <b>Settings</b> &rarr; <b>Environment variables</b>:</li>
-          <li>Add variable: <code>CMS_GITHUB_TOKEN</code> = <i>your_token_value</i></li>
+          <li>In Cloudflare Dashboard &rarr; <b>Workers & Pages</b> &rarr; <b>Niamade_Printhub</b> &rarr; <b>Settings</b> &rarr; <b>Environment variables</b></li>
+          <li>Add: <code>CMS_GITHUB_TOKEN</code> = <i>your GitHub token</i> (as Secret)</li>
         </ol>
       </div>
 
-      <p style="font-size: 13px; color: #64748b;">Or paste it below once to start editing immediately in this browser:</p>
-      <div class="input-row">
-        <input type="password" id="manual-token" placeholder="Paste GitHub Token (ghp_...)" />
-        <button class="btn" id="save-token">Save & Enter CMS</button>
+      <div class="box">
+        <strong>Option B (Start editing immediately in this browser):</strong>
+        <p style="margin: 6px 0 0; font-size: 12px; color: #64748b;">Paste a GitHub Personal Access Token (classic with <code>repo</code> scope) below:</p>
+        <div class="input-group">
+          <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+          <button class="btn" id="save-btn">Enter CMS</button>
+        </div>
       </div>
     </div>
 
-    <script>
-      (async function init() {
-        const loader = document.getElementById("loader");
-        const statusBox = document.getElementById("cf-status");
-        const userInfo = document.getElementById("user-info");
-        const manualInput = document.getElementById("manual-token");
-        const saveBtn = document.getElementById("save-token");
+    <div id="loader" class="card">
+      <div class="spinner"></div>
+      <div id="loader-msg">Connecting to PrintHub CMS via Cloudflare...</div>
+    </div>
 
-        function launchCMS(token, email, name) {
+    <script>
+      (async function() {
+        const loader = document.getElementById("loader");
+        const setupCard = document.getElementById("setup-card");
+        const tokenInput = document.getElementById("token-input");
+        const saveBtn = document.getElementById("save-btn");
+        const userDisplay = document.getElementById("user-display");
+
+        function startDecap(token, email) {
           const userObj = {
             backendName: "github",
             token: token,
             email: email || "admin@printhub.africa",
-            name: name || "Admin",
+            name: (email || "admin").split("@")[0],
             login: (email || "admin").split("@")[0]
           };
           localStorage.setItem("decap-cms-user", JSON.stringify(userObj));
           localStorage.setItem("netlify-cms-user", JSON.stringify(userObj));
 
-          // Hide status and load Decap script
-          if (loader) loader.style.display = "none";
-          if (statusBox) statusBox.style.display = "none";
+          // Remove setup cards & style
+          if (loader) loader.remove();
+          if (setupCard) setupCard.remove();
+          document.body.style.display = "block";
+          document.body.style.padding = "0";
+          document.body.style.background = "#fff";
 
-          const script = document.createElement("script");
-          script.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
-          document.body.appendChild(script);
+          // Load Decap CMS
+          const s = document.createElement("script");
+          s.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
+          document.body.appendChild(s);
         }
 
+        // Check if token already cached in this browser
         try {
-          // Ask the Cloudflare Pages Function for the token
-          const res = await fetch("/api/cms-token", { credentials: "same-origin" });
-          const data = await res.json();
+          const cached = localStorage.getItem("decap-cms-user");
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed && parsed.token && parsed.token.startsWith("gh")) {
+              startDecap(parsed.token, parsed.email);
+              return;
+            }
+          }
+        } catch (e) {}
 
-          if (data && data.ok && data.token) {
-            launchCMS(data.token, data.email, data.name);
+        // Fetch from Cloudflare Pages Function
+        let cfData = null;
+        try {
+          const res = await fetch("/api/cms-token", { credentials: "same-origin" });
+          if (res.ok) {
+            cfData = await res.json();
+            if (cfData && cfData.ok && cfData.token) {
+              startDecap(cfData.token, cfData.email);
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("Could not fetch /api/cms-token", err);
+        }
+
+        // If no token found, show the friendly setup card (instead of dumping into GitHub login)
+        loader.style.display = "none";
+        setupCard.style.display = "block";
+        if (cfData && cfData.email) {
+          userDisplay.innerHTML = "Logged in as <b>" + cfData.email + "</b> via Cloudflare Access.";
+        }
+
+        saveBtn.addEventListener("click", () => {
+          const t = tokenInput.value.trim();
+          if (!t) {
+            alert("Please paste a GitHub token (starts with ghp_)");
             return;
           }
-
-          // If no token stored in Cloudflare env yet, check if one was saved locally
-          const cached = localStorage.getItem("decap-cms-user");
-          if (cached) {
-            try {
-              const parsed = JSON.parse(cached);
-              if (parsed && parsed.token && parsed.token.startsWith("gh")) {
-                launchCMS(parsed.token, data.email || parsed.email, parsed.name);
-                return;
-              }
-            } catch (e) {}
-          }
-
-          // Show setup guidance
-          loader.style.display = "none";
-          statusBox.style.display = "block";
-          if (data.email) {
-            userInfo.innerHTML = "Logged in as <b>" + data.email + "</b> via Cloudflare Access.";
-          }
-
-          saveBtn.addEventListener("click", () => {
-            const val = manualInput.value.trim();
-            if (val) {
-              launchCMS(val, data.email || "admin@printhub.africa", "Admin");
-            }
-          });
-        } catch (err) {
-          console.error("Auth check failed", err);
-          // Fallback: check cached session or load standard CMS
-          const cached = localStorage.getItem("decap-cms-user");
-          if (cached) {
-            try {
-              const parsed = JSON.parse(cached);
-              if (parsed && parsed.token) {
-                launchCMS(parsed.token, parsed.email, parsed.name);
-                return;
-              }
-            } catch (e) {}
-          }
-
-          loader.style.display = "none";
-          const script = document.createElement("script");
-          script.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
-          document.body.appendChild(script);
-        }
+          startDecap(t, cfData ? cfData.email : "admin@printhub.africa");
+        });
       })();
     </script>
   </body>
