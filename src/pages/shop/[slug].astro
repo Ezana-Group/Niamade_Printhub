@@ -83,7 +83,7 @@ const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell
         <p class="eyebrow">{p.cat}</p>
         <h1 class="mt-2 text-4xl md:text-5xl">{p.name}</h1>
         <p class="mt-5 flex items-baseline gap-3"><span class="font-display text-4xl font-semibold text-brand">{p.price}</span><span class="text-mute">price guide</span></p>
-        <p class="mt-5 text-lg text-ink/85">{p.blurb}</p>
+        <div class="mt-5 text-lg text-ink/85 prose space-y-3 leading-relaxed" set:html={p.blurb} />
         <div class="mt-6"><p class="text-sm font-bold">Lovely for</p><ul class="mt-2 flex flex-wrap gap-2">{p.uses.map((u: string) => <li class="rounded-full bg-sand px-4 py-1.5 text-[0.95rem] font-semibold">{u}</li>)}</ul></div>
         <div class="mt-8 flex flex-wrap gap-3">
           <a href={wa(orderMsg)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Order on WhatsApp</a>

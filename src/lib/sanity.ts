@@ -73,6 +73,53 @@ function urlForImage(source: any): string | null {
   return `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${id}-${dimensions}.${format}`;
 }
 
+export function blocksToHtml(blocks: any): string {
+  if (!blocks) return "";
+  if (typeof blocks === "string") return blocks;
+  if (!Array.isArray(blocks)) return "";
+
+  return blocks.map((block: any) => {
+    if (block._type !== "block" || !Array.isArray(block.children)) return "";
+
+    let html = block.children.map((child: any) => {
+      let text = child.text || "";
+      text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      if (Array.isArray(child.marks)) {
+        for (const mark of child.marks) {
+          if (mark === "strong") text = `<strong>${text}</strong>`;
+          else if (mark === "em") text = `<em>${text}</em>`;
+          else if (mark === "underline") text = `<u>${text}</u>`;
+          else if (block.markDefs) {
+            const def = block.markDefs.find((d: any) => d._key === mark);
+            if (def && def.href) {
+              text = `<a href="${def.href}" target="_blank" rel="noopener" class="text-brand underline">${text}</a>`;
+            }
+          }
+        }
+      }
+      return text;
+    }).join("");
+
+    if (block.listItem === "bullet") return `<li>${html}</li>`;
+    if (block.listItem === "number") return `<li>${html}</li>`;
+    if (block.style === "h3") return `<h3 class="font-display text-2xl mt-4 mb-2">${html}</h3>`;
+    if (block.style === "h4") return `<h4 class="font-display text-xl mt-3 mb-1 font-semibold">${html}</h4>`;
+    if (block.style === "blockquote") return `<blockquote class="border-l-4 border-brand pl-4 italic my-3 text-mute">${html}</blockquote>`;
+    return `<p class="leading-relaxed">${html}</p>`;
+  }).join("\n");
+}
+
+export function blocksToPlainText(blocks: any): string {
+  if (!blocks) return "";
+  if (typeof blocks === "string") return blocks;
+  if (!Array.isArray(blocks)) return "";
+  return blocks
+    .filter((b: any) => b._type === "block" && Array.isArray(b.children))
+    .map((b: any) => b.children.map((c: any) => c.text || "").join(""))
+    .join(" ")
+    .trim();
+}
+
 export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null> {
   const query = encodeURIComponent(`*[_type == "product"]{
     _id,
@@ -121,7 +168,7 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
         material: item.material || "PLA",
         finish: item.finish || "Smooth",
         tags: Array.isArray(item.occasions) ? item.occasions : [],
-        blurb: item.blurb || "",
+        blurb: typeof item.blurb === "string" ? item.blurb : (blocksToHtml(item.blurb) || blocksToPlainText(item.blurb) || ""),
         uses: Array.isArray(item.uses) ? item.uses : [],
         care: item.care || "",
         photos: photos.length ? photos : undefined,
