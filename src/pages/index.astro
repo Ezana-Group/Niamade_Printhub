@@ -67,14 +67,14 @@ const ld = {
       </ul>
     </div>
     <div class="lg:col-span-5 relative">
-      <div class="grid grid-cols-2 gap-4 md:gap-5 max-w-lg mx-auto lg:max-w-none">
+      <div class="w-full grid grid-cols-2 gap-4 md:gap-5 max-w-lg mx-auto lg:max-w-none">
         <div class="space-y-4 md:space-y-5 pt-10">
-          <div style="--d:150ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="lithophane-photo-lamp" cat="Gifts" /></div>
-          <div style="--d:300ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="name-keychain" cat="Gifts" /></div>
+          <div style="--d:150ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="lithophane-photo-lamp" cat="Gifts" /></div>
+          <div style="--d:300ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="name-keychain" cat="Gifts" /></div>
         </div>
         <div class="space-y-4 md:space-y-5">
-          <div style="--d:220ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="geometric-spiral-vase" cat="Home & decor" /></div>
-          <div style="--d:370ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="kenya-topographic-relief" cat="Kenya" /></div>
+          <div style="--d:220ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="geometric-spiral-vase" cat="Home & decor" /></div>
+          <div style="--d:370ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="kenya-topographic-relief" cat="Kenya" /></div>
         </div>
       </div>
       <div style="--d:520ms" class="rise absolute -top-3 -left-2 md:-left-5 w-28 h-28 md:w-32 md:h-32 rounded-full bg-butter border-4 border-white shadow-lg grid place-items-center text-center -rotate-6 font-display font-semibold leading-tight text-[0.95rem] md:text-base p-3">Made to order<br />in Eldoret</div>
@@ -122,9 +122,13 @@ const ld = {
           <a href={wa("Hi PrintHub, I want our brand on something people won't throw away.")} target="_blank" rel="noopener" class="btn btn-soft"><Icon name="whatsapp" size={18} />Talk to us</a>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-4 max-w-md mx-auto md:max-w-none">
-        <div class="rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2 mt-6"><ProductArt slug="branded-logo-sign" cat="Business" /></div>
-        <div class="rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="custom-desk-nameplate" cat="Business" /></div>
+      <div class="w-full grid grid-cols-2 gap-4 max-w-md mx-auto md:max-w-none">
+        <a href="/shop/branded-logo-sign/" class="block w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2 mt-6 press lift" aria-label="Branded Logo Sign">
+          <ProductArt slug="branded-logo-sign" cat="Business" />
+        </a>
+        <a href="/shop/custom-desk-nameplate/" class="block w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2 press lift" aria-label="Custom Desk Nameplate">
+          <ProductArt slug="custom-desk-nameplate" cat="Business" />
+        </a>
       </div>
     </div>
   </section>
