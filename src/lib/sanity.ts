@@ -15,6 +15,9 @@ export interface SanityProduct {
   blurb: string;
   uses: string[];
   care: string;
+  sizes?: string[];
+  colours?: string[];
+  customizationPrompt?: string;
   photos?: string[];
 }
 
@@ -134,6 +137,9 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     blurb,
     uses,
     care,
+    sizes,
+    colours,
+    customizationPrompt,
     photos
   }`);
 
@@ -170,7 +176,10 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
         tags: Array.isArray(item.occasions) ? item.occasions : [],
         blurb: typeof item.blurb === "string" ? item.blurb : (blocksToHtml(item.blurb) || blocksToPlainText(item.blurb) || ""),
         uses: Array.isArray(item.uses) ? item.uses : [],
-        care: item.care || "",
+        care: typeof item.care === "string" ? item.care : (blocksToHtml(item.care) || blocksToPlainText(item.care) || ""),
+        sizes: Array.isArray(item.sizes) ? item.sizes : undefined,
+        colours: Array.isArray(item.colours) ? item.colours : undefined,
+        customizationPrompt: item.customizationPrompt || undefined,
         photos: photos.length ? photos : undefined,
       };
     });
@@ -193,7 +202,12 @@ export async function fetchFaqsFromSanity(): Promise<SanityFaq[] | null> {
     const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
     if (!res.ok) return null;
     const { result } = await res.json();
-    return Array.isArray(result) && result.length ? result : null;
+    if (!Array.isArray(result) || !result.length) return null;
+    return result.map((f: any) => ({
+      group: f.group,
+      q: f.q,
+      a: typeof f.a === "string" ? f.a : (blocksToHtml(f.a) || blocksToPlainText(f.a) || ""),
+    }));
   } catch (err) {
     return null;
   }

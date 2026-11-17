@@ -84,15 +84,54 @@ const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell
         <h1 class="mt-2 text-4xl md:text-5xl">{p.name}</h1>
         <p class="mt-5 flex items-baseline gap-3"><span class="font-display text-4xl font-semibold text-brand">{p.price}</span><span class="text-mute">price guide</span></p>
         <div class="mt-5 text-lg text-ink/85 prose space-y-3 leading-relaxed" set:html={p.blurb} />
+        
+        {p.sizes && p.sizes.length > 0 && (
+          <div class="mt-6">
+            <p class="text-sm font-bold text-ink">Choose Size</p>
+            <div class="mt-2 flex flex-wrap gap-2" id="size-options">
+              {p.sizes.map((s: string, i: number) => (
+                <button type="button" class="size-chip rounded-full border border-line px-4 py-1.5 text-sm font-semibold transition-all aria-[selected=true]:bg-brand aria-[selected=true]:text-white aria-[selected=true]:border-brand" aria-selected={i === 0 ? "true" : "false"} data-val={s}>
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {p.colours && p.colours.length > 0 && (
+          <div class="mt-5">
+            <p class="text-sm font-bold text-ink">Choose Colour</p>
+            <div class="mt-2 flex flex-wrap gap-2" id="colour-options">
+              {p.colours.map((c: string, i: number) => (
+                <button type="button" class="colour-chip rounded-full border border-line px-4 py-1.5 text-sm font-semibold transition-all aria-[selected=true]:bg-brand aria-[selected=true]:text-white aria-[selected=true]:border-brand" aria-selected={i === 0 ? "true" : "false"} data-val={c}>
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {p.customizationPrompt && (
+          <div class="mt-5">
+            <p class="text-sm font-bold text-ink">{p.customizationPrompt}</p>
+            <input type="text" id="custom-text" placeholder="e.g. Your name, text or initials" class="mt-2 w-full max-w-md rounded-2xl border border-line bg-card px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
+          </div>
+        )}
+
         <div class="mt-6"><p class="text-sm font-bold">Lovely for</p><ul class="mt-2 flex flex-wrap gap-2">{p.uses.map((u: string) => <li class="rounded-full bg-sand px-4 py-1.5 text-[0.95rem] font-semibold">{u}</li>)}</ul></div>
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href={wa(orderMsg)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Order on WhatsApp</a>
+          <a id="wa-order-btn" href={wa(orderMsg)} target="_blank" rel="noopener" class="btn btn-wa" data-base-name={p.name} data-base-price={p.price}><Icon name="whatsapp" size={20} />Order on WhatsApp</a>
           <a href="/custom/" class="btn btn-soft">Want it changed?</a>
         </div>
         <dl class="mt-9 panel divide-y divide-line">
           {specs.map(([k, v]) => <div class="grid grid-cols-3 gap-4 px-6 py-4"><dt class="font-bold">{k}</dt><dd class="col-span-2 text-mute">{v}</dd></div>)}
         </dl>
-        <p class="mt-5 rounded-3xl bg-butter px-6 py-4 text-ink/85"><span class="font-bold">Good to know: </span>{p.care}</p>
+        {p.care && (
+          <div class="mt-5 rounded-3xl bg-butter px-6 py-4 text-ink/85 prose">
+            <p class="font-bold not-prose mb-1">Good to know:</p>
+            <div set:html={p.care} />
+          </div>
+        )}
       </div>
     </div>
   </section>
@@ -115,4 +154,42 @@ const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell
     main.src = src;
     if (!reduce) { main.getAnimations().forEach((a) => a.cancel()); main.animate([{ opacity: 0.25 }, { opacity: 1 }], { duration: 220, easing: "cubic-bezier(0.23, 1, 0.32, 1)" }); }
   }));
+
+  // Dynamic Size & Colour Selection for WhatsApp Order
+  const waBtn = document.getElementById("wa-order-btn") as HTMLAnchorElement | null;
+  const sizeChips = document.querySelectorAll<HTMLButtonElement>(".size-chip");
+  const colourChips = document.querySelectorAll<HTMLButtonElement>(".colour-chip");
+  const customInput = document.getElementById("custom-text") as HTMLInputElement | null;
+
+  function updateWaLink() {
+    if (!waBtn) return;
+    const baseName = waBtn.dataset.baseName || "";
+    const basePrice = waBtn.dataset.basePrice || "";
+    const selSize = document.querySelector<HTMLButtonElement>(".size-chip[aria-selected='true']")?.dataset.val;
+    const selColour = document.querySelector<HTMLButtonElement>(".colour-chip[aria-selected='true']")?.dataset.val;
+    const customVal = customInput?.value?.trim();
+
+    let text = `Hi PrintHub, I'd like to order: ${baseName} (${basePrice}).`;
+    if (selSize) text += ` Size: ${selSize}.`;
+    if (selColour) text += ` Colour: ${selColour}.`;
+    if (customVal) text += ` Custom Text: "${customVal}".`;
+
+    waBtn.href = `https://wa.me/254792732929?text=${encodeURIComponent(text)}`;
+  }
+
+  sizeChips.forEach((btn) => btn.addEventListener("click", () => {
+    sizeChips.forEach((b) => b.setAttribute("aria-selected", "false"));
+    btn.setAttribute("aria-selected", "true");
+    updateWaLink();
+  }));
+
+  colourChips.forEach((btn) => btn.addEventListener("click", () => {
+    colourChips.forEach((b) => b.setAttribute("aria-selected", "false"));
+    btn.setAttribute("aria-selected", "true");
+    updateWaLink();
+  }));
+
+  if (customInput) {
+    customInput.addEventListener("input", updateWaLink);
+  }
 </script>
