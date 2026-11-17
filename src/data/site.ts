@@ -14,6 +14,7 @@ const _cmsStock = Object.values(_productModules).map((m) => m.default ?? m) as A
 
 import _faqsData from "../content/faqs.json";
 import _settingsData from "../content/settings.json";
+import { fetchProductsFromSanity } from "../lib/sanity";
 import { fetchProductsFromNotion } from "../lib/notion";
 
 export const site = {
@@ -59,9 +60,10 @@ export const occasions = [
   { id: "parts", label: "Parts & prototypes", blurb: "Brackets, spares and test pieces for makers and engineers.", art: "rapid-prototype-print", tone: "sand" },
 ] as const;
 
-// Try fetching products from Notion if configured; otherwise use local JSON files.
-const _notionProducts = await fetchProductsFromNotion();
-const stock = _notionProducts || _cmsStock;
+// Priority: Sanity Studio -> Notion -> local JSON content
+const _sanityProducts = await fetchProductsFromSanity();
+const _notionProducts = _sanityProducts ? null : await fetchProductsFromNotion();
+const stock = _sanityProducts || _notionProducts || _cmsStock;
 
 // Your own photos win automatically: drop <slug>-1.jpg, <slug>-2.jpg (jpg/jpeg/png/webp/avif) into public/products/.
 const ownDir = path.join(process.cwd(), "public", "products");
