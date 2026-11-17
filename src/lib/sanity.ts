@@ -33,6 +33,28 @@ export interface SanitySettings {
   hours?: string[];
 }
 
+export interface SanityLegalPage {
+  title: string;
+  slug: string;
+  subtitle?: string;
+  lastUpdated?: string;
+  noticeBanner?: string;
+  sections?: Array<{ title: string; content: string }>;
+  seoDescription?: string;
+}
+
+export interface SanityPageContent {
+  page: string;
+  heroHeading?: string;
+  heroSubtext?: string;
+  niamadeHubBlurb?: string;
+  brandBlurb?: string;
+  values?: Array<{ title: string; description: string; tone: string }>;
+  steps?: Array<{ step: string; title: string; description: string }>;
+  ctaHeading?: string;
+  ctaBody?: string;
+}
+
 const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || import.meta.env.SANITY_PROJECT_ID || "m7x6icn3";
 const SANITY_DATASET = process.env.SANITY_DATASET || import.meta.env.SANITY_DATASET || "production";
 const SANITY_API_VERSION = "2023-08-01";
@@ -138,6 +160,54 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     email,
     city,
     hours
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    return result || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchLegalPageFromSanity(slug: string): Promise<SanityLegalPage | null> {
+  const query = encodeURIComponent(`*[_type == "legalPage" && slug.current == "${slug}"][0]{
+    title,
+    "slug": slug.current,
+    subtitle,
+    lastUpdated,
+    noticeBanner,
+    sections,
+    seoDescription
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    return result || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchPageContentFromSanity(page: string): Promise<SanityPageContent | null> {
+  const query = encodeURIComponent(`*[_type == "pageContent" && page == "${page}"][0]{
+    page,
+    heroHeading,
+    heroSubtext,
+    niamadeHubBlurb,
+    brandBlurb,
+    values,
+    steps,
+    ctaHeading,
+    ctaBody
   }`);
 
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
