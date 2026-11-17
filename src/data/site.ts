@@ -14,6 +14,7 @@ const _cmsStock = Object.values(_productModules).map((m) => m.default ?? m) as A
 
 import _faqsData from "../content/faqs.json";
 import _settingsData from "../content/settings.json";
+import { fetchProductsFromNotion } from "../lib/notion";
 
 export const site = {
   name: _settingsData.name,
@@ -58,16 +59,17 @@ export const occasions = [
   { id: "parts", label: "Parts & prototypes", blurb: "Brackets, spares and test pieces for makers and engineers.", art: "rapid-prototype-print", tone: "sand" },
 ] as const;
 
-// Prices are DRAFT guides in KES. Confirm every price before launch.
-// Products are now managed via the Decap CMS at /admin — edit src/content/products/*.json
-const stock = _cmsStock;
+// Try fetching products from Notion if configured; otherwise use local JSON files.
+const _notionProducts = await fetchProductsFromNotion();
+const stock = _notionProducts || _cmsStock;
 
 // Your own photos win automatically: drop <slug>-1.jpg, <slug>-2.jpg (jpg/jpeg/png/webp/avif) into public/products/.
 const ownDir = path.join(process.cwd(), "public", "products");
 const ownFiles = fs.existsSync(ownDir) ? fs.readdirSync(ownDir) : [];
-export const products = stock.map((p) => {
+export const products = stock.map((p: any) => {
   const own = ownFiles.filter((f) => new RegExp(`^${p.slug}-\\d+\\.(jpe?g|png|webp|avif)$`, "i").test(f)).sort().map((f) => `/products/${f}`);
-  return { ...p, photos: own };
+  const photos = (p.photos && p.photos.length) ? p.photos : own;
+  return { ...p, photos };
 });
 export type Product = (typeof products)[number];
 export const price = (p: string) => { const m = p.replace(/,/g, "").match(/\d+/); return m ? Number(m[0]) : undefined; };
