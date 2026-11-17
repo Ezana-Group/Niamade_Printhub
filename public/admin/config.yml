@@ -3,6 +3,9 @@ backend:
   repo: Ezana-Group/Niamade_Printhub
   branch: main
 
+logo_url: /logo.png
+display_url: https://printhub.africa
+
 # Media uploaded through the CMS goes here
 media_folder: public/products
 public_folder: /products
@@ -17,6 +20,7 @@ collections:
     delete: true
     identifier_field: slug
     slug: "{{fields.slug}}"
+    summary: "{{name}} — {{price}} ({{cat}})"
     extension: json
     format: json
     fields:

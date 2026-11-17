@@ -5,238 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>PrintHub Africa — Content Manager</title>
-    <style>
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: #f1f5f9;
-        color: #0f172a;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-      }
-      .card {
-        background: #ffffff;
-        border-radius: 16px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-        padding: 32px;
-        max-width: 540px;
-        width: 100%;
-      }
-      .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 12px;
-        background: #eff6ff;
-        color: #2563eb;
-        border: 1px solid #bfdbfe;
-        border-radius: 999px;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 16px;
-      }
-      h1 {
-        font-size: 22px;
-        font-weight: 700;
-        margin: 0 0 10px;
-        color: #0f172a;
-      }
-      p {
-        font-size: 14px;
-        line-height: 1.6;
-        color: #475569;
-        margin: 0 0 16px;
-      }
-      .box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        padding: 16px;
-        margin: 16px 0;
-        font-size: 13px;
-      }
-      .box ol {
-        margin: 8px 0 0;
-        padding-left: 20px;
-      }
-      .box li {
-        margin-bottom: 6px;
-      }
-      code {
-        background: #e2e8f0;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 12px;
-        color: #b45309;
-      }
-      .input-group {
-        display: flex;
-        gap: 8px;
-        margin-top: 14px;
-      }
-      input[type="password"], input[type="text"] {
-        flex: 1;
-        padding: 10px 14px;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-      }
-      input:focus {
-        border-color: #f97316;
-      }
-      button.btn {
-        padding: 10px 18px;
-        background: #f97316;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        cursor: pointer;
-        transition: background 0.15s;
-        white-space: nowrap;
-      }
-      button.btn:hover {
-        background: #ea580c;
-      }
-      .spinner {
-        width: 32px;
-        height: 32px;
-        border: 3px solid #e2e8f0;
-        border-top-color: #f97316;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        margin: 0 auto 16px;
-      }
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-      #loader {
-        text-align: center;
-        color: #64748b;
-        font-size: 14px;
-      }
-      #app-root {
-        width: 100%;
-      }
-    </style>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo-mark.png" />
   </head>
   <body>
-    <div id="setup-card" class="card" style="display: none;">
-      <div class="badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-        Cloudflare Access Verified
-      </div>
-      <h1>Connect PrintHub CMS</h1>
-      <p id="user-display">You are authenticated via Cloudflare Access.</p>
-      
-      <p>Because this site saves products to your GitHub repository, we just need a <b>GitHub Token</b> to authorize edits without forcing you to use GitHub login.</p>
-
-      <div class="box">
-        <strong>Option A (Permanent for all team members):</strong>
-        <ol>
-          <li>In Cloudflare Dashboard &rarr; <b>Workers & Pages</b> &rarr; <b>Niamade_Printhub</b> &rarr; <b>Settings</b> &rarr; <b>Environment variables</b></li>
-          <li>Add: <code>CMS_GITHUB_TOKEN</code> = <i>your GitHub token</i> (as Secret)</li>
-        </ol>
-      </div>
-
-      <div class="box">
-        <strong>Option B (Start editing immediately in this browser):</strong>
-        <p style="margin: 6px 0 0; font-size: 12px; color: #64748b;">Paste a GitHub Personal Access Token (classic with <code>repo</code> scope) below:</p>
-        <div class="input-group">
-          <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
-          <button class="btn" id="save-btn">Enter CMS</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="loader" class="card">
-      <div class="spinner"></div>
-      <div id="loader-msg">Connecting to PrintHub CMS via Cloudflare...</div>
-    </div>
-
     <script>
       (async function() {
-        const loader = document.getElementById("loader");
-        const setupCard = document.getElementById("setup-card");
-        const tokenInput = document.getElementById("token-input");
-        const saveBtn = document.getElementById("save-btn");
-        const userDisplay = document.getElementById("user-display");
-
-        function startDecap(token, email) {
-          const userObj = {
-            backendName: "github",
-            token: token,
-            email: email || "admin@printhub.africa",
-            name: (email || "admin").split("@")[0],
-            login: (email || "admin").split("@")[0]
-          };
-          localStorage.setItem("decap-cms-user", JSON.stringify(userObj));
-          localStorage.setItem("netlify-cms-user", JSON.stringify(userObj));
-
-          // Remove setup cards & style
-          if (loader) loader.remove();
-          if (setupCard) setupCard.remove();
-          document.body.style.display = "block";
-          document.body.style.padding = "0";
-          document.body.style.background = "#fff";
-
-          // Load Decap CMS
-          const s = document.createElement("script");
-          s.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
-          document.body.appendChild(s);
-        }
-
-        // Check if token already cached in this browser
-        try {
-          const cached = localStorage.getItem("decap-cms-user");
-          if (cached) {
-            const parsed = JSON.parse(cached);
-            if (parsed && parsed.token && parsed.token.startsWith("gh")) {
-              startDecap(parsed.token, parsed.email);
-              return;
-            }
-          }
-        } catch (e) {}
-
-        // Fetch from Cloudflare Pages Function
-        let cfData = null;
+        // Automatically check if Cloudflare Access has a token ready
         try {
           const res = await fetch("/api/cms-token", { credentials: "same-origin" });
           if (res.ok) {
-            cfData = await res.json();
-            if (cfData && cfData.ok && cfData.token) {
-              startDecap(cfData.token, cfData.email);
-              return;
+            const data = await res.json();
+            if (data && data.ok && data.token) {
+              const userObj = {
+                backendName: "github",
+                token: data.token,
+                email: data.email || "admin@printhub.africa",
+                name: (data.email || "admin").split("@")[0],
+                login: (data.email || "admin").split("@")[0]
+              };
+              localStorage.setItem("sveltia-cms.user", JSON.stringify(userObj));
+              localStorage.setItem("decap-cms-user", JSON.stringify(userObj));
+              localStorage.setItem("netlify-cms-user", JSON.stringify(userObj));
             }
           }
-        } catch (err) {
-          console.warn("Could not fetch /api/cms-token", err);
+        } catch (e) {
+          // Silent fallback — Sveltia has its own built-in sign-in options
         }
 
-        // If no token found, show the friendly setup card (instead of dumping into GitHub login)
-        loader.style.display = "none";
-        setupCard.style.display = "block";
-        if (cfData && cfData.email) {
-          userDisplay.innerHTML = "Logged in as <b>" + cfData.email + "</b> via Cloudflare Access.";
-        }
-
-        saveBtn.addEventListener("click", () => {
-          const t = tokenInput.value.trim();
-          if (!t) {
-            alert("Please paste a GitHub token (starts with ghp_)");
-            return;
-          }
-          startDecap(t, cfData ? cfData.email : "admin@printhub.africa");
-        });
+        // Load modern Sveltia CMS
+        const script = document.createElement("script");
+        script.src = "https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js";
+        document.body.appendChild(script);
       })();
     </script>
   </body>
