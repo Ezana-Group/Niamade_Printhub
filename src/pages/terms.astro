@@ -1,0 +1,218 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+import { site, wa } from "../data/site";
+
+const lastUpdated = "November 17, 2026";
+---
+<Layout 
+  title="Terms of Service & Manufacturing Agreement" 
+  description="Terms and conditions governing custom 3D printing, CAD design, prototyping and manufacturing services by Niamade Hub trading as PrintHub Africa."
+>
+  <section class="wrap pt-10 md:pt-14 pb-16">
+    <div class="max-w-4xl">
+      <p class="eyebrow rise">Legal & Governance</p>
+      <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">Terms of Service & Manufacturing Agreement</h1>
+      <p style="--d:120ms" class="rise mt-4 text-lg text-mute">
+        Registered Business Identity: <strong class="text-ink font-semibold">Niamade Hub</strong> · Commercial Trading Brand: <strong class="text-ink font-semibold">PrintHub Africa</strong>
+      </p>
+      <p style="--d:160ms" class="rise mt-1 text-sm text-mute">Last Revised: {lastUpdated} · Jurisdiction: Republic of Kenya</p>
+    </div>
+
+    <!-- NOTICE BANNER -->
+    <div class="mt-8 rounded-3xl bg-sand border border-line p-6 max-w-4xl">
+      <p class="text-sm md:text-base text-ink/85 leading-relaxed">
+        <strong class="font-bold text-ink">Important Notice on Made-to-Order Manufacturing:</strong> PrintHub Africa provides bespoke custom additive manufacturing and digital design services. Under Kenyan Consumer Protection standards, bespoke items manufactured according to customer-supplied files, specifications, or personalized configurations cannot be cancelled or returned for a change of mind once physical production or digital modeling has commenced. Please review the material tolerances, quotation, and deposit terms below prior to confirming your order.
+      </p>
+    </div>
+
+    <div class="mt-12 grid lg:grid-cols-12 gap-10 items-start max-w-5xl">
+      <!-- TABLE OF CONTENTS (STICKY ON DESKTOP) -->
+      <aside class="lg:col-span-4 rounded-4xl bg-card border border-line p-6 lg:sticky lg:top-28 space-y-2 text-sm">
+        <p class="font-bold text-xs uppercase tracking-wider text-brand mb-3">Table of Contents</p>
+        <nav aria-label="Terms of Service Sections" class="space-y-1.5 text-mute">
+          <a href="#1-entity" class="block hover:text-brand transition-colors">1. Contracting Entity & Acceptance</a>
+          <a href="#2-services" class="block hover:text-brand transition-colors">2. Scope of Services</a>
+          <a href="#3-quotes" class="block hover:text-brand transition-colors">3. Quotations & Order Formation</a>
+          <a href="#4-payments" class="block hover:text-brand transition-colors">4. Payment Terms & M-Pesa</a>
+          <a href="#5-custom-nature" class="block hover:text-brand transition-colors">5. Custom Orders & Cancellations</a>
+          <a href="#6-ip-indemnity" class="block hover:text-brand transition-colors">6. Customer IP & Trademark Indemnity</a>
+          <a href="#7-tolerances" class="block hover:text-brand transition-colors">7. Manufacturing Realities & Tolerances</a>
+          <a href="#8-inspection" class="block hover:text-brand transition-colors">8. Quality Inspection & Defect Remedy</a>
+          <a href="#9-delivery" class="block hover:text-brand transition-colors">9. Delivery, Collection & Transit Risk</a>
+          <a href="#10-liability" class="block hover:text-brand transition-colors">10. Limitation of Liability</a>
+          <a href="#11-force-majeure" class="block hover:text-brand transition-colors">11. Force Majeure</a>
+          <a href="#12-governing-law" class="block hover:text-brand transition-colors">12. Governing Law & Dispute Resolution</a>
+        </nav>
+      </aside>
+
+      <!-- TERMS TEXT CONTENT -->
+      <div class="lg:col-span-8 space-y-10 text-[1.03rem] text-ink/85 leading-relaxed">
+        
+        <!-- SECTION 1 -->
+        <article id="1-entity" class="space-y-3 pt-2">
+          <h2 class="font-display text-2xl font-semibold text-ink">1. Contracting Entity & Acceptance of Terms</h2>
+          <p>
+            These Terms of Service ("Agreement") constitute a legally binding agreement between you (the "Customer", "Client", or "you") and <strong class="text-ink font-semibold">Niamade Hub</strong>, a registered business enterprise in the Republic of Kenya operating the commercial trading brand <strong class="text-ink font-semibold">PrintHub Africa</strong> ("PrintHub Africa", "we", "us", or "our").
+          </p>
+          <p>
+            By accessing <a href={site.url} class="font-semibold text-brand underline underline-offset-4">printhub.africa</a>, requesting a quote, transferring design assets, issuing an M-Pesa payment, or approving a physical build order, you expressly accept and agree to be bound by these Terms in full. If you are entering into this Agreement on behalf of a corporate entity, company, or institution, you warrant that you hold legitimate legal authority to bind that entity.
+          </p>
+        </article>
+
+        <!-- SECTION 2 -->
+        <article id="2-services" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">2. Scope of Services</h2>
+          <p>
+            PrintHub Africa specializes in custom design, engineering, prototyping, and additive manufacturing. Our commercial activities encompass:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5 text-mute">
+            <li><strong class="text-ink">Additive Manufacturing (3D Printing):</strong> Fabrication of components utilizing thermoplastic polymers including PLA, PETG, TPU, and soluble PVA support filaments.</li>
+            <li><strong class="text-ink">Computer-Aided Design (CAD) & Reverse Engineering:</strong> 3D surface and solid modeling based on customer sketches, photos, caliper measurements, or physical broken parts.</li>
+            <li><strong class="text-ink">Post-Processing & Finishing:</strong> Mechanical support removal, hand-sanding, priming, smoothing, assembly, and multi-tone painting.</li>
+            <li><strong class="text-ink">Commercial & Corporate Branding:</strong> Fabrication of raised dimensional signage, executive desk plates, architectural models, and branded corporate hardware.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 3 -->
+        <article id="3-quotes" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">3. Quotations & Order Formation</h2>
+          <p>
+            All price estimates displayed on <a href="/shop/" class="font-semibold text-brand">printhub.africa/shop</a> serve as baseline commercial guides in Kenyan Shillings (KES). Because every print project depends on geometrical density, wall thickness, infill percentage, polymer choice, and runtime, binding contracts are formed exclusively through verified quotes.
+          </p>
+          <p>
+            Formal quotes issued via WhatsApp, email, or invoice are valid for <strong class="text-ink font-semibold">fourteen (14) calendar days</strong> from the date of transmission. We reserve the right to revise or withdraw an unaccepted quote if raw material costs or geometry assessments require modification prior to deposit payment.
+          </p>
+        </article>
+
+        <!-- SECTION 4 -->
+        <article id="4-payments" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">4. Payment Terms & M-Pesa Procedures</h2>
+          <p>
+            Unless explicitly agreed upon in writing for verified institutional corporate accounts:
+          </p>
+          <ol class="list-decimal pl-5 space-y-2 text-mute">
+            <li><strong class="text-ink font-semibold">Digital CAD & Modeling Work:</strong> Design fees cover labor, software engineering, and file generation. CAD work is billed and payable in full upfront before 3D modeling commences.</li>
+            <li><strong class="text-ink font-semibold">Manufacturing Deposit:</strong> Custom print jobs require a non-refundable commitment deposit (typically 50% to 70% of the manufacturing total, or 100% for orders below KES 1,500) prior to scheduling machine runtime and polymer allocation.</li>
+            <li><strong class="text-ink font-semibold">Balance Due Before Dispatch:</strong> The remaining balance must be cleared via M-Pesa or agreed banking rails upon completion notification and prior to courier hand-off or physical collection in Eldoret.</li>
+            <li><strong class="text-ink font-semibold">Currency:</strong> All statutory transactions, quotes, invoices, and payments are conducted in Kenyan Shillings (KES).</li>
+          </ol>
+        </article>
+
+        <!-- SECTION 5 -->
+        <article id="5-custom-nature" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">5. Custom Orders & Cancellation Policy</h2>
+          <p>
+            Because our products are made-to-order according to customer-selected dimensions, text, brand marks, and CAD geometries:
+          </p>
+          <p>
+            <strong class="text-ink font-semibold">No Right of Withdrawal for Bespoke Goods:</strong> Once a deposit has been remitted and physical manufacturing or CAD engineering has commenced, orders cannot be cancelled, modified, or refunded due to customer change of mind, incorrect customer-supplied dimensions, or buyer's remorse.
+          </p>
+          <p>
+            If a customer requests a cancellation before physical printing begins but after slicing and technical file inspection have occurred, Niamade Hub reserves the right to retain a reasonable preparation fee covering computational and engineering overhead.
+          </p>
+        </article>
+
+        <!-- SECTION 6 -->
+        <article id="6-ip-indemnity" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">6. Customer Intellectual Property & Trademark Indemnity</h2>
+          <p>
+            When submitting 3D files (STL, OBJ, STEP, 3MF), logos, corporate emblems, vector artwork, or technical drawings:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-mute">
+            <li><strong class="text-ink font-semibold">Customer Warranty:</strong> You represent and warrant that you are the sole owner of all intellectual property rights in the submitted assets, or hold valid express licenses, permissions, or authorizations from the lawful trademark/copyright holder to manufacture the items.</li>
+            <li><strong class="text-ink font-semibold">Strict Indemnification:</strong> You agree to fully indemnify, defend, and hold harmless Niamade Hub, PrintHub Africa, its officers, directors, technicians, and contractors from and against any claims, losses, damages, liabilities, costs, legal fees, or regulatory penalties arising out of any third-party claim that your submitted designs infringe upon any patent, trademark, copyright, design right, or proprietary trade secret.</li>
+            <li><strong class="text-ink font-semibold">Right of Refusal:</strong> We reserve the unqualified right to decline to manufacture any design that infringes obvious trademarks, promotes hate speech, violates Kenyan law, or depicts prohibited firearms or dangerous weapons.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 7 -->
+        <article id="7-tolerances" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">7. Technical Realities, Tolerances & Material Limitations</h2>
+          <p>
+            Fused Deposition Modeling (FDM) is an additive manufacturing process where molten thermoplastic is extruded layer-upon-layer. Customers acknowledge the physical realities of the technology:
+          </p>
+          <div class="space-y-2 text-mute">
+            <p><strong class="text-ink font-semibold">A. Visual Appearance & Layer Lines:</strong> Microscopic horizontal striations ("layer lines") are a natural physical attribute of FDM printing and do not constitute a defect. While post-processing (sanding, smoothing, painting) mitigates surface texture, un-sanded pieces will display characteristic layer lines.</p>
+            <p><strong class="text-ink font-semibold">B. Dimensional Tolerance:</strong> Standard manufacturing tolerance for our calibrated equipment is <strong class="text-ink font-semibold">±0.2 mm or ±1%</strong> (whichever is greater). If your assembly requires tighter interference-fit or press-fit tolerances, you must declare this explicitly before slicing.</p>
+            <p><strong class="text-ink font-semibold">C. Polymer Thermal Constraints:</strong> Standard PLA begins to soften under glass-transition temperatures exceeding <strong class="text-ink font-semibold">50°C to 55°C</strong> (such as enclosed vehicle dashboards in tropical sun or direct continuous exterior exposure). For elevated thermal resilience or UV endurance, PETG or engineering polymers must be selected. Niamade Hub is not liable for thermal deformation resulting from inappropriate material selection contrary to our recommendations.</p>
+            <p><strong class="text-ink font-semibold">D. Food & Fluid Safety:</strong> Unless explicitly manufactured with certified food-safe resin and sealed with food-contact coatings, 3D prints contain microscopic voids that can harbor bacteria and are not certified food-contact safe or hermetically watertight.</p>
+          </div>
+        </article>
+
+        <!-- SECTION 8 -->
+        <article id="8-inspection" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">8. Quality Inspection, Defect Remedies & Transit Damage</h2>
+          <p>
+            We take pride in strict quality control. Upon receipt of your finished pieces:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-mute">
+            <li><strong class="text-ink font-semibold">48-Hour Inspection Window:</strong> You must inspect all delivered goods within <strong class="text-ink font-semibold">48 hours</strong> of physical receipt or collection. Any claim for manufacturing defect, missing items, or transit breakage must be reported within this window via WhatsApp or email with clear photographic or video evidence.</li>
+            <li><strong class="text-ink font-semibold">Remedy for Verified Defects:</strong> If an item is verified by our engineering team to suffer from severe delamination, structural failure under intended use, or significant variance from agreed technical specifications, our sole liability is limited to: (a) re-printing the defective component at our cost, or (b) issuing a partial or full refund for the defective portion at our discretion.</li>
+            <li><strong class="text-ink font-semibold">Exclusions:</strong> We are not responsible for failures resulting from customer design defects, inadequate wall thickness requested by customer against our advice, drops, impacts, thermal misuse, or normal operational wear and tear.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 9 -->
+        <article id="9-delivery" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">9. Delivery, Collection & Transfer of Risk</h2>
+          <p>
+            Physical fulfillment is handled via two methods:
+          </p>
+          <p>
+            <strong class="text-ink font-semibold">A. Workshop Collection:</strong> Free collection in Eldoret, Kenya by prior appointment during standard studio hours. Title and risk of damage pass to the Customer upon handover.
+          </p>
+          <p>
+            <strong class="text-ink font-semibold">B. Third-Party Courier Dispatch:</strong> We arrange delivery across Kenya (Nairobi, Mombasa, Kisumu, Nakuru, and countrywide towns) via reputable third-party logistics and parcel couriers. Delivery fees are charged at direct operational cost. Packages are cushioned with protective packaging. Risk of transit loss or delay passes to the Customer upon verified carrier handover, although we will actively assist in lodging carrier inquiries.
+          </p>
+        </article>
+
+        <!-- SECTION 10 -->
+        <article id="10-liability" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">10. Limitation of Liability</h2>
+          <p>
+            To the maximum extent permitted by the laws of Kenya:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-mute">
+            <li>Niamade Hub and PrintHub Africa shall not be liable for any indirect, incidental, consequential, special, or punitive damages, including loss of business profits, project delays, or business interruption.</li>
+            <li>In all circumstances, our aggregate financial liability arising out of or related to any order, whether in contract, tort (including negligence), or otherwise, shall strictly not exceed the total amount actually paid by you for the specific manufacturing batch or service in dispute.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 11 -->
+        <article id="11-force-majeure" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">11. Force Majeure</h2>
+          <p>
+            Neither party shall be liable for failure or delay in performance resulting from causes beyond reasonable control, including electrical grid outages, national logistics disruptions, telecommunications failures, natural disasters, raw polymer supply embargoes, or government actions.
+          </p>
+        </article>
+
+        <!-- SECTION 12 -->
+        <article id="12-governing-law" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">12. Governing Law & Dispute Resolution</h2>
+          <p>
+            This Agreement shall be construed, interpreted, and governed in accordance with the substantive laws of the <strong class="text-ink font-semibold">Republic of Kenya</strong>.
+          </p>
+          <p>
+            In the event of any controversy, claim, or dispute arising out of or relating to this Agreement, the parties shall first attempt in good faith to resolve the matter amicably through direct commercial consultation. If unresolved within thirty (30) days, the dispute shall be subject to the exclusive jurisdiction of the competent courts sitting in <strong class="text-ink font-semibold">Eldoret, Uasin Gishu County, Kenya</strong>.
+          </p>
+        </article>
+
+        <!-- CONTACT -->
+        <div class="pt-8 border-t border-line space-y-3">
+          <h3 class="font-display text-xl font-semibold">Inquiries & Formal Notices</h3>
+          <p class="text-mute text-sm">
+            For legal inquiries, contract documentation, or corporate master service agreements:
+          </p>
+          <div class="rounded-3xl bg-sand p-5 space-y-1 text-sm font-semibold">
+            <p>Niamade Hub (trading as PrintHub Africa)</p>
+            <p class="text-mute">Email: <a href={`mailto:${site.email}`} class="text-brand underline">{site.email}</a></p>
+            <p class="text-mute">Studio: {site.city}</p>
+            <p class="text-mute">WhatsApp / Phone: {site.phone}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</Layout>

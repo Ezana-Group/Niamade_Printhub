@@ -1,0 +1,70 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import Icon from "../../components/Icon.astro";
+import { products, occasions, wa, site } from "../../data/site";
+
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "PrintHub Africa 3D Print Shop",
+  description: "Personalised gifts, branded business pieces, Kenya souvenirs, home décor and useful parts, 3D printed to order in Eldoret, Kenya.",
+  url: `${site.url}/shop/`,
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: products.length,
+    itemListElement: products.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: p.name,
+      url: `${site.url}/shop/${p.slug}/`
+    }))
+  }
+};
+---
+<Layout title="3D Print Shop" jsonLd={ld} description="Personalised gifts, branded business pieces, Kenya souvenirs, home décor and useful parts, 3D printed to order in Eldoret. Pay by M-Pesa, delivery across Kenya.">
+  <section class="wrap pt-10 md:pt-14">
+    <p class="eyebrow rise">3D Print Shop Kenya</p>
+    <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl max-w-3xl">Made to order, just for you.</h1>
+    <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">Custom 3D printed gifts, branded business pieces, Kenya souvenirs, home décor and replacement parts. Everything is printed to order in Eldoret, with delivery across Kenya.</p>
+    <div id="chips" role="group" aria-label="Filter by occasion" class="mt-9 flex flex-wrap gap-2.5">
+      <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
+      {occasions.map((o) => <button type="button" class="chip" data-f={o.id} aria-pressed="false">{o.label}</button>)}
+    </div>
+    <p id="count" class="mt-4 text-mute" role="status" aria-live="polite">Showing all {products.length} pieces</p>
+    <div id="grid" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {products.map((p) => <ProductCard p={p} filterable />)}
+    </div>
+    {products.some((p) => !p.photos.length) && <p class="mt-8 text-sm text-mute">Illustrations show the style of each piece. Yours is printed to order.</p>}
+    <div class="mt-16 rounded-5xl bg-sky p-8 md:p-10 flex flex-wrap items-center justify-between gap-6">
+      <div class="max-w-xl"><h2 class="text-3xl md:text-4xl">Don't see what you need?</h2><p class="mt-2 text-lg text-ink/80">Most of our work is custom. Tell us your idea and we will quote it.</p></div>
+      <a href={wa("Hi PrintHub, I couldn't find what I need in the shop.")} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Ask on WhatsApp</a>
+    </div>
+  </section>
+</Layout>
+<script>
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("#chips .chip"));
+  const items = Array.from(document.querySelectorAll<HTMLElement>("#grid [data-tags]"));
+  const count = document.getElementById("count")!;
+  const labels: Record<string, string> = Object.fromEntries(chips.map((c) => [c.dataset.f!, c.textContent!.trim()]));
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const apply = (f: string, animate: boolean) => {
+    chips.forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.f === f)));
+    let k = 0;
+    items.forEach((i) => {
+      const show = f === "all" || i.dataset.tags!.split(" ").includes(f);
+      i.classList.toggle("hidden", !show);
+      i.getAnimations().forEach((a) => a.cancel());
+      if (show && animate && !reduce) i.animate([{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 280, delay: Math.min(k++, 8) * 30, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "backwards" });
+    });
+    const n = items.filter((i) => !i.classList.contains("hidden")).length;
+    count.textContent = f === "all" ? `Showing all ${n} pieces` : `Showing ${n} in ${labels[f]}`;
+  };
+  chips.forEach((c) => c.addEventListener("click", () => {
+    if (c.getAttribute("aria-pressed") === "true") return;
+    apply(c.dataset.f!, true);
+    history.replaceState(null, "", c.dataset.f === "all" ? location.pathname : `?for=${c.dataset.f}`);
+  }));
+  const want = new URLSearchParams(location.search).get("for");
+  if (want && chips.some((c) => c.dataset.f === want)) apply(want, false);
+</script>

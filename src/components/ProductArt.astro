@@ -1,0 +1,12 @@
+---
+import { art, palettes } from "../data/art";
+const { slug, cat, class: cls = "" } = Astro.props;
+const pal = palettes[cat] ?? palettes["Gifts"];
+const svg = art[slug] ?? "";
+---
+<div class:list={["art relative w-full aspect-square overflow-hidden", cls]} style={`--bg:${pal.bg};--a:${pal.a};--b:${pal.b};--c:${pal.c};background:${pal.bg}`}>
+  <svg viewBox="0 0 200 200" class="absolute inset-0 w-full h-full" role="img" aria-hidden="true" focusable="false">
+    <g set:html={svg} />
+    <g class="tex" set:html={svg} />
+  </svg>
+</div>

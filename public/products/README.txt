@@ -1,0 +1,3 @@
+Drop your own product photos here, named <slug>-1.jpg, <slug>-2.jpg ...
+The slug is the last part of the product URL, e.g. name-keychain-1.jpg
+See README.md > Product photos.

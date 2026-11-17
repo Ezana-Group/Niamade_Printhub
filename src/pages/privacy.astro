@@ -1,0 +1,208 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../data/site";
+
+const lastUpdated = "November 17, 2026";
+---
+<Layout 
+  title="Privacy Policy & CAD Confidentiality Notice" 
+  description="How Niamade Hub trading as PrintHub Africa collects, protects, and handles personal data and customer CAD files under the Kenya Data Protection Act, 2019."
+>
+  <section class="wrap pt-10 md:pt-14 pb-16">
+    <div class="max-w-4xl">
+      <p class="eyebrow rise">Data Protection & Privacy</p>
+      <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">Privacy Policy & CAD Confidentiality Notice</h1>
+      <p style="--d:120ms" class="rise mt-4 text-lg text-mute">
+        Data Controller: <strong class="text-ink font-semibold">Niamade Hub</strong> · Commercial Brand: <strong class="text-ink font-semibold">PrintHub Africa</strong>
+      </p>
+      <p style="--d:160ms" class="rise mt-1 text-sm text-mute">Last Revised: {lastUpdated} · Legal Framework: Kenya Data Protection Act, 2019 (KDPA)</p>
+    </div>
+
+    <!-- HIGHLIGHT CALLOUT -->
+    <div class="mt-8 rounded-3xl bg-sand border border-line p-6 max-w-4xl">
+      <p class="text-sm md:text-base text-ink/85 leading-relaxed">
+        <strong class="font-bold text-ink">Our Core Privacy Commitment:</strong> We respect your privacy and the intellectual property of your engineering designs. We do not sell your personal data, we do not deploy invasive third-party tracking pixels, and we treat your proprietary 3D CAD files as confidential trade assets. This policy explains our statutory compliance under the laws of the Republic of Kenya.
+      </p>
+    </div>
+
+    <div class="mt-12 grid lg:grid-cols-12 gap-10 items-start max-w-5xl">
+      <!-- TABLE OF CONTENTS (STICKY ON DESKTOP) -->
+      <aside class="lg:col-span-4 rounded-4xl bg-card border border-line p-6 lg:sticky lg:top-28 space-y-2 text-sm">
+        <p class="font-bold text-xs uppercase tracking-wider text-brand mb-3">Policy Sections</p>
+        <nav aria-label="Privacy Policy Sections" class="space-y-1.5 text-mute">
+          <a href="#1-controller" class="block hover:text-brand transition-colors">1. Data Controller Identity</a>
+          <a href="#2-collection" class="block hover:text-brand transition-colors">2. Information We Collect</a>
+          <a href="#3-cad-confidentiality" class="block hover:text-brand transition-colors">3. CAD & Design Confidentiality</a>
+          <a href="#4-basis" class="block hover:text-brand transition-colors">4. Lawful Basis for Processing</a>
+          <a href="#5-usage" class="block hover:text-brand transition-colors">5. How We Use Your Data</a>
+          <a href="#6-sharing" class="block hover:text-brand transition-colors">6. Data Sharing & Third Parties</a>
+          <a href="#7-cookies" class="block hover:text-brand transition-colors">7. Cookies & Web Tracking</a>
+          <a href="#8-security" class="block hover:text-brand transition-colors">8. Security & Storage</a>
+          <a href="#9-retention" class="block hover:text-brand transition-colors">9. Retention & Disposal</a>
+          <a href="#10-rights" class="block hover:text-brand transition-colors">10. Your Rights Under Kenyan Law</a>
+          <a href="#11-contact" class="block hover:text-brand transition-colors">11. Data Inquiries & ODPC</a>
+        </nav>
+      </aside>
+
+      <!-- POLICY TEXT CONTENT -->
+      <div class="lg:col-span-8 space-y-10 text-[1.03rem] text-ink/85 leading-relaxed">
+        
+        <!-- SECTION 1 -->
+        <article id="1-controller" class="space-y-3 pt-2">
+          <h2 class="font-display text-2xl font-semibold text-ink">1. Data Controller Identity</h2>
+          <p>
+            Under the <strong class="text-ink font-semibold">Kenya Data Protection Act, 2019</strong> (the "Act") and the regulations of the Office of the Data Protection Commissioner (ODPC), the data controller responsible for the processing of your personal data collected through <a href={site.url} class="font-semibold text-brand underline underline-offset-4">printhub.africa</a> and associated official channels is:
+          </p>
+          <div class="rounded-3xl bg-card border border-line p-5 text-sm space-y-1 font-semibold">
+            <p><strong class="text-ink">Registered Business:</strong> Niamade Hub</p>
+            <p><strong class="text-ink">Commercial Trading Brand:</strong> PrintHub Africa</p>
+            <p><strong class="text-ink">Physical Studio:</strong> {site.city}</p>
+            <p><strong class="text-ink">Data Protection Email:</strong> <a href={`mailto:${site.email}`} class="text-brand underline">{site.email}</a></p>
+          </div>
+        </article>
+
+        <!-- SECTION 2 -->
+        <article id="2-collection" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">2. Categories of Information We Collect</h2>
+          <p>
+            We collect only the minimum personal data strictly necessary to fulfill your technical manufacturing requests, quotes, payments, and product deliveries:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-mute">
+            <li><strong class="text-ink font-semibold">Identity & Contact Data:</strong> Full name, telephone number (for WhatsApp technical communications and courier delivery dispatches), and email address.</li>
+            <li><strong class="text-ink font-semibold">Delivery & Physical Coordinates:</strong> County, town, neighborhood, landmark, or collection point required for regional courier dispatch across Kenya.</li>
+            <li><strong class="text-ink font-semibold">Payment & M-Pesa Transaction Records:</strong> M-Pesa transaction reference codes, sender name, confirmation timestamps, and amounts paid. <em class="text-ink">Note: We never ask for, access, or store your M-Pesa PIN, banking passwords, or payment cards.</em></li>
+            <li><strong class="text-ink font-semibold">Design & Engineering Assets:</strong> Uploaded CAD geometries (STL, STEP, 3MF, OBJ), vector artwork (SVG, AI, PDF), project briefs, photographs of broken replacement parts, and dimension specifications.</li>
+            <li><strong class="text-ink font-semibold">Technical Web Data:</strong> Standard server access log data (IP address, browser user-agent, access timestamp) generated automatically when accessing the web server.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 3 -->
+        <article id="3-cad-confidentiality" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">3. Proprietary CAD & Design File Confidentiality</h2>
+          <p>
+            We recognize that our clients entrust us with sensitive prototypes, proprietary engineering files, intellectual property, and upcoming product launches.
+          </p>
+          <div class="space-y-2 text-mute">
+            <p><strong class="text-ink font-semibold">A. Non-Disclosure & Confidentiality:</strong> All 3D CAD models, schematics, sketches, and files shared with PrintHub Africa are held under strict commercial confidentiality. They will never be shared, leased, sold, or distributed to any third party.</p>
+            <p><strong class="text-ink font-semibold">B. No Public Repositories:</strong> We never upload customer-commissioned files to public 3D file sharing platforms (such as Printables, Thingiverse, MakerWorld, or Thangs) without explicit written permission from the client.</p>
+            <p><strong class="text-ink font-semibold">C. No Competing Production:</strong> We do not manufacture or monetize your proprietary files for any client other than you.</p>
+            <p><strong class="text-ink font-semibold">D. Marketing Photography:</strong> We occasionally photograph completed prints to showcase fabrication capability on social media. If your prototype is sensitive, proprietary, or subject to an unannounced launch, notify us in writing and we will place an immediate photography embargo on your order.</p>
+          </div>
+        </article>
+
+        <!-- SECTION 4 -->
+        <article id="4-basis" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">4. Lawful Basis for Processing Under Kenyan Law</h2>
+          <p>
+            In accordance with Section 30 of the Kenya Data Protection Act, 2019, our processing of your personal data relies upon:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5 text-mute">
+            <li><strong class="text-ink font-semibold">Performance of a Contract:</strong> Processing necessary to analyze CAD geometry, formulate pricing quotes, execute manufacturing, and dispatch ordered goods.</li>
+            <li><strong class="text-ink font-semibold">Compliance with Legal Obligations:</strong> Retaining statutory financial records and tax transaction logs under the Tax Procedures Act of Kenya.</li>
+            <li><strong class="text-ink font-semibold">Legitimate Interests:</strong> Operating customer support, workshop quality control, and ensuring technical server security.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 5 -->
+        <article id="5-usage" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">5. How We Use Your Information</h2>
+          <p>
+            Your information is used strictly to power our direct client services:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5 text-mute">
+            <li>Reviewing 3D geometry and issuing technical quotes in Kenyan Shillings.</li>
+            <li>Communicating slice configurations, material suggestions, and build photos via WhatsApp or email.</li>
+            <li>Reconciling M-Pesa payment deposits and final balances against orders.</li>
+            <li>Coordinating delivery dispatches with regional couriers across Kenya.</li>
+            <li>Resolving warranty, defect, or re-print inquiries within our inspection window.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 6 -->
+        <article id="6-sharing" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">6. Data Sharing & Third-Party Processors</h2>
+          <p>
+            <strong class="text-ink font-semibold">We never sell, rent, or trade your personal data.</strong> Information is shared solely with vetted operational service providers necessary to execute your contract:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-mute">
+            <li><strong class="text-ink font-semibold">Courier & Logistics Providers:</strong> We share recipient name, phone number, and delivery address with third-party parcel and courier services in Kenya (such as Fargo Courier, Speedaf, Wells Fargo, or dedicated matatu parcel services) solely to achieve physical delivery.</li>
+            <li><strong class="text-ink font-semibold">Payment Networks:</strong> Safaricom M-Pesa processes transaction authorizations on secure telecommunications rails.</li>
+            <li><strong class="text-ink font-semibold">Statutory Authorities:</strong> Disclosed only where strictly required by formal court order or lawful statutory directive from Kenyan law enforcement.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 7 -->
+        <article id="7-cookies" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">7. Cookies & Web Tracking Policy</h2>
+          <p>
+            PrintHub Africa is built on a modern, ultra-fast static website architecture:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5 text-mute">
+            <li><strong class="text-ink font-semibold">Zero Third-Party Advertising Cookies:</strong> We do not deploy Meta Pixel, Google AdSense cookies, cross-site trackers, or behavioral profiling scripts.</li>
+            <li><strong class="text-ink font-semibold">Functional Local Storage Only:</strong> We use minimal functional browser storage exclusively for user interface states (such as scroll preservation and mobile navigation toggles).</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 8 -->
+        <article id="8-security" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">8. Data Security & Storage Safeguards</h2>
+          <p>
+            We implement technical and organizational security measures to protect your personal and engineering data against unauthorized access, loss, or destruction:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5 text-mute">
+            <li>All web communications between your browser and printhub.africa are encrypted using Transport Layer Security (TLS/HTTPS).</li>
+            <li>Workshop CAD workstations and digital storage volumes are access-controlled and password-protected.</li>
+            <li>Access to client order databases and WhatsApp commercial threads is restricted to authorized studio personnel only.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 9 -->
+        <article id="9-retention" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">9. Data Retention & Asset Disposal</h2>
+          <p>
+            We retain customer CAD files and dimension logs to enable seamless future re-orders and spare part re-prints. If you prefer that your design files be permanently purged from our workstations upon successful order delivery, simply message us at <a href={`mailto:${site.email}`} class="text-brand underline">{site.email}</a> and our engineering team will execute a secure purge of the digital assets within five (5) business days.
+          </p>
+          <p>
+            Tax invoices and M-Pesa transaction reference receipts are retained for statutory retention periods mandated under Kenyan revenue laws.
+          </p>
+        </article>
+
+        <!-- SECTION 10 -->
+        <article id="10-rights" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">10. Your Statutory Rights Under the KDPA</h2>
+          <p>
+            Under Section 26 of the Kenya Data Protection Act, 2019, you hold the following legally protected rights:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-mute">
+            <li><strong class="text-ink font-semibold">Right to be Informed:</strong> To know what personal data is collected and how it is processed.</li>
+            <li><strong class="text-ink font-semibold">Right of Access:</strong> To request a copy of the personal data we hold about you.</li>
+            <li><strong class="text-ink font-semibold">Right to Rectification:</strong> To request correction of inaccurate, outdated, or incomplete data.</li>
+            <li><strong class="text-ink font-semibold">Right to Erasure (Deletion):</strong> To request that we delete or erase your personal data where there is no statutory reason for retaining it.</li>
+            <li><strong class="text-ink font-semibold">Right to Object:</strong> To object to the processing of your data for specific operations.</li>
+            <li><strong class="text-ink font-semibold">Right to Data Portability:</strong> To receive your design files and transaction records in a structured, machine-readable format.</li>
+          </ul>
+        </article>
+
+        <!-- SECTION 11 -->
+        <article id="11-contact" class="space-y-3 pt-6 border-t border-line">
+          <h2 class="font-display text-2xl font-semibold text-ink">11. Data Protection Inquiries & Supervisory Authority</h2>
+          <p>
+            To exercise any of your statutory data rights, or if you have questions regarding our CAD confidentiality procedures, contact:
+          </p>
+          <div class="rounded-3xl bg-sand p-5 space-y-1 text-sm font-semibold">
+            <p>Data Protection Officer / Legal Lead</p>
+            <p class="text-ink">Niamade Hub (operating PrintHub Africa)</p>
+            <p class="text-mute">Email: <a href={`mailto:${site.email}`} class="text-brand underline">{site.email}</a></p>
+            <p class="text-mute">Physical Address: {site.city}</p>
+            <p class="text-mute">Telephone: {site.phone}</p>
+          </div>
+          <p class="text-sm text-mute pt-2">
+            If you believe your personal data rights under the Act have been infringed, you hold the right to lodge a formal complaint with the <strong class="text-ink font-semibold">Office of the Data Protection Commissioner (ODPC) of Kenya</strong> via their official portal at <a href="https://www.odpc.go.ke" target="_blank" rel="noopener" class="text-brand underline">odpc.go.ke</a>.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+</Layout>

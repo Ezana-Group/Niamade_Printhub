@@ -1,0 +1,69 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProductCard from "../components/ProductCard.astro";
+import Icon from "../components/Icon.astro";
+import { site, products, wa } from "../data/site";
+const slugs = ["branded-logo-sign", "custom-desk-nameplate", "name-keychain", "cable-desk-organiser", "architectural-scale-model", "rapid-prototype-print"];
+const list = slugs.map((s) => products.find((p) => p.slug === s)!);
+const msg = "Hi PrintHub, I want our brand on something people won't throw away. I need a quote for custom business pieces.";
+const send = ["Your logo as a vector file (SVG, AI, PDF) or high-res image", "Your hex brand colours", "Quantity needed (larger batches cost less per piece)", "Where they will live (indoor reception, outdoor facade, desk)", "Names and titles, if it's for a team roster"];
+const biz = [
+  { n: "Send your brief", t: "Share what you have on WhatsApp. Vector files are ideal; napkin sketches also work. We will ask for whatever is missing." },
+  { n: "We quote with specs", t: "You get transparent pricing per piece in KES and material recommendations. Volume discounts apply automatically." },
+  { n: "Approve and lock in", t: "Once you approve the quote and proof, an M-Pesa deposit queues production. Balance is due before dispatch." },
+  { n: "Collect or courier", t: "Collect free in Eldoret by appointment, or we dispatch across Kenya via tracked courier." },
+];
+
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Commercial 3D Printing & Dimensional Branding",
+  provider: {
+    "@type": "LocalBusiness",
+    name: site.name,
+    legalName: site.businessName,
+    url: site.url
+  },
+  areaServed: { "@type": "Country", name: "Kenya" },
+  description: "Dimensional logo signs, precision desk nameplates, custom promotional hardware and architectural scale models engineered to order in Kenya.",
+  serviceType: "Additive Manufacturing and Dimensional Branding"
+};
+---
+<Layout title="For Business" waMsg={msg} jsonLd={ld} description="Dimensional logo signs, precision desk plates, custom giveaways and scale models. Engineered to order in Eldoret and delivered across Kenya.">
+  <section class="wrap pt-10 md:pt-14">
+    <div class="rounded-5xl bg-butter p-8 md:p-14 grid lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-8">
+        <p class="eyebrow rise">Commercial 3D Printing & Branding · Kenya</p>
+        <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl">Your brand deserves better than a blurry logo on cheap paper.</h1>
+        <p style="--d:120ms" class="rise mt-5 text-xl text-ink/80 max-w-2xl">Dimensional logo signs, weighted desk plates, custom giveaways and architectural models. Engineered to order in Eldoret and delivered across Kenya. Ordering in volume? Batches cost less per piece.</p>
+        <div style="--d:180ms" class="rise mt-8 flex flex-wrap gap-3">
+          <a href={wa(msg)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Get a business quote</a>
+          <a href="#what" class="btn btn-soft">See what we make</a>
+        </div>
+      </div>
+      <ul class="lg:col-span-4 space-y-3 text-lg">
+        {["Made to your brand colours", "Batch pricing for teams and events", "Pay by M-Pesa", "Delivery across Kenya"].map((t) => <li class="flex gap-3"><Icon name="check" size={22} class="text-brand shrink-0 mt-0.5" />{t}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap mt-20" id="what">
+    <div class="max-w-2xl"><p class="eyebrow">What we make</p><h2 class="mt-2 text-4xl md:text-5xl">Popular with businesses</h2></div>
+    <div data-reveal-group class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">{list.map((p) => <ProductCard p={p} />)}</div>
+    <p class="mt-6 text-mute">Something else in mind? Most business work is custom. <a href="/custom/" class="font-bold text-brand underline underline-offset-4">See custom orders</a>.</p>
+  </section>
+
+  <section class="wrap mt-24 grid lg:grid-cols-12 gap-10 items-start">
+    <div class="lg:col-span-7">
+      <p class="eyebrow">How a business order works</p><h2 class="mt-2 text-4xl md:text-5xl">Simple, and quoted before you pay.</h2>
+      <ol class="mt-8 space-y-4">
+        {biz.map((s, i) => <li class="panel p-6 flex gap-5"><span class="w-11 h-11 shrink-0 rounded-full bg-peach grid place-items-center font-display text-xl font-semibold text-brand">{i + 1}</span><div><h3 class="font-display text-xl">{s.n}</h3><p class="text-mute mt-1">{s.t}</p></div></li>)}
+      </ol>
+    </div>
+    <aside class="lg:col-span-5 rounded-5xl bg-sky p-8 lg:sticky lg:top-28">
+      <h3 class="font-display text-2xl">What to send us</h3>
+      <ul class="mt-5 space-y-3">{send.map((t) => <li class="flex gap-3"><Icon name="check" size={22} class="text-brand shrink-0 mt-0.5" />{t}</li>)}</ul>
+      <a href={wa(msg)} target="_blank" rel="noopener" class="btn btn-wa w-full mt-7"><Icon name="whatsapp" size={20} />Send it on WhatsApp</a>
+    </aside>
+  </section>
+</Layout>

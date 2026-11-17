@@ -1,0 +1,19 @@
+---
+import ProductArt from "./ProductArt.astro";
+import Icon from "./Icon.astro";
+const { p, filterable = false } = Astro.props;
+---
+<a href={`/shop/${p.slug}/`} data-tags={filterable ? p.tags.join(" ") : undefined} class="press lift group panel overflow-hidden flex flex-col h-full">
+  {p.photos.length
+    ? <img src={p.photos[0]} alt={p.name} width="800" height="800" loading="lazy" decoding="async" class="w-full aspect-square object-cover" />
+    : <ProductArt slug={p.slug} cat={p.cat} />}
+  <div class="p-5 flex flex-col flex-1">
+    <p class="text-[0.8rem] font-bold uppercase tracking-[0.1em] text-mute">{p.cat}</p>
+    <h3 class="font-display text-[1.35rem] leading-snug mt-1">{p.name}</h3>
+    <p class="text-mute mt-1">{p.note}</p>
+    <div class="mt-auto pt-4 flex items-center justify-between">
+      <span class="font-bold text-brand">{p.price}</span>
+      <span class="w-9 h-9 rounded-full bg-sand grid place-items-center transition-colors duration-150 group-hover:bg-brand group-hover:text-white"><Icon name="arrow" size={18} /></span>
+    </div>
+  </div>
+</a>

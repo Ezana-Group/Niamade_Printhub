@@ -1,0 +1,93 @@
+---
+import "@fontsource/fraunces/latin-600.css";
+import "@fontsource/fraunces/latin-700.css";
+import "@fontsource/fraunces/latin-600-italic.css";
+import "@fontsource/figtree/latin-400.css";
+import "@fontsource/figtree/latin-500.css";
+import "@fontsource/figtree/latin-600.css";
+import "@fontsource/figtree/latin-700.css";
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Icon from "../components/Icon.astro";
+import { site, wa } from "../data/site";
+const { title, waMsg, image = "/og.png", jsonLd, description = "Made-to-order 3D printing in Eldoret, Kenya. Personalised gifts, branded business pieces, Kenya souvenirs and useful parts. Pay by M-Pesa, delivery across Kenya.", robots = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" } = Astro.props;
+const full = title === "PrintHub Africa" ? "PrintHub Africa | Custom 3D Printing in Eldoret, Kenya" : `${title} | PrintHub Africa`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL(image, site.url).href;
+
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "PrintHub Africa",
+  alternateName: ["PrintHub", "PrintHub Kenya", "Niamade Hub"],
+  url: site.url,
+  inLanguage: "en-KE",
+  description: "Custom made-to-order 3D printing, CAD design, and dimensional fabrication in Eldoret, Kenya by Niamade Hub."
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{full}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    {site.googleSiteVerification && <meta name="google-site-verification" content={site.googleSiteVerification} />}
+    <meta name="theme-color" content="#FFF8EE" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo-mark.png?v=3" />
+    <link rel="apple-touch-icon" href="/logo-mark.png?v=3" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" /><meta property="og:site_name" content="PrintHub Africa" /><meta property="og:locale" content="en_KE" />
+    <meta property="og:title" content={full} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={full} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={ogImage} />
+    {site.googleAnalyticsId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.googleAnalyticsId}`}></script>
+        <script is:inline define:vars={{ gaId: site.googleAnalyticsId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId, { page_path: window.location.pathname });
+        </script>
+      </>
+    )}
+    <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script is:inline>
+      // Content is only hidden-then-revealed when JS runs and motion is allowed; otherwise it is simply visible.
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window && "animate" in Element.prototype) {
+        document.documentElement.classList.add("js");
+        setTimeout(function () { if (!window.__revealReady) document.documentElement.classList.remove("js"); }, 2500);
+      }
+    </script>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><pattern id="layers" width="6" height="5" patternUnits="userSpaceOnUse"><rect width="6" height="1.4" fill="#2B1D16" opacity=".13" /></pattern></defs></svg>
+    <a href="#content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-full focus:bg-ink focus:text-cream focus:px-5 focus:py-3 focus:font-semibold">Skip to content</a>
+    <Header waMsg={waMsg} />
+    <main id="content" class="flex-1"><slot /></main>
+    <Footer />
+    <a href={wa(waMsg)} target="_blank" rel="noopener" aria-label="Chat on WhatsApp" style="bottom:max(1rem, env(safe-area-inset-bottom)); --d:900ms" class="rise sm:hidden fixed right-4 z-40 btn btn-wa shadow-lg"><Icon name="whatsapp" size={18} />WhatsApp</a>
+  </body>
+</html>
+<script>
+  // Scroll reveal: children of [data-reveal-group] rise in once, staggered by their order within each batch.
+  const groups = document.querySelectorAll<HTMLElement>("[data-reveal-group]");
+  (window as any).__revealReady = true;
+  if (groups.length && document.documentElement.classList.contains("js")) {
+    const io = new IntersectionObserver((entries) => {
+      let k = 0;
+      entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left).forEach((e) => {
+        const el = e.target as HTMLElement;
+        io.unobserve(el);
+        el.animate([{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], { duration: 520, delay: Math.min(k++, 5) * 60, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "backwards" });
+        el.setAttribute("data-in", "");
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    groups.forEach((g) => Array.from(g.children).forEach((c) => io.observe(c)));
+  }
+</script>

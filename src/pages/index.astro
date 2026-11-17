@@ -1,0 +1,251 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProductArt from "../components/ProductArt.astro";
+import ProductCard from "../components/ProductCard.astro";
+import Icon from "../components/Icon.astro";
+import { site, wa, products, occasions, steps, faqs } from "../data/site";
+
+const bySlug = (s: string) => products.find((p) => p.slug === s)!;
+const tone: Record<string, string> = { lilac: "bg-lilac", rose: "bg-rose", butter: "bg-butter", mint: "bg-mint", peach: "bg-peach", sky: "bg-sky", sand: "bg-sand" };
+const featured = ["name-keychain", "lithophane-photo-lamp", "kenya-topographic-relief", "geometric-spiral-vase", "succulent-planter-set", "big-five-animal-set"].map(bySlug);
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: site.name,
+  legalName: site.businessName,
+  alternateName: "PrintHub Africa — A Niamade Hub Company",
+  url: site.url,
+  telephone: site.phone,
+  email: site.email,
+  image: `${site.url}/og.png`,
+  logo: `${site.url}/logo.png`,
+  priceRange: "KES 300 - KES 15,000",
+  currenciesAccepted: "KES",
+  paymentAccepted: ["M-Pesa", "Cash"],
+  description: "Made-to-order 3D printing in Eldoret, Kenya by PrintHub Africa, a Niamade Hub company: personalised gifts, branded business pieces, souvenirs and custom parts, with delivery across Kenya.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Eldoret",
+    addressRegion: "Uasin Gishu County",
+    addressCountry: "KE"
+  },
+  openingHoursSpecification: site.hoursSpec.map((h) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: h.days.map((d) => days[d]),
+    opens: h.open,
+    closes: h.close
+  })),
+  areaServed: [
+    { "@type": "Country", name: "Kenya" },
+    { "@type": "AdministrativeArea", name: "Uasin Gishu County" }
+  ],
+  sameAs: [site.googleBusinessProfile, ...site.socials.map((s) => s.href)],
+};
+---
+<Layout title="PrintHub Africa" jsonLd={ld}>
+  <!-- HERO -->
+  <section class="wrap pt-10 md:pt-16 pb-6 grid lg:grid-cols-12 gap-12 items-center">
+    <div class="lg:col-span-7">
+      <div style="--d:0ms" class="rise inline-flex items-center gap-2.5 rounded-full bg-card border border-line px-4 py-2 text-[0.95rem] font-semibold">
+        <span id="open-dot" class="w-2.5 h-2.5 rounded-full bg-mute/50"></span><span id="open-text">Eldoret · quotes on WhatsApp</span>
+      </div>
+      <p class="eyebrow rise mt-4 block">Custom 3D Printing & Fabrication · Kenya</p>
+      <h1 style="--d:60ms" class="rise mt-2 text-[clamp(2.5rem,5.6vw,4.4rem)]">
+        Ideas are cheap.
+        <span class="block italic text-brand">Making them real <span class="relative inline-block">is the hard part.<svg class="absolute left-0 -bottom-2 w-full h-3 text-coral" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8c20-8 30 6 50-1s30-7 50 0 30 7 50 0 30-6 46-1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span></span>
+      </h1>
+      <p style="--d:130ms" class="rise mt-7 text-xl text-mute max-w-xl">We design, engineer and manufacture custom 3D printed pieces, prototypes and dimensional branding. Based in Eldoret, delivered across Kenya.</p>
+      <div style="--d:200ms" class="rise mt-9 flex flex-wrap gap-3">
+        <a href="/shop/" class="btn btn-primary">Explore What We Do <Icon name="arrow" size={18} /></a>
+        <a href={wa("Hi PrintHub, I have something in mind.")} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Have Something in Mind?</a>
+      </div>
+      <ul style="--d:270ms" class="rise mt-9 flex flex-wrap gap-x-7 gap-y-3 text-[0.97rem] font-semibold text-mute">
+        <li class="flex items-center gap-2"><Icon name="mpesa" size={20} class="text-brand" />Pay with M-Pesa</li>
+        <li class="flex items-center gap-2"><Icon name="truck" size={20} class="text-brand" />Delivery across Kenya</li>
+        <li class="flex items-center gap-2"><Icon name="home" size={20} class="text-brand" />Made in Eldoret</li>
+      </ul>
+    </div>
+    <div class="lg:col-span-5 relative">
+      <div class="grid grid-cols-2 gap-4 md:gap-5 max-w-lg mx-auto lg:max-w-none">
+        <div class="space-y-4 md:space-y-5 pt-10">
+          <div style="--d:150ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="lithophane-photo-lamp" cat="Gifts" /></div>
+          <div style="--d:300ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="name-keychain" cat="Gifts" /></div>
+        </div>
+        <div class="space-y-4 md:space-y-5">
+          <div style="--d:220ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="geometric-spiral-vase" cat="Home & decor" /></div>
+          <div style="--d:370ms" class="rise rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="kenya-topographic-relief" cat="Kenya" /></div>
+        </div>
+      </div>
+      <div style="--d:520ms" class="rise absolute -top-3 -left-2 md:-left-5 w-28 h-28 md:w-32 md:h-32 rounded-full bg-butter border-4 border-white shadow-lg grid place-items-center text-center -rotate-6 font-display font-semibold leading-tight text-[0.95rem] md:text-base p-3">Made to order<br />in Eldoret</div>
+    </div>
+  </section>
+
+  <!-- OCCASIONS -->
+  <section class="wrap mt-24">
+    <div class="max-w-2xl"><p class="eyebrow">Shop by occasion</p><h2 class="mt-2 text-4xl md:text-5xl">What are you celebrating?</h2><p class="mt-4 text-mute text-lg">Start with the moment, and we will point you to something that fits.</p></div>
+    <div data-reveal-group class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {occasions.map((o) => { const pr = bySlug(o.art); return (
+        <a href={`/shop/?for=${o.id}`} class:list={["press lift group rounded-4xl overflow-hidden flex flex-col", tone[o.tone]]}>
+          <ProductArt slug={pr.slug} cat={pr.cat} class="!aspect-[5/4]" />
+          <div class="p-5"><h3 class="font-display text-xl">{o.label}</h3><p class="text-mute mt-1 text-[0.98rem]">{o.blurb}</p></div>
+        </a>); })}
+      <a href="/shop/" class="press lift group rounded-4xl bg-brand text-white p-6 flex flex-col justify-between min-h-[14rem]">
+        <span class="font-display text-3xl leading-tight">See everything in the shop</span>
+        <span class="inline-flex items-center gap-2 font-bold">Browse all {products.length} <Icon name="arrow" size={20} /></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FEATURED -->
+  <section class="wrap mt-24">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-2xl"><p class="eyebrow">From the shop</p><h2 class="mt-2 text-4xl md:text-5xl">Good places to start</h2></div>
+      <a href="/shop/" class="btn btn-soft">View all <Icon name="arrow" size={18} /></a>
+    </div>
+    <div data-reveal-group class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">{featured.map((p) => <ProductCard p={p} />)}</div>
+    <p class="mt-6 text-mute text-[0.97rem]">Prices are a guide. We confirm your exact price when we quote. Everything is printed to order, so colours and sizes can be changed.</p>
+  </section>
+
+  <!-- BUSINESS -->
+  <section class="wrap mt-24">
+    <div class="rounded-5xl bg-sky p-7 md:p-12 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <p class="eyebrow">For business</p>
+        <h2 class="mt-2 text-4xl md:text-5xl">Your brand deserves better than a blurry logo on cheap paper.</h2>
+        <p class="mt-4 text-lg text-ink/80">Raised 3D signs, weighted desk plates and custom hardware. Dimensional branding that your team and clients won't immediately throw in the bin.</p>
+        <ul class="mt-6 space-y-3 text-lg">
+          {["Dimensional logo signs for reception and shop fronts", "Precision desk nameplates for the team", "Custom hardware and giveaways people actually keep", "Architectural scale models for pitches and planning"].map((t) => <li class="flex gap-3"><Icon name="check" size={22} class="text-brand shrink-0 mt-0.5" />{t}</li>)}
+        </ul>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/for-business/" class="btn btn-ink">See what we make <Icon name="arrow" size={18} /></a>
+          <a href={wa("Hi PrintHub, I want our brand on something people won't throw away.")} target="_blank" rel="noopener" class="btn btn-soft"><Icon name="whatsapp" size={18} />Talk to us</a>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 max-w-md mx-auto md:max-w-none">
+        <div class="rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2 mt-6"><ProductArt slug="branded-logo-sign" cat="Business" /></div>
+        <div class="rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="custom-desk-nameplate" cat="Business" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="wrap mt-24" id="how">
+    <div class="max-w-2xl"><p class="eyebrow">How it works</p><h2 class="mt-2 text-4xl md:text-5xl">Three easy steps, mostly on WhatsApp.</h2></div>
+    <ol data-reveal-group class="mt-10 grid md:grid-cols-3 gap-5">
+      {steps.map((s) => (
+        <li class="panel p-7">
+          <span class="w-12 h-12 rounded-full bg-peach grid place-items-center font-display text-2xl font-semibold text-brand">{s.n}</span>
+          <h3 class="font-display text-2xl mt-5">{s.title}</h3>
+          <p class="text-mute mt-2">{s.text}</p>
+        </li>))}
+    </ol>
+  </section>
+
+  <!-- OWN IDEA -->
+  <section class="wrap mt-24">
+    <div class="max-w-2xl"><p class="eyebrow">Custom orders</p><h2 class="mt-2 text-4xl md:text-5xl">Bring a file. Or just an obsession.</h2></div>
+    <div data-reveal-group class="mt-10 grid md:grid-cols-2 gap-5">
+      <a href="/custom/#print" class="press lift group rounded-4xl bg-sky p-8 flex flex-col">
+        <h3 class="font-display text-3xl">I have a 3D file</h3>
+        <p class="mt-3 text-lg text-ink/80">Send your STEP, STL or 3MF. We check geometry, verify slice integrity, and quote upfront.</p>
+        <span class="mt-6 inline-flex items-center gap-2 font-bold text-brand">Print my file <Icon name="arrow" size={18} /></span>
+      </a>
+      <a href="/custom/#design" class="press lift group rounded-4xl bg-lilac p-8 flex flex-col">
+        <h3 class="font-display text-3xl">I only have an idea</h3>
+        <p class="mt-3 text-lg text-ink/80">A napkin sketch, caliper measurements, or a snapped plastic bracket. We model it to tolerance.</p>
+        <span class="mt-6 inline-flex items-center gap-2 font-bold text-brand">Design it for me <Icon name="arrow" size={18} /></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="wrap mt-24">
+    <div data-reveal-group class="grid md:grid-cols-3 gap-5">
+      {[
+        { icon: "whatsapp", t: "We interrogate the idea first", d: "What is it for? Where will it live? Which axis takes the load? We pick the right polymer before turning on the heaters." },
+        { icon: "check", t: "Finished with intention", d: "Layer lines are fine for prototypes, but for displays we sand, prime, smooth and paint until it looks injection-molded." },
+        { icon: "mpesa", t: "Pay the Kenyan way", d: "Clear prices in KES, zero hidden import fees, and payment by M-Pesa. Design is quoted separately from print so you always know." },
+      ].map((x) => (
+        <div class="rounded-4xl bg-sand p-7"><span class="w-12 h-12 rounded-2xl bg-card grid place-items-center text-brand"><Icon name={x.icon} size={24} /></span><h3 class="font-display text-2xl mt-5">{x.t}</h3><p class="text-mute mt-2">{x.d}</p></div>))}
+    </div>
+  </section>
+
+  <!-- STUDIO & CORPORATE ENDORSEMENT -->
+  <section class="wrap mt-24">
+    <div class="rounded-5xl bg-card border border-line p-8 md:p-11 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="max-w-2xl">
+        <p class="eyebrow">The Studio</p>
+        <p class="mt-2 text-lg md:text-xl text-ink/85 leading-relaxed font-display font-medium">
+          PrintHub Africa is part of <span class="font-bold text-ink">Niamade Hub</span>, a business focused on delivering innovative design, 3D printing, technology and custom manufacturing solutions.
+        </p>
+        <p class="mt-2 text-sm text-mute">
+          PrintHub Africa — A Niamade Hub Company
+        </p>
+      </div>
+      <a href="/about/" class="btn btn-soft shrink-0">About Niamade Hub <Icon name="arrow" size={18} /></a>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section class="wrap mt-24">
+    <div class="rounded-5xl bg-peach p-8 md:p-12 text-center">
+      <p class="eyebrow">Follow along</p>
+      <h2 class="mt-2 text-4xl md:text-5xl">See what we are printing this week.</h2>
+      <p class="mt-3 text-lg text-ink/75 max-w-xl mx-auto">New prints, work in progress and ideas for your next gift.</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        {site.socials.map((s) => <a href={s.href} target="_blank" rel="noopener" class="btn btn-soft !bg-white"><Icon name={s.id} size={20} />{s.label}</a>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wrap mt-24 grid lg:grid-cols-12 gap-10">
+    <div class="lg:col-span-4"><p class="eyebrow">Questions</p><h2 class="mt-2 text-4xl md:text-5xl">Good to know</h2><a href="/help/" class="btn btn-soft mt-7">All questions <Icon name="arrow" size={18} /></a></div>
+    <div class="lg:col-span-8">
+      {faqs.filter((f) => ["How do I get a quote?", "How do I pay?", "Do you deliver?", "How long will my order take?"].includes(f.q)).map((f) => (
+        <details class="group border-b border-line py-5">
+          <summary class="flex items-center justify-between gap-6 cursor-pointer font-display text-xl font-semibold">{f.q}<span class="plus text-2xl text-brand shrink-0" aria-hidden="true">+</span></summary>
+          <p class="mt-3 text-mute max-w-2xl">{f.a}</p>
+        </details>))}
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="wrap mt-24">
+    <div class="on-dark rounded-5xl bg-ink text-cream p-8 md:p-14 text-center">
+      <h2 class="text-4xl md:text-6xl text-cream">Got something in mind?</h2>
+      <p class="mt-4 text-cream/75 text-lg max-w-xl mx-auto">Send us a message, even if it is just a rough idea. We will help you shape it.</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href={wa()} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Chat on WhatsApp</a>
+        <a href={`tel:${site.phone.replace(/\s/g, "")}`} class="btn bg-white/10 text-cream hover:bg-white/20"><Icon name="phone" size={18} />{site.phone}</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+<script define:vars={{ spec: site.hoursSpec, tz: site.tz }}>
+  // Live status from the real opening hours, in Kenya time (so it is right wherever the visitor is).
+  (function () {
+    const dot = document.getElementById("open-dot"), txt = document.getElementById("open-text");
+    if (!dot || !txt) return;
+    const parts = new Intl.DateTimeFormat("en-GB", { timeZone: tz, weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date());
+    const g = (t) => parts.find((x) => x.type === t).value;
+    const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const day = names.indexOf(g("weekday"));
+    const now = (+g("hour") % 24) * 60 + +g("minute");
+    const mins = (hhmm) => +hhmm.slice(0, 2) * 60 + +hhmm.slice(3);
+    const today = spec.find((h) => h.days.includes(day));
+    if (today && now >= mins(today.open) && now < mins(today.close)) {
+      dot.className = "w-2.5 h-2.5 rounded-full bg-wa animate-pulse"; txt.textContent = "Open now · replying on WhatsApp";
+      return;
+    }
+    for (let i = 0; i < 8; i++) {
+      const d = (day + i) % 7, h = spec.find((x) => x.days.includes(d));
+      if (h && (i > 0 || now < mins(h.open))) {
+        const when = i === 0 ? "today" : i === 1 ? "tomorrow" : names[d];
+        txt.textContent = "Closed · reopens " + when + " " + h.open.replace(/^0/, "");
+        break;
+      }
+    }
+  })();
+</script>

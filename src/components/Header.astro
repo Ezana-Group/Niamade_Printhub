@@ -1,0 +1,51 @@
+---
+import { wa } from "../data/site";
+import Icon from "./Icon.astro";
+const { waMsg } = Astro.props;
+const path = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : Astro.url.pathname + "/";
+const nav = [
+  { href: "/shop/", label: "Shop" },
+  { href: "/for-business/", label: "For business" },
+  { href: "/custom/", label: "Custom orders" },
+  { href: "/help/", label: "Help" },
+  { href: "/contact/", label: "Contact" },
+];
+const on = (h: string) => path === h || path.startsWith(h);
+---
+<header class="sticky top-0 z-50 px-3 md:px-6 pt-3">
+  <div class="mx-auto max-w-6xl flex items-center justify-between gap-3 rounded-full hdr-glass bg-cream/90 backdrop-blur-xl border border-line shadow-[0_6px_24px_-14px_rgba(43,29,22,.35)] pl-4 pr-2 py-2">
+    <a href="/" aria-label="PrintHub Africa, home" class="flex items-center shrink-0">
+      <img src="/logo-horizontal.png" alt="PrintHub Africa" width="825" height="256" class="h-10 md:h-11 w-auto" />
+    </a>
+    <nav aria-label="Main" class="hidden lg:flex items-center gap-1 text-[0.97rem] font-semibold">
+      {nav.map((n) => <a href={n.href} aria-current={on(n.href) ? "page" : undefined} class:list={["px-4 py-2 rounded-full transition-colors duration-150 hover:bg-sand", on(n.href) && "bg-sand"]}>{n.label}</a>)}
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href={wa(waMsg)} target="_blank" rel="noopener" class="btn btn-wa !py-3 hidden sm:inline-flex"><Icon name="whatsapp" size={18} />Chat on WhatsApp</a>
+      <button id="mt" type="button" aria-expanded="false" aria-controls="mm" aria-label="Open menu" class="lg:hidden w-11 h-11 rounded-full bg-sand grid place-items-center active:scale-95 transition-transform duration-150">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path class="ico-top" d="M4 8h16"/><path class="ico-bot" d="M4 16h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mm" data-open="false" class="menu-panel hdr-glass absolute left-3 right-3 md:left-6 md:right-6 top-full mt-2 rounded-4xl bg-cream border border-line shadow-xl p-5 lg:hidden max-h-[80dvh] overflow-y-auto overscroll-contain">
+    <nav aria-label="Mobile">
+      {nav.map((n) => <a href={n.href} class="block py-3.5 border-b border-line font-display text-2xl font-semibold">{n.label}</a>)}
+      <a href="/about/" class="block py-3.5 border-b border-line font-display text-2xl font-semibold">About us</a>
+    </nav>
+    <a href={wa(waMsg)} target="_blank" rel="noopener" class="btn btn-wa w-full mt-5"><Icon name="whatsapp" size={18} />Chat on WhatsApp</a>
+    <p class="text-center text-xs text-mute/80 mt-4 border-t border-line pt-3">PrintHub Africa · A Niamade Hub Company</p>
+    <p class="text-center text-sm text-mute mt-1.5">Mon–Fri 8:00 – 18:00 · Sat 9:00 – 15:00</p>
+  </div>
+</header>
+<script>
+  const b = document.getElementById("mt")!, m = document.getElementById("mm")!;
+  const set = (open: boolean) => {
+    m.dataset.open = String(open);
+    b.setAttribute("aria-expanded", String(open));
+    b.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  };
+  b.addEventListener("click", () => set(m.dataset.open !== "true"));
+  m.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => set(false)));
+  document.addEventListener("keydown", (e) => e.key === "Escape" && set(false));
+  document.addEventListener("pointerdown", (e) => { if (m.dataset.open === "true" && !(e.target as Element).closest("header")) set(false); });
+</script>

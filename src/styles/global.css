@@ -1,0 +1,82 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 6.5rem; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; }
+  body { @apply bg-cream text-ink font-sans text-[1.0625rem] leading-relaxed min-h-screen flex flex-col; }
+  h1, h2, h3 { @apply font-display font-semibold; letter-spacing: -0.015em; text-wrap: balance; }
+  h1 { letter-spacing: -0.025em; line-height: 1.04; }
+  p, li { text-wrap: pretty; }
+  ::selection { @apply bg-coral text-ink; }
+  :focus-visible { outline: 3px solid #A6360A; outline-offset: 3px; border-radius: 0.5rem; }
+  .on-dark :focus-visible { outline-color: #FFC857; }
+}
+@layer components {
+  .wrap { @apply max-w-6xl mx-auto px-5 md:px-8; }
+  .eyebrow { @apply inline-block text-[0.8rem] font-bold uppercase tracking-[0.12em] text-brand; }
+  /* Press feedback is instant; colour and lift changes are quick ease-outs. */
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold leading-none whitespace-nowrap;
+    transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+    touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { @apply bg-brand text-white hover:bg-[#8A2D07]; }
+  .btn-wa { @apply bg-wa text-white hover:bg-[#0E6B32]; }
+  .btn-soft { @apply bg-card text-ink border-2 border-line hover:border-ink; }
+  .btn-ink { @apply bg-ink text-cream hover:bg-[#44302a]; }
+  .chip { @apply rounded-full border-2 border-line bg-card px-4 py-2 text-[0.95rem] font-semibold hover:border-ink;
+    transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out); touch-action: manipulation; }
+  button.chip:active { transform: scale(0.97); }
+  .chip[aria-pressed="true"] { @apply bg-ink text-cream border-ink; }
+  .panel { @apply rounded-4xl bg-card border border-line; }
+  .field { @apply w-full rounded-2xl border-2 border-line bg-card px-4 py-3 text-base focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/15; transition: border-color 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
+  .field[aria-invalid="true"] { border-color: #B42318; }
+  .lbl { @apply block text-sm font-bold mb-1.5; }
+  .err { @apply text-sm mt-1.5 font-semibold; color: #B42318; }
+  .press { transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out); }
+  .press:active { transform: scale(0.985); }
+  .lift { transition: transform 240ms var(--ease-out), box-shadow 240ms var(--ease-out); }
+  @media (hover: hover) { .lift:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(43,29,22,.35); } }
+  .sticker { @apply inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-bold bg-butter text-ink; }
+}
+
+/* ---- Product illustrations ---- */
+.art .a { fill: var(--a); } .art .b { fill: var(--b); } .art .c { fill: var(--c); }
+.art .k { fill: #2B1D16; } .art .w { fill: #FFFDF8; }
+.art .s, .art .sc, .art .sw { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.art .s { stroke: #2B1D16; } .art .sc { stroke: var(--c); } .art .sw { stroke: #FFFDF8; }
+.art .sh { fill: #2B1D16; opacity: 0.09; }
+/* second copy of the artwork painted with thin horizontal lines = the "printed layers" look */
+.art .tex * { fill: url(#layers) !important; stroke: none; }
+.art .tex .s, .art .tex .sc, .art .tex .sw, .art .tex .n, .art .tex .sh { display: none; }
+.art svg { transition: transform 360ms var(--ease-out); }
+@media (hover: hover) { a:hover .art svg { transform: scale(1.05) rotate(-1.5deg); } }
+
+/* ---- Entrances ---- */
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+.rise { animation: rise 560ms var(--ease-out) backwards; animation-delay: var(--d, 0ms); } /* backwards fill: nothing lingers, so :active still works */
+.js [data-reveal-group] > :not([data-in]) { opacity: 0; } /* .js is only set in <head> when motion is allowed */
+
+/* ---- Menus ---- */
+.menu-panel { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-8px) scale(0.98); transform-origin: top right;
+  transition: opacity 140ms var(--ease-out), transform 140ms var(--ease-out), visibility 0s linear 140ms; }
+.menu-panel[data-open="true"] { opacity: 1; visibility: visible; pointer-events: auto; transform: none;
+  transition: opacity 220ms var(--ease-out), transform 260ms var(--ease-drawer), visibility 0s; }
+.ico-top, .ico-bot { transform-box: view-box; transform-origin: 12px 12px; transition: transform 220ms var(--ease-out); }
+[aria-expanded="true"] .ico-top { transform: rotate(45deg) translateY(4px); }
+[aria-expanded="true"] .ico-bot { transform: rotate(-45deg) translateY(-4px); }
+details > summary { list-style: none; } details > summary::-webkit-details-marker { display: none; }
+details .plus { transition: transform 220ms var(--ease-out); } details[open] .plus { transform: rotate(45deg); }
+
+/* ---- Preferences ---- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise, .animate-pulse { animation: none; }
+  .menu-panel { transform: none; transition: opacity 120ms linear, visibility 0s; }
+  .ico-top, .ico-bot, details .plus, .art svg { transition: none; }
+  .btn:active, .press:active, button.chip:active { transform: none; }
+  .lift:hover, a:hover .art svg { transform: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) { .hdr-glass { background: #FFF8EE; backdrop-filter: none; -webkit-backdrop-filter: none; } }
+@media (prefers-contrast: more) { .panel, .chip, .field { border-color: #2B1D16; } }

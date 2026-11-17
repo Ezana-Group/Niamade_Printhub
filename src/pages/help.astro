@@ -1,0 +1,33 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+import { faqs, wa } from "../data/site";
+const groups = [...new Set(faqs.map((f) => f.group))];
+const id = (g: string) => g.toLowerCase().replace(/[^a-z]+/g, "-");
+const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
+---
+<Layout title="Help & FAQs" jsonLd={ld} description="Answers about ordering, paying by M-Pesa, delivery across Kenya, materials and caring for your 3D print.">
+  <section class="wrap pt-10 md:pt-14">
+    <p class="eyebrow rise">Help</p>
+    <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl">Questions, answered.</h1>
+    <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">Ordering, paying, delivery and looking after your print. Can't find it? Message us and we will reply.</p>
+    <nav aria-label="Jump to a topic" class="mt-8 flex flex-wrap gap-2.5">{groups.map((g) => <a href={`#${id(g)}`} class="chip">{g}</a>)}</nav>
+    <div class="mt-12 space-y-14">
+      {groups.map((g) => (
+        <div id={id(g)} class="grid lg:grid-cols-12 gap-6">
+          <h2 class="lg:col-span-4 text-3xl md:text-4xl">{g}</h2>
+          <div class="lg:col-span-8">
+            {faqs.filter((f) => f.group === g).map((f) => (
+              <details class="border-b border-line py-5">
+                <summary class="flex items-center justify-between gap-6 cursor-pointer font-display text-xl font-semibold">{f.q}<span class="plus text-2xl text-brand shrink-0" aria-hidden="true">+</span></summary>
+                <p class="mt-3 text-mute max-w-2xl">{f.a}</p>
+              </details>))}
+          </div>
+        </div>))}
+    </div>
+    <div class="mt-16 rounded-5xl bg-peach p-8 md:p-10 flex flex-wrap items-center justify-between gap-6">
+      <div class="max-w-xl"><h2 class="text-3xl md:text-4xl">Still wondering?</h2><p class="mt-2 text-lg text-ink/80">Ask us anything on WhatsApp and we will reply during opening hours.</p></div>
+      <a href={wa("Hi PrintHub, I have a question.")} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Ask on WhatsApp</a>
+    </div>
+  </section>
+</Layout>
