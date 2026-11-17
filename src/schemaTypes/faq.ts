@@ -9,9 +9,7 @@ export const faqType = defineType({
       name: 'group',
       title: 'Group / Category',
       type: 'string',
-      options: {
-        list: ['Ordering', 'Payment', 'Delivery', 'Materials & care'],
-      },
+      description: 'e.g. Ordering, Payment, Delivery, Materials & care, or type any category you want',
       validation: (rule) => rule.required(),
     }),
     defineField({

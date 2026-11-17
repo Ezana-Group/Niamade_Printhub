@@ -138,7 +138,7 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     _id,
     name,
     "slug": slug.current,
-    category,
+    "category": coalesce(category->title, category, "Home & decor"),
     price,
     note,
     material,

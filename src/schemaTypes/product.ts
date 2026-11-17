@@ -24,20 +24,9 @@ export const productType = defineType({
     defineField({
       name: 'category',
       title: 'Category',
-      type: 'string',
-      options: {
-        list: [
-          'Home & decor',
-          'Desk & tech',
-          'Kenya',
-          'Gifts',
-          'Business',
-          'Prototypes',
-          'Education',
-          'Parts',
-          'Toys & fun',
-        ],
-      },
+      type: 'reference',
+      to: [{ type: 'category' }],
+      description: 'Select an existing category or create a new one directly here',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -71,16 +60,9 @@ export const productType = defineType({
       type: 'array',
       of: [{ type: 'string' }],
       options: {
-        list: [
-          { title: 'Birthdays & gifts', value: 'gift' },
-          { title: 'Weddings & events', value: 'events' },
-          { title: 'Business & branding', value: 'business' },
-          { title: 'Kenya souvenirs', value: 'kenya' },
-          { title: 'Home & office', value: 'home' },
-          { title: 'Schools & learning', value: 'learn' },
-          { title: 'Parts & prototypes', value: 'parts' },
-        ],
+        layout: 'tags',
       },
+      description: 'Add or remove tags freely. Type any tag (e.g. gift, events, business, kenya, home, learn, parts) and press Enter to add.',
     }),
     defineField({
       name: 'blurb',

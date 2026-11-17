@@ -1,4 +1,5 @@
 import { productType } from './product'
+import { categoryType } from './category'
 import { faqType } from './faq'
 import { siteSettingsType } from './siteSettings'
 import { legalPageType } from './legalPage'
@@ -9,11 +10,12 @@ import { occasionType } from './occasion'
 
 export const schemaTypes = [
   productType,
+  categoryType,
+  occasionType,
   faqType,
   siteSettingsType,
-  legalPageType,
   pageContentType,
   materialType,
   serviceType,
-  occasionType,
+  legalPageType,
 ]
