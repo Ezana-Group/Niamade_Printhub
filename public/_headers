@@ -1,4 +1,13 @@
-# Force-clear Sveltia CMS cached assets on /admin
+# Force-clear all cached service workers and bundles on /admin without clearing auth storage
+/admin
+  Clear-Site-Data: "cache"
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/admin/
+  Clear-Site-Data: "cache"
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /admin/*
   Clear-Site-Data: "cache"
   Cache-Control: no-cache, no-store, must-revalidate
+
