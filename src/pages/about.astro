@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
-import { site, wa } from "../data/site";
+import { site, wa, waMessages } from "../data/site";
 const values = [
   { t: "We ask questions first", d: "What is it for? Where will it live? Which axis takes the load? We pick the right polymer before turning on the heaters.", tone: "bg-peach" },
   { t: "No price guesswork", d: "You get an upfront quote in KES before committing. Design work is quoted first, then physical manufacturing.", tone: "bg-sky" },
@@ -38,7 +38,7 @@ const ld = {
       <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl">We turn digital geometry into physical things.</h1>
       <p style="--d:120ms" class="rise mt-5 text-xl text-mute max-w-2xl">PrintHub Africa is a design and custom fabrication studio in Eldoret, operated by Niamade Hub. We solve real-world problems with additive manufacturing, high-strength polymers, and practical engineering.</p>
       <p style="--d:170ms" class="rise mt-4 text-lg text-mute max-w-2xl">From obsolete replacement gears to brand signs that demand attention: we build things that actually last, delivered across Kenya.</p>
-      <div style="--d:220ms" class="rise mt-8 flex flex-wrap gap-3"><a href={wa("Hi PrintHub, I'd like to talk about a project.")} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Say hello on WhatsApp</a><a href="/shop/" class="btn btn-soft">Explore what we do</a></div>
+      <div style="--d:220ms" class="rise mt-8 flex flex-wrap gap-3"><a href={wa(waMessages.general)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Say hello on WhatsApp</a><a href="/shop/" class="btn btn-soft">Explore what we do</a></div>
     </div>
     <div class="lg:col-span-5 flex justify-center"><div class="rounded-5xl bg-butter p-10 md:p-14 -rotate-2 shadow-xl border-4 border-white"><img src="/logo-mark.png" alt="PrintHub Africa logo mark - A Niamade Hub Company" width="750" height="903" class="h-56 md:h-72 w-auto" /></div></div>
   </section>

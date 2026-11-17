@@ -18,6 +18,7 @@ export interface SanityProduct {
   sizes?: string[];
   colours?: string[];
   customizationPrompt?: string;
+  waMessage?: string;
   photos?: string[];
 }
 
@@ -27,6 +28,14 @@ export interface SanityFaq {
   a: string;
 }
 
+export interface SanityWhatsAppMessages {
+  general?: string;
+  customFile?: string;
+  customIdea?: string;
+  business?: string;
+  help?: string;
+}
+
 export interface SanitySettings {
   name?: string;
   phone?: string;
@@ -34,6 +43,7 @@ export interface SanitySettings {
   email?: string;
   city?: string;
   hours?: string[];
+  whatsappMessages?: SanityWhatsAppMessages;
 }
 
 export interface SanityLegalPage {
@@ -140,6 +150,7 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     sizes,
     colours,
     customizationPrompt,
+    waMessage,
     photos
   }`);
 
@@ -180,6 +191,7 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
         sizes: Array.isArray(item.sizes) ? item.sizes : undefined,
         colours: Array.isArray(item.colours) ? item.colours : undefined,
         customizationPrompt: item.customizationPrompt || undefined,
+        waMessage: item.waMessage || undefined,
         photos: photos.length ? photos : undefined,
       };
     });
@@ -220,7 +232,8 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     whatsapp,
     email,
     city,
-    hours
+    hours,
+    whatsappMessages
   }`);
 
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;

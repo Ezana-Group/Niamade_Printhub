@@ -2,10 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import ProductCard from "../components/ProductCard.astro";
 import Icon from "../components/Icon.astro";
-import { site, products, wa } from "../data/site";
+import { site, products, wa, waMessages } from "../data/site";
 const slugs = ["branded-logo-sign", "custom-desk-nameplate", "name-keychain", "cable-desk-organiser", "architectural-scale-model", "rapid-prototype-print"];
 const list = slugs.map((s) => products.find((p) => p.slug === s)!);
-const msg = "Hi PrintHub, I want our brand on something people won't throw away. I need a quote for custom business pieces.";
+const msg = waMessages.business;
 const send = ["Your logo as a vector file (SVG, AI, PDF) or high-res image", "Your hex brand colours", "Quantity needed (larger batches cost less per piece)", "Where they will live (indoor reception, outdoor facade, desk)", "Names and titles, if it's for a team roster"];
 const biz = [
   { n: "Send your brief", t: "Share what you have on WhatsApp. Vector files are ideal; napkin sketches also work. We will ask for whatever is missing." },

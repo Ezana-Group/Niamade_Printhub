@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
-import { faqs, wa } from "../data/site";
+import { faqs, wa, waMessages } from "../data/site";
 const groups = [...new Set(faqs.map((f) => f.group))];
 const id = (g: string) => g.toLowerCase().replace(/[^a-z]+/g, "-");
 const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
@@ -27,7 +27,7 @@ const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: f
     </div>
     <div class="mt-16 rounded-5xl bg-peach p-8 md:p-10 flex flex-wrap items-center justify-between gap-6">
       <div class="max-w-xl"><h2 class="text-3xl md:text-4xl">Still wondering?</h2><p class="mt-2 text-lg text-ink/80">Ask us anything on WhatsApp and we will reply during opening hours.</p></div>
-      <a href={wa("Hi PrintHub, I have a question.")} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Ask on WhatsApp</a>
+      <a href={wa(waMessages.help)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Ask on WhatsApp</a>
     </div>
   </section>
 </Layout>

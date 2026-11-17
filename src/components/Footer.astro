@@ -1,5 +1,5 @@
 ---
-import { site, wa, occasions } from "../data/site";
+import { site, wa, waMessages, occasions } from "../data/site";
 import Icon from "./Icon.astro";
 ---
 <footer id="footer" class="on-dark bg-ink text-cream mt-24">
@@ -11,7 +11,7 @@ import Icon from "./Icon.astro";
         <p class="font-bold text-xs uppercase tracking-[0.14em] text-cream">Niamade Hub</p>
         <p class="text-sm text-cream/75 mt-1">PrintHub Africa is a trading brand operated by Niamade Hub.</p>
       </div>
-      <a href={wa()} target="_blank" rel="noopener" class="btn btn-wa mt-6"><Icon name="whatsapp" size={18} />Chat on WhatsApp</a>
+      <a href={wa(waMessages.general)} target="_blank" rel="noopener" class="btn btn-wa mt-6"><Icon name="whatsapp" size={18} />Chat on WhatsApp</a>
       <ul class="mt-7 flex gap-3" aria-label="Social media">
         {site.socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener" aria-label={`${s.label}: ${s.handle}`} class="w-11 h-11 rounded-full bg-white/10 grid place-items-center transition-[background-color,transform] duration-150 hover:bg-white/20 active:scale-95"><Icon name={s.id} size={20} /></a></li>)}
       </ul>

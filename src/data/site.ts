@@ -56,6 +56,15 @@ export const site = {
 
 export const wa = (msg = "Hi PrintHub, I'd like to ask about a 3D print.") => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;
 
+// WhatsApp message templates — editable in Sanity Studio → Site Settings → WhatsApp Message Templates
+export const waMessages = {
+  general:     _sanitySettings?.whatsappMessages?.general     || "Hi PrintHub, I'd like to ask about a 3D print.",
+  customFile:  _sanitySettings?.whatsappMessages?.customFile  || "Hi PrintHub, I have a 3D file ready for slicing analysis and quote.",
+  customIdea:  _sanitySettings?.whatsappMessages?.customIdea  || "Hi PrintHub, I have an idea and need it designed and manufactured.",
+  business:    _sanitySettings?.whatsappMessages?.business    || "Hi PrintHub, I need a quote for custom business pieces.",
+  help:        _sanitySettings?.whatsappMessages?.help        || "Hi PrintHub, I have a question.",
+};
+
 // Shop-by-occasion groups. `art` is the product whose illustration represents the group.
 export const occasions = [
   { id: "gift", label: "Birthdays & gifts", blurb: "Keepsakes with a name, a photo or a joke on them.", art: "lithophane-photo-lamp", tone: "lilac" },
