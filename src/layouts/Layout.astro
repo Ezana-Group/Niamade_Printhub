@@ -48,6 +48,18 @@ const websiteLd = {
     <link rel="icon" type="image/png" sizes="32x32" href="/logo-mark.png?v=3" />
     <link rel="apple-touch-icon" href="/logo-mark.png?v=3" />
     <link rel="canonical" href={canonical} />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var r of regs) r.unregister();
+        });
+      }
+      try {
+        localStorage.removeItem('sveltia-cms.user');
+        localStorage.removeItem('decap-cms-user');
+        localStorage.removeItem('netlify-cms-user');
+      } catch(e) {}
+    </script>
     <meta property="og:type" content="website" /><meta property="og:site_name" content="PrintHub Africa" /><meta property="og:locale" content="en_KE" />
     <meta property="og:title" content={full} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={full} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={ogImage} />

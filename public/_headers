@@ -1,0 +1,4 @@
+# Force-clear Sveltia CMS cached assets on /admin
+/admin/*
+  Clear-Site-Data: "cache"
+  Cache-Control: no-cache, no-store, must-revalidate
