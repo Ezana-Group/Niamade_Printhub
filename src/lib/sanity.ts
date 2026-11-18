@@ -213,7 +213,7 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
 }
 
 export async function fetchFaqsFromSanity(): Promise<SanityFaq[] | null> {
-  const query = encodeURIComponent(`*[_type == "faq"] | order(order asc){
+  const query = encodeURIComponent(`*[_type == "faq" && !(_id in path("drafts.**"))] | order(order asc){
     group,
     "q": question,
     "a": answer
@@ -226,11 +226,19 @@ export async function fetchFaqsFromSanity(): Promise<SanityFaq[] | null> {
     if (!res.ok) return null;
     const { result } = await res.json();
     if (!Array.isArray(result) || !result.length) return null;
-    return result.map((f: any) => ({
-      group: f.group,
-      q: f.q,
-      a: typeof f.a === "string" ? f.a : (blocksToHtml(f.a) || blocksToPlainText(f.a) || ""),
-    }));
+
+    const seen = new Set<string>();
+    const faqs: SanityFaq[] = [];
+    for (const f of result) {
+      if (!f.q || seen.has(f.q)) continue;
+      seen.add(f.q);
+      faqs.push({
+        group: f.group,
+        q: f.q,
+        a: typeof f.a === "string" ? f.a : (blocksToHtml(f.a) || blocksToPlainText(f.a) || ""),
+      });
+    }
+    return faqs;
   } catch (err) {
     return null;
   }
