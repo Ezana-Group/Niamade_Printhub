@@ -4,6 +4,7 @@ export const legalPageType = defineType({
   name: 'legalPage',
   title: 'Legal Pages',
   type: 'document',
+  icon: () => '⚖️',
   fields: [
     defineField({
       name: 'title',

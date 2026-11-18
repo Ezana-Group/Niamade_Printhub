@@ -4,6 +4,7 @@ export const siteSettingsType = defineType({
   name: 'siteSettings',
   title: 'Business & Brand Settings',
   type: 'document',
+  icon: () => '⚙️',
   fields: [
     defineField({
       name: 'name',

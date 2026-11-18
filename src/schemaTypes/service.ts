@@ -4,6 +4,7 @@ export const serviceType = defineType({
   name: 'service',
   title: 'Services & Capabilities',
   type: 'document',
+  icon: () => '🛠️',
   fields: [
     defineField({
       name: 'title',

@@ -4,6 +4,7 @@ export const pageContentType = defineType({
   name: 'pageContent',
   title: 'Page Content',
   type: 'document',
+  icon: () => '📝',
   fields: [
     defineField({
       name: 'page',

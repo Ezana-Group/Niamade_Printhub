@@ -4,6 +4,7 @@ export const occasionType = defineType({
   name: 'occasion',
   title: 'Occasions & Gift Guides',
   type: 'document',
+  icon: () => '🏷️',
   fields: [
     defineField({
       name: 'label',

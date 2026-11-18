@@ -4,6 +4,7 @@ export const materialType = defineType({
   name: 'material',
   title: 'Materials Guide',
   type: 'document',
+  icon: () => '🧪',
   fields: [
     defineField({
       name: 'name',
