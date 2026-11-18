@@ -11,6 +11,11 @@ export interface SanityProduct {
   originalPrice?: string;
   discountBadge?: string;
   onSale?: boolean;
+  isCollab?: boolean;
+  creatorName?: string;
+  creatorUrl?: string;
+  externalPurchaseUrl?: string;
+  purchaseAction?: "whatsapp" | "external" | "both";
   note: string;
   material: string;
   finish: string;
@@ -149,6 +154,11 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     originalPrice,
     discountBadge,
     onSale,
+    isCollab,
+    creatorName,
+    creatorUrl,
+    externalPurchaseUrl,
+    purchaseAction,
     note,
     material,
     finish,
@@ -192,6 +202,11 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
         originalPrice: item.originalPrice || undefined,
         discountBadge: item.discountBadge || (item.originalPrice ? "Sale" : undefined),
         onSale: Boolean(item.onSale || item.originalPrice),
+        isCollab: Boolean(item.isCollab),
+        creatorName: item.creatorName || undefined,
+        creatorUrl: item.creatorUrl || undefined,
+        externalPurchaseUrl: item.externalPurchaseUrl || undefined,
+        purchaseAction: item.purchaseAction || (item.externalPurchaseUrl ? "external" : "whatsapp"),
         note: item.note || "",
         material: item.material || "PLA",
         finish: item.finish || "Smooth",

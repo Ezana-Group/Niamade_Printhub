@@ -199,12 +199,65 @@ export const productType = defineType({
         },
       ],
     }),
+    defineField({
+      name: 'isCollab',
+      title: 'Client / Creator Collaboration',
+      type: 'boolean',
+      description: 'Toggle on if this product is made for a featured customer, creator, or brand partner',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'creatorName',
+      title: 'Creator / Brand Name',
+      type: 'string',
+      description: 'The name of the customer, brand, or creator (e.g. "Kiprono Studios", "AfroCrafts")',
+      hidden: ({ parent }) => !parent?.isCollab,
+    }),
+    defineField({
+      name: 'creatorUrl',
+      title: 'Creator Website / Social Profile',
+      type: 'url',
+      description: 'Optional link to the creator\'s portfolio, homepage, or Instagram profile',
+      hidden: ({ parent }) => !parent?.isCollab,
+    }),
+    defineField({
+      name: 'externalPurchaseUrl',
+      title: 'External Store / Checkout URL',
+      type: 'url',
+      description: 'Link directly to the customer\'s e-commerce store / product page (e.g. Shopify, website, or Instagram post)',
+      hidden: ({ parent }) => !parent?.isCollab,
+    }),
+    defineField({
+      name: 'purchaseAction',
+      title: 'Purchase Button Action',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Redirect to Creator Store (External URL)', value: 'external' },
+          { title: 'Order via PrintHub WhatsApp (We print & fulfill)', value: 'whatsapp' },
+          { title: 'Both (Primary button to Creator Store + secondary WhatsApp inquiry)', value: 'both' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'external',
+      description: 'How visitors can purchase this product',
+      hidden: ({ parent }) => !parent?.isCollab,
+    }),
   ],
   preview: {
     select: {
       title: 'name',
       subtitle: 'price',
+      creator: 'creatorName',
+      isCollab: 'isCollab',
       media: 'photos.0',
+    },
+    prepare({ title, subtitle, creator, isCollab, media }) {
+      return {
+        title,
+        subtitle: isCollab && creator ? `${subtitle} · Collab with ${creator}` : subtitle,
+        media,
+      }
     },
   },
 })

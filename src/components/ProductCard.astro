@@ -2,7 +2,9 @@
 import ProductArt from "./ProductArt.astro";
 import Icon from "./Icon.astro";
 const { p, filterable = false } = Astro.props;
-const allTags = p.onSale ? [...p.tags, "sale"] : p.tags;
+let allTags = [...(p.tags || [])];
+if (p.onSale) allTags.push("sale");
+if (p.isCollab) allTags.push("collab");
 ---
 <a href={`/shop/${p.slug}/`} data-tags={filterable ? allTags.join(" ") : undefined} class="press lift group panel overflow-hidden flex flex-col h-full">
   <div class="relative overflow-hidden">
@@ -12,6 +14,11 @@ const allTags = p.onSale ? [...p.tags, "sale"] : p.tags;
     {(p.discountBadge || p.onSale) && (
       <span class="absolute top-3 left-3 z-10 rounded-full bg-brand text-white font-bold text-xs uppercase tracking-wider px-3 py-1 shadow-md">
         {p.discountBadge || "Sale"}
+      </span>
+    )}
+    {p.isCollab && (
+      <span class="absolute top-3 right-3 z-10 rounded-full bg-ink/80 backdrop-blur-sm text-cream font-semibold text-[0.72rem] px-2.5 py-1 shadow-sm">
+        {p.creatorName ? `Collab · ${p.creatorName}` : "Collab"}
       </span>
     )}
   </div>

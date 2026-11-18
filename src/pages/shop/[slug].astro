@@ -87,6 +87,18 @@ const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell
       <div>
         <p class="eyebrow">{p.cat}</p>
         <h1 class="mt-2 text-4xl md:text-5xl">{p.name}</h1>
+        {p.isCollab && p.creatorName && (
+          <div class="mt-2.5 flex items-center gap-2 text-sm text-ink/75">
+            <span class="rounded-full bg-sand px-2.5 py-0.5 font-bold uppercase text-[0.7rem] text-ink/80 tracking-wider">Creator Collab</span>
+            <span>Crafted by PrintHub for {p.creatorUrl ? (
+              <a href={p.creatorUrl} target="_blank" rel="noopener" class="font-semibold text-brand hover:underline inline-flex items-center gap-0.5">
+                {p.creatorName} <span class="text-xs">↗</span>
+              </a>
+            ) : (
+              <strong class="font-semibold text-ink">{p.creatorName}</strong>
+            )}</span>
+          </div>
+        )}
         <p class="mt-5 flex items-baseline gap-3 flex-wrap">
           <span class="font-display text-4xl font-semibold text-brand">{p.price}</span>
           {p.originalPrice && (
@@ -135,8 +147,20 @@ const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell
         )}
 
         <div class="mt-6"><p class="text-sm font-bold">Lovely for</p><ul class="mt-2 flex flex-wrap gap-2">{p.uses.map((u: string) => <li class="rounded-full bg-sand px-4 py-1.5 text-[0.95rem] font-semibold">{u}</li>)}</ul></div>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a id="wa-order-btn" href={wa(orderMsg)} target="_blank" rel="noopener" class="btn btn-wa" data-base-name={p.name} data-base-price={p.price} data-wa-template={p.waMessage || ""}><Icon name="whatsapp" size={20} />Order on WhatsApp</a>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          {p.externalPurchaseUrl && (p.purchaseAction === 'external' || p.purchaseAction === 'both') ? (
+            <a href={p.externalPurchaseUrl} target="_blank" rel="noopener" class="btn !bg-ink !text-cream hover:!bg-black flex items-center gap-2 shadow-sm">
+              Buy on {p.creatorName || "Creator's Store"} ↗
+            </a>
+          ) : null}
+
+          {(p.purchaseAction === 'whatsapp' || p.purchaseAction === 'both' || !p.externalPurchaseUrl) && (
+            <a id="wa-order-btn" href={wa(orderMsg)} target="_blank" rel="noopener" class="btn btn-wa" data-base-name={p.name} data-base-price={p.price} data-wa-template={p.waMessage || ""}>
+              <Icon name="whatsapp" size={20} />
+              {p.externalPurchaseUrl && p.purchaseAction === 'both' ? 'Order Batch via WhatsApp' : 'Order on WhatsApp'}
+            </a>
+          )}
+
           <a href="/custom/" class="btn btn-soft">Want it changed?</a>
         </div>
         <dl class="mt-9 panel divide-y divide-line">
@@ -146,6 +170,15 @@ const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell
           <div class="mt-5 rounded-3xl bg-butter px-6 py-4 text-ink/85 prose">
             <p class="font-bold not-prose mb-1">Good to know:</p>
             <div set:html={p.care} />
+          </div>
+        )}
+        {p.isCollab && (
+          <div class="mt-5 rounded-3xl bg-sand/60 border border-line p-5 flex flex-wrap items-center justify-between gap-4">
+            <div class="max-w-md">
+              <p class="font-bold text-sm text-ink">Have a product you want manufactured?</p>
+              <p class="text-xs text-mute mt-0.5">We help designers, businesses, and creators produce retail-ready pieces and small-batch runs.</p>
+            </div>
+            <a href="/for-business/" class="btn btn-soft !py-2 !px-4 text-xs font-bold">Print with us →</a>
           </div>
         )}
       </div>

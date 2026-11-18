@@ -32,6 +32,9 @@ const ld = {
       {products.some((p: any) => p.onSale) && (
         <button type="button" class="chip font-bold !text-brand border !border-brand/30 hover:!bg-brand hover:!text-white" data-f="sale" aria-pressed="false">🔥 Offers & Sale</button>
       )}
+      {products.some((p: any) => p.isCollab) && (
+        <button type="button" class="chip font-semibold !text-ink border !border-ink/20 hover:!bg-ink hover:!text-cream transition-colors" data-f="collab" aria-pressed="false">🤝 Creator Collabs</button>
+      )}
       {occasions.map((o) => <button type="button" class="chip" data-f={o.id} aria-pressed="false">{o.label}</button>)}
     </div>
     <p id="count" class="mt-4 text-mute" role="status" aria-live="polite">Showing all {products.length} pieces</p>
