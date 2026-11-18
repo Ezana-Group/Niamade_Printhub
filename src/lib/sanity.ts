@@ -52,6 +52,8 @@ export interface SanitySettings {
   city?: string;
   hours?: string[];
   whatsappMessages?: SanityWhatsAppMessages;
+  paystackPublicKey?: string;
+  enableCheckout?: boolean;
 }
 
 export interface SanityLegalPage {
@@ -267,7 +269,9 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     email,
     city,
     hours,
-    whatsappMessages
+    whatsappMessages,
+    paystackPublicKey,
+    enableCheckout
   }`);
 
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;

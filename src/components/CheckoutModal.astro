@@ -1,0 +1,360 @@
+---
+/**
+ * CheckoutModal.astro
+ * Client-side Paystack checkout modal for PrintHub Africa.
+ * Usage: <CheckoutModal paystackKey="pk_live_..." />
+ * Triggered by any element with data-checkout="true" on the page.
+ *
+ * Paystack handles:
+ *   - Card payments (Visa, Mastercard)
+ *   - M-Pesa STK Push (Kenya mobile money)
+ *
+ * No backend required — Paystack popup is fully client-side.
+ * Order details are posted to PrintHub's WhatsApp after successful payment.
+ */
+interface Props {
+  paystackKey: string;
+}
+const { paystackKey } = Astro.props;
+---
+
+<!-- Checkout Modal Overlay -->
+<div
+  id="checkout-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="checkout-title"
+  class="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4"
+  style="display:none!important"
+>
+  <!-- Backdrop -->
+  <div id="checkout-backdrop" class="absolute inset-0 bg-ink/50 backdrop-blur-sm" aria-hidden="true"></div>
+
+  <!-- Panel -->
+  <div class="relative w-full sm:max-w-lg bg-cream rounded-t-4xl sm:rounded-5xl shadow-2xl overflow-y-auto max-h-[92dvh] sm:max-h-[90vh]">
+    <!-- Header -->
+    <div class="sticky top-0 bg-cream/95 backdrop-blur-sm flex items-center justify-between px-6 py-4 border-b border-line z-10">
+      <div>
+        <h2 id="checkout-title" class="font-display text-xl font-semibold">Complete your order</h2>
+        <p id="checkout-product-label" class="text-sm text-mute mt-0.5"></p>
+      </div>
+      <button
+        id="checkout-close"
+        type="button"
+        aria-label="Close checkout"
+        class="w-9 h-9 rounded-full hover:bg-sand flex items-center justify-center transition-colors text-mute"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form id="checkout-form" class="px-6 py-5 space-y-4" novalidate>
+      <!-- Order details (read-only summary) -->
+      <div id="order-detail-block" class="rounded-3xl bg-sand/70 p-4 text-sm space-y-1.5"></div>
+
+      <hr class="border-line" />
+
+      <!-- Customer details -->
+      <div>
+        <label class="block text-sm font-bold mb-1" for="co-name">Your name <span class="text-brand">*</span></label>
+        <input
+          type="text"
+          id="co-name"
+          name="name"
+          autocomplete="name"
+          required
+          placeholder="e.g. Amina Waweru"
+          class="w-full rounded-2xl border border-line bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-1" for="co-email">Email address <span class="text-brand">*</span></label>
+        <input
+          type="email"
+          id="co-email"
+          name="email"
+          autocomplete="email"
+          required
+          placeholder="e.g. amina@example.com"
+          class="w-full rounded-2xl border border-line bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+        <p class="mt-1 text-xs text-mute">Your Paystack receipt will be sent here.</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-1" for="co-phone">Phone number <span class="text-brand">*</span></label>
+        <input
+          type="tel"
+          id="co-phone"
+          name="phone"
+          autocomplete="tel"
+          required
+          placeholder="e.g. 0712 345 678"
+          class="w-full rounded-2xl border border-line bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+        <p class="mt-1 text-xs text-mute">For M-Pesa STK Push — your phone will prompt you to enter your PIN.</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-1" for="co-delivery">Delivery Town / Collection</label>
+        <input
+          type="text"
+          id="co-delivery"
+          name="delivery"
+          placeholder="e.g. Nairobi, Mombasa, or Free collection in Eldoret"
+          class="w-full rounded-2xl border border-line bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+        <p class="mt-1 text-xs text-mute">Courier across Kenya charged at cost, or free pickup in Eldoret.</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-1" for="co-qty">Quantity</label>
+        <input
+          type="number"
+          id="co-qty"
+          name="qty"
+          min="1"
+          max="50"
+          value="1"
+          class="w-32 rounded-2xl border border-line bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+      </div>
+
+      <div id="co-custom-row" style="display:none">
+        <label class="block text-sm font-bold mb-1" for="co-custom">Customisation / special note</label>
+        <input
+          type="text"
+          id="co-custom"
+          name="custom"
+          placeholder="e.g. Add 'Happy Birthday Mum' in script font"
+          class="w-full rounded-2xl border border-line bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+      </div>
+
+      <!-- Total -->
+      <div class="rounded-3xl bg-brand/8 border border-brand/20 p-4 flex items-center justify-between">
+        <span class="font-bold text-sm">Total</span>
+        <span class="font-display text-2xl font-semibold text-brand" id="co-total">—</span>
+      </div>
+
+      <!-- Payment note -->
+      <p class="text-xs text-mute text-center leading-relaxed">
+        Payments processed securely by <strong>Paystack</strong>. Accepts <strong>M-Pesa</strong> and credit/debit cards. PrintHub never sees your card details.
+      </p>
+
+      <!-- Error -->
+      <p id="co-error" class="text-sm text-red-600 font-medium hidden"></p>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        id="co-submit"
+        class="btn w-full !bg-brand !text-cream hover:!bg-brand/90 font-bold text-base py-3 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Pay securely with Paystack
+      </button>
+    </form>
+  </div>
+</div>
+
+<script define:vars={{ paystackKey }}>
+  // ── State ────────────────────────────────────────────────────────────────────
+  let orderCtx = {
+    productName: "",
+    productSlug: "",
+    unitPriceKes: 0,
+    size: "",
+    colour: "",
+    hasCustom: false,
+  };
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+  function el(id) { return document.getElementById(id); }
+  function qs(sel) { return document.querySelector(sel); }
+
+  function parseKes(str) {
+    // "KES 1,200" / "1200" / "From KES 800" → 800
+    const m = str.replace(/,/g, "").match(/[\d]+/);
+    return m ? parseInt(m[0], 10) : 0;
+  }
+
+  function getTotal() {
+    const qty = parseInt(el("co-qty")?.value || "1", 10);
+    return orderCtx.unitPriceKes * Math.max(1, qty);
+  }
+
+  function updateTotal() {
+    const total = getTotal();
+    const qty = parseInt(el("co-qty")?.value || "1", 10);
+    el("co-total").textContent = total > 0
+      ? `KES ${(total).toLocaleString()}`
+      : "—";
+    // Update order summary block
+    renderDetailBlock(qty);
+  }
+
+  function renderDetailBlock(qty) {
+    const ctx = orderCtx;
+    const lines = [
+      ["Product", ctx.productName],
+      ctx.size ? ["Size", ctx.size] : null,
+      ctx.colour ? ["Colour", ctx.colour] : null,
+      ["Quantity", qty || 1],
+      ctx.unitPriceKes ? ["Unit price", `KES ${ctx.unitPriceKes.toLocaleString()}`] : null,
+    ].filter(Boolean);
+
+    el("order-detail-block").innerHTML = lines
+      .map(([k, v]) => `<div class="flex justify-between gap-4"><span class="text-mute">${k}</span><span class="font-semibold">${v}</span></div>`)
+      .join("");
+  }
+
+  // ── Open / close ─────────────────────────────────────────────────────────────
+  function openModal(ctx) {
+    orderCtx = { ...orderCtx, ...ctx };
+    el("checkout-modal").style.removeProperty("display");
+    el("checkout-product-label").textContent = ctx.productName || "";
+    el("co-qty").value = "1";
+    el("co-error").classList.add("hidden");
+    el("co-custom-row").style.display = ctx.hasCustom ? "block" : "none";
+    updateTotal();
+    setTimeout(() => el("co-name")?.focus(), 100);
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    el("checkout-modal").style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  // ── Paystack popup ────────────────────────────────────────────────────────────
+  function launchPaystack(formData) {
+    const totalKobo = getTotal() * 100; // Paystack uses smallest currency unit (kobo / pesewa)
+    // For KES, Paystack uses KES directly in pesewa-equivalent (1 KES = 100 pesewa in their system)
+    const ref = "PHB-" + Date.now() + "-" + Math.random().toString(36).substr(2, 5).toUpperCase();
+
+    // Compose metadata for PrintHub's Paystack dashboard
+    const meta = {
+      product: orderCtx.productName,
+      slug: orderCtx.productSlug,
+      size: orderCtx.size || "N/A",
+      colour: orderCtx.colour || "N/A",
+      quantity: el("co-qty").value,
+      custom_note: el("co-custom")?.value || "",
+      delivery: formData.get("delivery") || "Standard Delivery / Eldoret",
+      phone: formData.get("phone"),
+    };
+
+    const handler = window.PaystackPop.setup({
+      key: paystackKey,
+      email: formData.get("email"),
+      amount: totalKobo,
+      currency: "KES",
+      ref,
+      firstname: formData.get("name").split(" ")[0],
+      lastname: formData.get("name").split(" ").slice(1).join(" ") || "",
+      phone: formData.get("phone"),
+      metadata: { custom_fields: Object.entries(meta).map(([k, v]) => ({ display_name: k.replace(/_/g, " "), variable_name: k, value: v })) },
+      label: `PrintHub Africa – ${orderCtx.productName}`,
+
+      onClose: function () {
+        // User cancelled — re-enable button
+        const btn = el("co-submit");
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Pay securely with Paystack`;
+        const errEl = el("co-error");
+        errEl.textContent = "Payment was cancelled. Try again when you're ready.";
+        errEl.classList.remove("hidden");
+      },
+
+      callback: function (response) {
+        // Payment successful
+        closeModal();
+        // Build WhatsApp message to notify PrintHub
+        const waText = encodeURIComponent(
+          `🛍️ NEW PAID ORDER — PrintHub Africa\n\nProduct: ${orderCtx.productName}\nSize: ${meta.size}\nColour: ${meta.colour}\nQty: ${meta.quantity}\nDelivery: ${meta.delivery}\nCustom: ${meta.custom_note || "None"}\n\nCustomer: ${formData.get("name")}\nEmail: ${formData.get("email")}\nPhone: ${meta.phone}\n\nAmount: KES ${(totalKobo / 100).toLocaleString()}\nPaystack Ref: ${response.reference}\nStatus: ✅ PAID (M-Pesa / Card)`
+        );
+        window.open(`https://wa.me/254792732929?text=${waText}`, "_blank");
+
+        // Redirect to confirmation page
+        const params = new URLSearchParams({
+          product: orderCtx.productName,
+          ref: response.reference,
+          name: formData.get("name"),
+          qty: meta.quantity,
+          size: meta.size,
+          colour: meta.colour,
+          delivery: meta.delivery,
+          amount: (totalKobo / 100).toString(),
+        });
+        window.location.href = `/order-confirmed/?${params.toString()}`;
+      },
+    });
+    handler.openIframe();
+  }
+
+  // ── Load Paystack JS ──────────────────────────────────────────────────────────
+  function loadPaystackScript() {
+    return new Promise((resolve, reject) => {
+      if (window.PaystackPop) { resolve(); return; }
+      const s = document.createElement("script");
+      s.src = "https://js.paystack.co/v1/inline.js";
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  // ── Form submit ───────────────────────────────────────────────────────────────
+  el("checkout-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    const errEl = el("co-error");
+    errEl.classList.add("hidden");
+
+    // Basic validation
+    if (!data.get("name")?.toString().trim()) { errEl.textContent = "Please enter your name."; errEl.classList.remove("hidden"); return; }
+    if (!data.get("email")?.toString().includes("@")) { errEl.textContent = "Please enter a valid email address."; errEl.classList.remove("hidden"); return; }
+    if (!data.get("phone")?.toString().trim()) { errEl.textContent = "Please enter your phone number."; errEl.classList.remove("hidden"); return; }
+    if (getTotal() <= 0) { errEl.textContent = "This product has a price that must be quoted — please use WhatsApp to order."; errEl.classList.remove("hidden"); return; }
+
+    const btn = el("co-submit");
+
+    // If Paystack public key is not yet configured, gracefully send the complete order to WhatsApp
+    if (!paystackKey || typeof paystackKey !== 'string' || !paystackKey.startsWith("pk_")) {
+      const waOrderText = encodeURIComponent(
+        `🛍️ NEW DIRECT ORDER — PrintHub Africa\n\nProduct: ${orderCtx.productName}\nSize: ${orderCtx.size || "Standard"}\nColour: ${orderCtx.colour || "Standard"}\nQuantity: ${el("co-qty")?.value || 1}\nDelivery: ${data.get("delivery") || "Standard"}\n${orderCtx.hasCustom ? `Customization: ${el("co-custom")?.value || "None"}\n` : ""}Total: KES ${getTotal().toLocaleString()}\n\nCustomer: ${data.get("name")}\nPhone: ${data.get("phone")}\nEmail: ${data.get("email")}\n\nI would like to complete this order and pay via M-Pesa.`
+      );
+      window.open(`https://wa.me/254792732929?text=${waOrderText}`, "_blank");
+      closeModal();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Loading payment...`;
+
+    try {
+      await loadPaystackScript();
+      launchPaystack(data);
+    } catch {
+      btn.disabled = false;
+      btn.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Pay securely with Paystack`;
+      errEl.textContent = "Could not load payment system. Please check your connection and try again, or use WhatsApp.";
+      errEl.classList.remove("hidden");
+    }
+  });
+
+  // ── Quantity change ───────────────────────────────────────────────────────────
+  el("co-qty").addEventListener("input", updateTotal);
+
+  // ── Close triggers ────────────────────────────────────────────────────────────
+  el("checkout-close").addEventListener("click", closeModal);
+  el("checkout-backdrop").addEventListener("click", closeModal);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+  // ── Global API (called by product page) ──────────────────────────────────────
+  window.__phbCheckout = { open: openModal };
+</script>

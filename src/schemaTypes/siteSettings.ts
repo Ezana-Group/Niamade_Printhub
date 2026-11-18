@@ -133,5 +133,19 @@ export const siteSettingsType = defineType({
         { name: 'googleBusiness', type: 'string', title: 'Google Business Profile URL' },
       ],
     }),
+    // ── PAYMENTS & CHECKOUT ──
+    defineField({
+      name: 'enableCheckout',
+      title: 'Enable Online Checkout (M-Pesa & Card)',
+      type: 'boolean',
+      description: 'Show direct checkout buttons on products with fixed prices',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'paystackPublicKey',
+      title: 'Paystack Public Key',
+      type: 'string',
+      description: 'Paystack Public Key (starts with pk_live_ or pk_test_). Get this from Paystack Dashboard > Settings > API Keys. Leave empty to route direct checkout orders to WhatsApp.',
+    }),
   ],
 })

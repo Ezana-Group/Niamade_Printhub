@@ -52,6 +52,9 @@ export const site = {
   googleSiteVerification: "wCWYBxjCrZbXaBiDU1aioTUMNUC7wAjEBIpVFX5rrwk",
   googleAnalyticsId: "G-DPPDS1G5P1",
   googleAdsId: "AW-18115096382",
+  // Payments & Checkout
+  paystackPublicKey: _sanitySettings?.paystackPublicKey || process.env.PUBLIC_PAYSTACK_KEY || import.meta.env?.PUBLIC_PAYSTACK_KEY || "",
+  enableCheckout: _sanitySettings?.enableCheckout ?? true,
 };
 
 export const wa = (msg = "Hi PrintHub, I'd like to ask about a 3D print.") => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;
