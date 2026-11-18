@@ -45,16 +45,16 @@ export const pageContentType = defineType({
     defineField({
       name: 'niamadeHubBlurb',
       title: 'About Niamade Hub',
-      type: 'array',
-      of: [{ type: 'block' }],
-      description: 'About page: description of the registered corporate entity (rich text)',
+      type: 'text',
+      rows: 4,
+      description: 'About page: description of the registered corporate entity',
     }),
     defineField({
       name: 'brandBlurb',
       title: 'About PrintHub Africa',
-      type: 'array',
-      of: [{ type: 'block' }],
-      description: 'About page: description of the commercial trading brand (rich text)',
+      type: 'text',
+      rows: 4,
+      description: 'About page: description of the commercial trading brand',
     }),
     defineField({
       name: 'values',
