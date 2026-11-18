@@ -13,7 +13,7 @@ const ld = {
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: products.length,
-    itemListElement: products.map((p, i) => ({
+    itemListElement: products.map((p: any, i: number) => ({
       "@type": "ListItem",
       position: i + 1,
       name: p.name,
@@ -21,56 +21,447 @@ const ld = {
     }))
   }
 };
+
+const hasOffers = products.some((p: any) => p.onSale || p.discountBadge);
+const hasCollabs = products.some((p: any) => p.isCollab);
 ---
-<Layout title="3D Print Shop" jsonLd={ld} description="Personalised gifts, branded business pieces, Kenya souvenirs, home décor and useful parts, 3D printed to order in Eldoret. Pay by M-Pesa, delivery across Kenya.">
-  <section class="wrap pt-10 md:pt-14">
-    <p class="eyebrow rise">3D Print Shop Kenya</p>
-    <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl max-w-3xl">Made to order, just for you.</h1>
-    <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">Custom 3D printed gifts, branded business pieces, Kenya souvenirs, home décor and replacement parts. Everything is printed to order in Eldoret, with delivery across Kenya.</p>
-    <div id="chips" role="group" aria-label="Filter by occasion" class="mt-9 flex flex-wrap gap-2.5">
-      <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
-      {products.some((p: any) => p.onSale) && (
-        <button type="button" class="chip font-bold !text-brand border !border-brand/30 hover:!bg-brand hover:!text-white" data-f="sale" aria-pressed="false">🔥 Offers & Sale</button>
-      )}
-      {products.some((p: any) => p.isCollab) && (
-        <button type="button" class="chip font-semibold !text-ink border !border-ink/20 hover:!bg-ink hover:!text-cream transition-colors" data-f="collab" aria-pressed="false">🤝 Creator Collabs</button>
-      )}
-      {occasions.map((o) => <button type="button" class="chip" data-f={o.id} aria-pressed="false">{o.label}</button>)}
+<Layout
+  title="3D Print Shop"
+  jsonLd={ld}
+  description="Personalised gifts, branded business pieces, Kenya souvenirs, home décor and useful parts, 3D printed to order in Eldoret. Pay by M-Pesa, delivery across Kenya."
+>
+  <section class="wrap pt-8 md:pt-12">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="text-sm text-mute flex items-center gap-2">
+      <a href="/" class="hover:text-brand transition-colors">Home</a>
+      <span aria-hidden="true" class="text-line">/</span>
+      <span class="text-ink font-semibold">Shop</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="mt-4 md:mt-6">
+      <p class="eyebrow rise">3D Print Shop Kenya</p>
+      <h1 style="--d:60ms" class="rise mt-2 text-4xl sm:text-5xl md:text-6xl max-w-3xl">Made to order, just for you.</h1>
+      <p style="--d:120ms" class="rise mt-3 text-lg sm:text-xl text-mute max-w-2xl leading-relaxed">
+        Custom 3D printed gifts, branded corporate pieces, Kenya souvenirs, home décor and replacement parts. Hand-calibrated and printed to order in Eldoret, with courier delivery across Kenya.
+      </p>
     </div>
-    <p id="count" class="mt-4 text-mute" role="status" aria-live="polite">Showing all {products.length} pieces</p>
+
+    <!-- Assurance / Value Strip -->
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 py-4 px-5 rounded-3xl bg-sand/50 border border-line/60">
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-full bg-card grid place-items-center text-brand shrink-0 shadow-xs"><Icon name="truck" size={17} /></span>
+        <div class="text-xs">
+          <p class="font-bold text-ink">Kenya Delivery</p>
+          <p class="text-mute">Nairobi next-day</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-full bg-card grid place-items-center text-brand shrink-0 shadow-xs"><Icon name="clock" size={17} /></span>
+        <div class="text-xs">
+          <p class="font-bold text-ink">24–48h Turnaround</p>
+          <p class="text-mute">Printed on demand</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-full bg-card grid place-items-center text-brand shrink-0 shadow-xs"><Icon name="palette" size={17} /></span>
+        <div class="text-xs">
+          <p class="font-bold text-ink">Custom Colours</p>
+          <p class="text-mute">15+ filament shades</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-full bg-card grid place-items-center text-brand shrink-0 shadow-xs"><Icon name="mpesa" size={17} /></span>
+        <div class="text-xs">
+          <p class="font-bold text-ink">M-Pesa Verified</p>
+          <p class="text-mute">Or Card Checkout</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shop Control Bar (Search + Sort) -->
+    <div class="mt-10 p-4 md:p-5 rounded-4xl bg-card border border-line shadow-xs">
+      <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <!-- Search Input -->
+        <div class="relative flex-1">
+          <label for="shop-search" class="sr-only">Search products</label>
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-mute">
+            <Icon name="search" size={18} />
+          </div>
+          <input
+            id="shop-search"
+            type="search"
+            autocomplete="off"
+            placeholder="Search gifts, keychains, desk stands, vases, parts..."
+            class="w-full rounded-2xl border-2 border-line bg-cream/30 pl-10 pr-10 py-2.5 text-[0.95rem] text-ink placeholder:text-mute/70 focus:outline-none focus:border-brand focus:bg-card focus:ring-4 focus:ring-brand/10 transition-all"
+          />
+          <button
+            id="search-clear"
+            type="button"
+            class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-mute hover:text-ink transition-colors"
+            aria-label="Clear search query"
+          >
+            <Icon name="close" size={16} />
+          </button>
+        </div>
+
+        <!-- Sort Select -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <label for="shop-sort" class="text-xs font-bold uppercase tracking-wider text-mute whitespace-nowrap flex items-center gap-1.5">
+            <Icon name="sort" size={14} /> Sort:
+          </label>
+          <select
+            id="shop-sort"
+            class="rounded-xl border-2 border-line bg-card py-2.5 pl-3 pr-8 text-[0.9rem] font-semibold text-ink focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 cursor-pointer"
+          >
+            <option value="default">Featured / Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A to Z</option>
+            <option value="name-desc">Name: Z to A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Filter Group Chips -->
+      <div class="mt-4 pt-4 border-t border-line/60">
+        <div class="flex items-center justify-between gap-2 mb-2.5">
+          <span class="text-xs font-bold uppercase tracking-wider text-mute">Browse by Occasion & Category</span>
+          <button
+            id="btn-reset-all"
+            type="button"
+            class="hidden text-xs font-bold text-brand hover:underline inline-flex items-center gap-1"
+          >
+            <Icon name="close" size={12} /> Reset all
+          </button>
+        </div>
+        <div id="chips" role="group" aria-label="Filter by category and occasion" class="flex flex-wrap gap-2">
+          <button type="button" class="chip" data-f="all" aria-pressed="true">All Pieces</button>
+          {hasOffers && (
+            <button
+              type="button"
+              class="chip font-bold !text-brand border !border-brand/40 bg-brand/5 hover:!bg-brand hover:!text-white"
+              data-f="sale"
+              aria-pressed="false"
+            >
+              🔥 Offers & Sale
+            </button>
+          )}
+          {hasCollabs && (
+            <button
+              type="button"
+              class="chip font-semibold !text-ink border !border-ink/20 hover:!bg-ink hover:!text-cream transition-colors"
+              data-f="collab"
+              aria-pressed="false"
+            >
+              🤝 Creator Collabs
+            </button>
+          )}
+          {occasions.map((o) => (
+            <button type="button" class="chip" data-f={o.id} aria-pressed="false">
+              {o.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filters & Result Count -->
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
+      <div class="flex items-center gap-2">
+        <p id="count" class="font-medium text-mute" role="status" aria-live="polite">
+          Showing all {products.length} pieces
+        </p>
+        <div id="active-badge" class="hidden items-center gap-1 px-2.5 py-0.5 rounded-full bg-sand text-xs font-bold text-ink">
+          <span id="active-label"></span>
+          <button id="clear-active" type="button" class="text-mute hover:text-brand" aria-label="Remove filter">✕</button>
+        </div>
+      </div>
+      <p class="text-xs text-mute hidden sm:block">
+        Need custom colours, sizing or your logo? Every piece is made to order.
+      </p>
+    </div>
+
+    <!-- Product Grid -->
     <div id="grid" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
       {products.map((p) => <ProductCard p={p} filterable />)}
     </div>
-    {products.some((p) => !p.photos.length) && <p class="mt-8 text-sm text-mute">Illustrations show the style of each piece. Yours is printed to order.</p>}
-    <div class="mt-16 rounded-5xl bg-sky p-8 md:p-10 flex flex-wrap items-center justify-between gap-6">
-      <div class="max-w-xl"><h2 class="text-3xl md:text-4xl">Don't see what you need?</h2><p class="mt-2 text-lg text-ink/80">Most of our work is custom. Tell us your idea and we will quote it.</p></div>
-      <a href={wa("Hi PrintHub, I couldn't find what I need in the shop.")} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Ask on WhatsApp</a>
+
+    <!-- Empty State (Hidden by default) -->
+    <div id="empty-state" class="hidden mt-8 py-16 px-6 text-center panel bg-card max-w-xl mx-auto">
+      <div class="w-16 h-16 rounded-full bg-sand/70 text-brand grid place-items-center mx-auto text-2xl">
+        <Icon name="search" size={28} />
+      </div>
+      <h2 class="mt-4 text-2xl font-display">No matching pieces found</h2>
+      <p class="mt-2 text-mute text-sm max-w-md mx-auto">
+        We couldn't find anything matching your search or filters. But don't worry — we can 3D print almost anything you have in mind!
+      </p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <button id="empty-reset" type="button" class="btn btn-soft text-sm py-2.5 px-5">
+          Reset all filters
+        </button>
+        <a href={wa("Hi PrintHub, I was looking for a specific item on your shop that isn't listed.")} target="_blank" rel="noopener" class="btn btn-wa text-sm py-2.5 px-5">
+          <Icon name="whatsapp" size={16} /> Request custom quote
+        </a>
+      </div>
+    </div>
+
+    <!-- Note on preview illustrations -->
+    {products.some((p: any) => !p.photos || !p.photos.length) && (
+      <p class="mt-8 text-sm text-mute text-center sm:text-left">
+        Illustrations represent the geometry and finish of each piece. Yours is 3D printed fresh to your exact colour choice.
+      </p>
+    )}
+
+    <!-- How Ordering Works Banner -->
+    <div class="mt-14 p-6 sm:p-8 rounded-5xl bg-sand/60 border border-line">
+      <h2 class="text-2xl sm:text-3xl font-display text-center">How Ordering at PrintHub Works</h2>
+      <p class="mt-1 text-mute text-center text-sm max-w-md mx-auto">From idea to delivery at your doorstep in 3 simple steps.</p>
+      <div class="mt-8 grid sm:grid-cols-3 gap-6">
+        <div class="panel p-5 bg-card text-center sm:text-left">
+          <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">1</span>
+          <h3 class="font-display text-lg">Pick & Personalise</h3>
+          <p class="text-xs text-mute mt-1.5 leading-relaxed">Choose your model, custom text, name, logo, or tell us your favourite filament colour.</p>
+        </div>
+        <div class="panel p-5 bg-card text-center sm:text-left">
+          <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">2</span>
+          <h3 class="font-display text-lg">Pay & Preview</h3>
+          <p class="text-xs text-mute mt-1.5 leading-relaxed">Check out securely via M-Pesa or Card. We confirm 3D slicer details on WhatsApp before manufacturing.</p>
+        </div>
+        <div class="panel p-5 bg-card text-center sm:text-left">
+          <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">3</span>
+          <h3 class="font-display text-lg">Fast Doorstep Delivery</h3>
+          <p class="text-xs text-mute mt-1.5 leading-relaxed">Printed in Eldoret in 24–48 hours, then dispatched countrywide via trusted parcel couriers.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom CTA: Custom Design & File Upload -->
+    <div class="mt-12 rounded-5xl bg-sky p-8 md:p-10 flex flex-wrap items-center justify-between gap-6">
+      <div class="max-w-xl">
+        <p class="eyebrow text-ink font-bold">Have your own STL file or custom idea?</p>
+        <h2 class="mt-1 text-3xl md:text-4xl">Don't see what you need in the shop?</h2>
+        <p class="mt-2 text-base md:text-lg text-ink/80 leading-relaxed">
+          Most of our work is custom! Upload your 3D files (STL/STEP) for an instant slicing assessment, or chat with our design team.
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <a href="/custom/" class="btn btn-ink shadow-sm">
+          Custom 3D Printing & CAD
+        </a>
+        <a href={wa("Hi PrintHub, I couldn't find what I need in the shop and have a custom idea.")} target="_blank" rel="noopener" class="btn btn-wa">
+          <Icon name="whatsapp" size={19} /> Ask on WhatsApp
+        </a>
+      </div>
     </div>
   </section>
 </Layout>
+
 <script>
+  // Elements
   const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("#chips .chip"));
-  const items = Array.from(document.querySelectorAll<HTMLElement>("#grid [data-tags]"));
+  const grid = document.getElementById("grid") as HTMLElement;
+  const items = Array.from(grid.querySelectorAll<HTMLElement>("[data-tags]"));
   const count = document.getElementById("count")!;
+  const searchInput = document.getElementById("shop-search") as HTMLInputElement;
+  const searchClear = document.getElementById("search-clear") as HTMLButtonElement;
+  const sortSelect = document.getElementById("shop-sort") as HTMLSelectElement;
+  const emptyState = document.getElementById("empty-state") as HTMLElement;
+  const emptyReset = document.getElementById("empty-reset") as HTMLButtonElement;
+  const btnResetAll = document.getElementById("btn-reset-all") as HTMLButtonElement;
+  const activeBadge = document.getElementById("active-badge") as HTMLElement;
+  const activeLabel = document.getElementById("active-label") as HTMLElement;
+  const clearActive = document.getElementById("clear-active") as HTMLButtonElement;
+
   const labels: Record<string, string> = Object.fromEntries(chips.map((c) => [c.dataset.f!, c.textContent!.trim()]));
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const apply = (f: string, animate: boolean) => {
-    chips.forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.f === f)));
-    let k = 0;
-    items.forEach((i) => {
-      const show = f === "all" || i.dataset.tags!.split(" ").includes(f);
-      i.classList.toggle("hidden", !show);
-      i.getAnimations().forEach((a) => a.cancel());
-      if (show && animate && !reduce) i.animate([{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 280, delay: Math.min(k++, 8) * 30, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "backwards" });
+
+  // State
+  let currentFilter = "all";
+  let searchQuery = "";
+  let currentSort = "default";
+
+  // Initial order preservation for "default"
+  const originalOrder = [...items];
+
+  // Core filter & sort function
+  const applyFiltersAndSort = (animate = false) => {
+    // 1. Update Chip UI
+    chips.forEach((c) => {
+      const active = c.dataset.f === currentFilter;
+      c.setAttribute("aria-pressed", String(active));
     });
-    const n = items.filter((i) => !i.classList.contains("hidden")).length;
-    count.textContent = f === "all" ? `Showing all ${n} pieces` : `Showing ${n} in ${labels[f]}`;
+
+    // 2. Filter items
+    const query = searchQuery.trim().toLowerCase();
+    let visibleCount = 0;
+    let k = 0;
+
+    items.forEach((item) => {
+      const tags = (item.dataset.tags || "").split(" ");
+      const name = (item.dataset.name || "");
+      const note = (item.dataset.note || "");
+      const cat = (item.dataset.cat || "");
+      const material = (item.dataset.material || "");
+
+      const matchesTag = currentFilter === "all" || tags.includes(currentFilter);
+      const matchesSearch = !query ||
+        name.includes(query) ||
+        note.includes(query) ||
+        cat.includes(query) ||
+        material.includes(query) ||
+        tags.some(t => t.includes(query));
+
+      const show = matchesTag && matchesSearch;
+      item.classList.toggle("hidden", !show);
+      item.getAnimations().forEach((a) => a.cancel());
+
+      if (show) {
+        visibleCount++;
+        if (animate && !reduce) {
+          item.animate(
+            [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }],
+            { duration: 240, delay: Math.min(k++, 8) * 25, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "backwards" }
+          );
+        }
+      }
+    });
+
+    // 3. Sort visible items if necessary
+    if (currentSort !== "default") {
+      const sorted = [...items].sort((a, b) => {
+        if (currentSort === "price-asc") {
+          return (Number(a.dataset.price) || 0) - (Number(b.dataset.price) || 0);
+        }
+        if (currentSort === "price-desc") {
+          return (Number(b.dataset.price) || 0) - (Number(a.dataset.price) || 0);
+        }
+        if (currentSort === "name-asc") {
+          return (a.dataset.name || "").localeCompare(b.dataset.name || "");
+        }
+        if (currentSort === "name-desc") {
+          return (b.dataset.name || "").localeCompare(a.dataset.name || "");
+        }
+        return 0;
+      });
+      sorted.forEach((el) => grid.appendChild(el));
+    } else {
+      // restore original order
+      originalOrder.forEach((el) => grid.appendChild(el));
+    }
+
+    // 4. Update Result Count & Feedback
+    if (visibleCount === 0) {
+      grid.classList.add("hidden");
+      emptyState.classList.remove("hidden");
+      count.textContent = "Showing 0 pieces";
+    } else {
+      grid.classList.remove("hidden");
+      emptyState.classList.add("hidden");
+      if (currentFilter === "all" && !query) {
+        count.textContent = `Showing all ${visibleCount} pieces`;
+      } else if (query && currentFilter !== "all") {
+        count.textContent = `Showing ${visibleCount} pieces in ${labels[currentFilter]} matching "${query}"`;
+      } else if (query) {
+        count.textContent = `Showing ${visibleCount} pieces matching "${query}"`;
+      } else {
+        count.textContent = `Showing ${visibleCount} in ${labels[currentFilter]}`;
+      }
+    }
+
+    // 5. Active filter badges & reset button visibility
+    const isFiltered = currentFilter !== "all" || Boolean(query) || currentSort !== "default";
+    btnResetAll.classList.toggle("hidden", !isFiltered);
+    searchClear.classList.toggle("hidden", !query);
+
+    if (currentFilter !== "all") {
+      activeBadge.classList.remove("hidden");
+      activeBadge.classList.add("inline-flex");
+      activeLabel.textContent = labels[currentFilter];
+    } else {
+      activeBadge.classList.add("hidden");
+      activeBadge.classList.remove("inline-flex");
+    }
+
+    // 6. Update URL query params without reloading
+    const params = new URLSearchParams();
+    if (currentFilter !== "all") params.set("for", currentFilter);
+    if (query) params.set("q", query);
+    if (currentSort !== "default") params.set("sort", currentSort);
+    const paramStr = params.toString();
+    const newUrl = paramStr ? `${location.pathname}?${paramStr}` : location.pathname;
+    history.replaceState(null, "", newUrl);
   };
-  chips.forEach((c) => c.addEventListener("click", () => {
-    if (c.getAttribute("aria-pressed") === "true") return;
-    apply(c.dataset.f!, true);
-    history.replaceState(null, "", c.dataset.f === "all" ? location.pathname : `?for=${c.dataset.f}`);
-  }));
-  const want = new URLSearchParams(location.search).get("for");
-  if (want && chips.some((c) => c.dataset.f === want)) apply(want, false);
+
+  // Reset function
+  const resetAll = () => {
+    currentFilter = "all";
+    searchQuery = "";
+    currentSort = "default";
+    searchInput.value = "";
+    sortSelect.value = "default";
+    applyFiltersAndSort(true);
+  };
+
+  // Event Listeners
+  chips.forEach((c) => {
+    c.addEventListener("click", () => {
+      const targetFilter = c.dataset.f!;
+      if (currentFilter === targetFilter) return;
+      currentFilter = targetFilter;
+      applyFiltersAndSort(true);
+    });
+  });
+
+  // Search input debounced
+  let searchTimeout: any;
+  searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = searchInput.value;
+      applyFiltersAndSort(false);
+    }, 150);
+  });
+
+  searchClear.addEventListener("click", () => {
+    searchInput.value = "";
+    searchQuery = "";
+    applyFiltersAndSort(true);
+    searchInput.focus();
+  });
+
+  // Sort change
+  sortSelect.addEventListener("change", () => {
+    currentSort = sortSelect.value;
+    applyFiltersAndSort(true);
+  });
+
+  // Reset buttons
+  emptyReset.addEventListener("click", resetAll);
+  btnResetAll.addEventListener("click", resetAll);
+  clearActive.addEventListener("click", () => {
+    currentFilter = "all";
+    applyFiltersAndSort(true);
+  });
+
+  // Read initial query params
+  const urlParams = new URLSearchParams(location.search);
+  const initialFor = urlParams.get("for");
+  const initialQ = urlParams.get("q");
+  const initialSort = urlParams.get("sort");
+
+  if (initialFor && chips.some((c) => c.dataset.f === initialFor)) {
+    currentFilter = initialFor;
+  }
+  if (initialQ) {
+    searchQuery = initialQ;
+    searchInput.value = initialQ;
+  }
+  if (initialSort && ["price-asc", "price-desc", "name-asc", "name-desc"].includes(initialSort)) {
+    currentSort = initialSort;
+    sortSelect.value = initialSort;
+  }
+
+  // Initial run
+  applyFiltersAndSort(false);
 </script>

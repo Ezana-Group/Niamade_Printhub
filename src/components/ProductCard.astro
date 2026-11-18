@@ -1,15 +1,26 @@
 ---
 import ProductArt from "./ProductArt.astro";
 import Icon from "./Icon.astro";
+import { price } from "../data/site";
 const { p, filterable = false } = Astro.props;
 let allTags = [...(p.tags || [])];
 if (p.onSale) allTags.push("sale");
 if (p.isCollab) allTags.push("collab");
+const numPrice = price(p.price) || 0;
 ---
-<a href={`/shop/${p.slug}/`} data-tags={filterable ? allTags.join(" ") : undefined} class="press lift group panel overflow-hidden flex flex-col h-full">
-  <div class="relative overflow-hidden">
-    {p.photos.length
-      ? <img src={p.photos[0]} alt={p.name} width="800" height="800" loading="lazy" decoding="async" class="w-full aspect-square object-cover" />
+<a
+  href={`/shop/${p.slug}/`}
+  data-tags={filterable ? allTags.join(" ") : undefined}
+  data-name={filterable ? p.name.toLowerCase() : undefined}
+  data-note={filterable ? (p.note || "").toLowerCase() : undefined}
+  data-cat={filterable ? (p.cat || "").toLowerCase() : undefined}
+  data-material={filterable ? (p.material || "").toLowerCase() : undefined}
+  data-price={filterable ? numPrice : undefined}
+  class="press lift group panel overflow-hidden flex flex-col h-full"
+>
+  <div class="relative overflow-hidden bg-sand/30">
+    {p.photos && p.photos.length
+      ? <img src={p.photos[0]} alt={p.name} width="800" height="800" loading="lazy" decoding="async" class="w-full aspect-square object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
       : <ProductArt slug={p.slug} cat={p.cat} />}
     {(p.discountBadge || p.onSale) && (
       <span class="absolute top-3 left-3 z-10 rounded-full bg-brand text-white font-bold text-xs uppercase tracking-wider px-3 py-1 shadow-md">
@@ -17,23 +28,35 @@ if (p.isCollab) allTags.push("collab");
       </span>
     )}
     {p.isCollab && (
-      <span class="absolute top-3 right-3 z-10 rounded-full bg-ink/80 backdrop-blur-sm text-cream font-semibold text-[0.72rem] px-2.5 py-1 shadow-sm">
+      <span class="absolute top-3 right-3 z-10 rounded-full bg-ink/85 backdrop-blur-sm text-cream font-semibold text-[0.72rem] px-2.5 py-1 shadow-sm">
         {p.creatorName ? `Collab · ${p.creatorName}` : "Collab"}
       </span>
     )}
   </div>
   <div class="p-5 flex flex-col flex-1">
-    <p class="text-[0.8rem] font-bold uppercase tracking-[0.1em] text-mute">{p.cat}</p>
-    <h3 class="font-display text-[1.35rem] leading-snug mt-1">{p.name}</h3>
-    <p class="text-mute mt-1">{p.note}</p>
-    <div class="mt-auto pt-4 flex items-center justify-between">
+    <div class="flex items-center justify-between gap-2">
+      <p class="text-[0.78rem] font-bold uppercase tracking-[0.1em] text-mute truncate">{p.cat}</p>
+      {p.material && (
+        <span class="text-[0.7rem] font-medium text-mute/90 bg-sand/80 rounded-md px-2 py-0.5 whitespace-nowrap" title={`3D printed in ${p.material}`}>
+          {p.material}
+        </span>
+      )}
+    </div>
+    <h3 class="font-display text-[1.3rem] leading-snug mt-1.5 group-hover:text-brand transition-colors">{p.name}</h3>
+    <p class="text-mute text-sm mt-1 line-clamp-2">{p.note}</p>
+    <div class="mt-auto pt-4 flex items-center justify-between border-t border-line/60">
       <div class="flex items-baseline gap-2 flex-wrap">
-        <span class="font-bold text-brand">{p.price}</span>
+        <span class="font-bold text-brand text-lg">{p.price}</span>
         {p.originalPrice && (
-          <span class="text-sm line-through text-mute/70 font-medium">{p.originalPrice}</span>
+          <span class="text-xs line-through text-mute/70 font-medium">{p.originalPrice}</span>
         )}
       </div>
-      <span class="w-9 h-9 rounded-full bg-sand grid place-items-center transition-colors duration-150 group-hover:bg-brand group-hover:text-white"><Icon name="arrow" size={18} /></span>
+      <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ink group-hover:text-brand transition-colors">
+        <span class="hidden sm:inline">Customize</span>
+        <span class="w-8 h-8 rounded-full bg-sand grid place-items-center transition-all duration-200 group-hover:bg-brand group-hover:text-white">
+          <Icon name="arrow" size={15} />
+        </span>
+      </div>
     </div>
   </div>
 </a>
