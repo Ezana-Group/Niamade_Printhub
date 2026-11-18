@@ -257,211 +257,230 @@ const hasCollabs = products.some((p: any) => p.isCollab);
   </section>
 </Layout>
 
-<script>
-  // Elements
-  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("#chips .chip"));
-  const grid = document.getElementById("grid") as HTMLElement;
-  const items = Array.from(grid.querySelectorAll<HTMLElement>("[data-tags]"));
-  const count = document.getElementById("count")!;
-  const searchInput = document.getElementById("shop-search") as HTMLInputElement;
-  const searchClear = document.getElementById("search-clear") as HTMLButtonElement;
-  const sortSelect = document.getElementById("shop-sort") as HTMLSelectElement;
-  const emptyState = document.getElementById("empty-state") as HTMLElement;
-  const emptyReset = document.getElementById("empty-reset") as HTMLButtonElement;
-  const btnResetAll = document.getElementById("btn-reset-all") as HTMLButtonElement;
-  const activeBadge = document.getElementById("active-badge") as HTMLElement;
-  const activeLabel = document.getElementById("active-label") as HTMLElement;
-  const clearActive = document.getElementById("clear-active") as HTMLButtonElement;
+<script is:inline>
+  (function () {
+    function initShopCatalog() {
+      const grid = document.getElementById("grid");
+      if (!grid) return;
 
-  const labels: Record<string, string> = Object.fromEntries(chips.map((c) => [c.dataset.f!, c.textContent!.trim()]));
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const items = Array.from(grid.querySelectorAll("[data-tags]"));
+      const originalOrder = [...items];
+      const count = document.getElementById("count");
+      const searchInput = document.getElementById("shop-search");
+      const searchClear = document.getElementById("search-clear");
+      const sortSelect = document.getElementById("shop-sort");
+      const emptyState = document.getElementById("empty-state");
+      const emptyReset = document.getElementById("empty-reset");
+      const btnResetAll = document.getElementById("btn-reset-all");
+      const activeBadge = document.getElementById("active-badge");
+      const activeLabel = document.getElementById("active-label");
+      const clearActive = document.getElementById("clear-active");
+      const chipsContainer = document.getElementById("chips");
 
-  // State
-  let currentFilter = "all";
-  let searchQuery = "";
-  let currentSort = "default";
+      // State
+      let currentFilter = "all";
+      let searchQuery = "";
+      let currentSort = "default";
 
-  // Initial order preservation for "default"
-  const originalOrder = [...items];
+      // Read initial URL params
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialFor = urlParams.get("for");
+        const initialQ = urlParams.get("q");
+        const initialSort = urlParams.get("sort");
 
-  // Core filter & sort function
-  const applyFiltersAndSort = (animate = false) => {
-    // 1. Update Chip UI
-    chips.forEach((c) => {
-      const active = c.dataset.f === currentFilter;
-      c.setAttribute("aria-pressed", String(active));
-    });
-
-    // 2. Filter items
-    const query = searchQuery.trim().toLowerCase();
-    let visibleCount = 0;
-    let k = 0;
-
-    items.forEach((item) => {
-      const tags = (item.dataset.tags || "").split(" ");
-      const name = (item.dataset.name || "");
-      const note = (item.dataset.note || "");
-      const cat = (item.dataset.cat || "");
-      const material = (item.dataset.material || "");
-
-      const matchesTag = currentFilter === "all" || tags.includes(currentFilter);
-      const matchesSearch = !query ||
-        name.includes(query) ||
-        note.includes(query) ||
-        cat.includes(query) ||
-        material.includes(query) ||
-        tags.some(t => t.includes(query));
-
-      const show = matchesTag && matchesSearch;
-      item.classList.toggle("hidden", !show);
-      item.getAnimations().forEach((a) => a.cancel());
-
-      if (show) {
-        visibleCount++;
-        if (animate && !reduce) {
-          item.animate(
-            [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }],
-            { duration: 240, delay: Math.min(k++, 8) * 25, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "backwards" }
-          );
+        if (initialFor) currentFilter = initialFor;
+        if (initialQ) {
+          searchQuery = initialQ;
+          if (searchInput) searchInput.value = initialQ;
         }
+        if (initialSort && ["price-asc", "price-desc", "name-asc", "name-desc"].includes(initialSort)) {
+          currentSort = initialSort;
+          if (sortSelect) sortSelect.value = initialSort;
+        }
+      } catch (e) {}
+
+      function getChipLabel(filterId) {
+        if (!chipsContainer) return filterId;
+        const btn = chipsContainer.querySelector(`button[data-f="${filterId}"]`);
+        return btn ? btn.textContent.trim().replace(/^[^\w]+/, '') : filterId;
       }
-    });
 
-    // 3. Sort visible items if necessary
-    if (currentSort !== "default") {
-      const sorted = [...items].sort((a, b) => {
-        if (currentSort === "price-asc") {
-          return (Number(a.dataset.price) || 0) - (Number(b.dataset.price) || 0);
+      function applyFiltersAndSort() {
+        // 1. Update Chip UI
+        if (chipsContainer) {
+          const chips = chipsContainer.querySelectorAll("button[data-f]");
+          chips.forEach((c) => {
+            const isActive = c.getAttribute("data-f") === currentFilter;
+            c.setAttribute("aria-pressed", String(isActive));
+          });
         }
-        if (currentSort === "price-desc") {
-          return (Number(b.dataset.price) || 0) - (Number(a.dataset.price) || 0);
-        }
-        if (currentSort === "name-asc") {
-          return (a.dataset.name || "").localeCompare(b.dataset.name || "");
-        }
-        if (currentSort === "name-desc") {
-          return (b.dataset.name || "").localeCompare(a.dataset.name || "");
-        }
-        return 0;
-      });
-      sorted.forEach((el) => grid.appendChild(el));
-    } else {
-      // restore original order
-      originalOrder.forEach((el) => grid.appendChild(el));
-    }
 
-    // 4. Update Result Count & Feedback
-    if (visibleCount === 0) {
-      grid.classList.add("hidden");
-      emptyState.classList.remove("hidden");
-      count.textContent = "Showing 0 pieces";
-    } else {
-      grid.classList.remove("hidden");
-      emptyState.classList.add("hidden");
-      if (currentFilter === "all" && !query) {
-        count.textContent = `Showing all ${visibleCount} pieces`;
-      } else if (query && currentFilter !== "all") {
-        count.textContent = `Showing ${visibleCount} pieces in ${labels[currentFilter]} matching "${query}"`;
-      } else if (query) {
-        count.textContent = `Showing ${visibleCount} pieces matching "${query}"`;
-      } else {
-        count.textContent = `Showing ${visibleCount} in ${labels[currentFilter]}`;
+        // 2. Filter Items
+        const query = (searchQuery || "").trim().toLowerCase();
+        let visibleCount = 0;
+
+        items.forEach((item) => {
+          const tags = (item.getAttribute("data-tags") || "").split(" ");
+          const name = (item.getAttribute("data-name") || "");
+          const note = (item.getAttribute("data-note") || "");
+          const cat = (item.getAttribute("data-cat") || "");
+          const material = (item.getAttribute("data-material") || "");
+
+          const matchesTag = currentFilter === "all" || tags.includes(currentFilter);
+          const matchesSearch = !query ||
+            name.includes(query) ||
+            note.includes(query) ||
+            cat.includes(query) ||
+            material.includes(query) ||
+            tags.some((t) => t.includes(query));
+
+          const show = matchesTag && matchesSearch;
+          if (show) {
+            visibleCount++;
+            item.style.display = "";
+            item.classList.remove("hidden");
+          } else {
+            item.style.display = "none";
+            item.classList.add("hidden");
+          }
+        });
+
+        // 3. Sort Items
+        if (currentSort !== "default") {
+          const sorted = [...items].sort((a, b) => {
+            const priceA = parseFloat(a.getAttribute("data-price") || "0") || 0;
+            const priceB = parseFloat(b.getAttribute("data-price") || "0") || 0;
+            const nameA = a.getAttribute("data-name") || "";
+            const nameB = b.getAttribute("data-name") || "";
+
+            if (currentSort === "price-asc") return priceA - priceB;
+            if (currentSort === "price-desc") return priceB - priceA;
+            if (currentSort === "name-asc") return nameA.localeCompare(nameB);
+            if (currentSort === "name-desc") return nameB.localeCompare(nameA);
+            return 0;
+          });
+          sorted.forEach((el) => grid.appendChild(el));
+        } else {
+          originalOrder.forEach((el) => grid.appendChild(el));
+        }
+
+        // 4. Update Result Count & Feedback
+        if (visibleCount === 0) {
+          grid.classList.add("hidden");
+          if (emptyState) emptyState.classList.remove("hidden");
+          if (count) count.textContent = "Showing 0 pieces";
+        } else {
+          grid.classList.remove("hidden");
+          if (emptyState) emptyState.classList.add("hidden");
+          if (count) {
+            const label = getChipLabel(currentFilter);
+            if (currentFilter === "all" && !query) {
+              count.textContent = `Showing all ${visibleCount} pieces`;
+            } else if (query && currentFilter !== "all") {
+              count.textContent = `Showing ${visibleCount} pieces in ${label} matching "${query}"`;
+            } else if (query) {
+              count.textContent = `Showing ${visibleCount} pieces matching "${query}"`;
+            } else {
+              count.textContent = `Showing ${visibleCount} in ${label}`;
+            }
+          }
+        }
+
+        // 5. Active Badges & Reset visibility
+        const isFiltered = currentFilter !== "all" || Boolean(query) || currentSort !== "default";
+        if (btnResetAll) btnResetAll.classList.toggle("hidden", !isFiltered);
+        if (searchClear) searchClear.classList.toggle("hidden", !query);
+
+        if (activeBadge && activeLabel) {
+          if (currentFilter !== "all") {
+            activeBadge.classList.remove("hidden");
+            activeBadge.classList.add("inline-flex");
+            activeLabel.textContent = getChipLabel(currentFilter);
+          } else {
+            activeBadge.classList.add("hidden");
+            activeBadge.classList.remove("inline-flex");
+          }
+        }
+
+        // 6. Update URL
+        try {
+          const params = new URLSearchParams();
+          if (currentFilter !== "all") params.set("for", currentFilter);
+          if (query) params.set("q", query);
+          if (currentSort !== "default") params.set("sort", currentSort);
+          const paramStr = params.toString();
+          const newUrl = paramStr ? `${window.location.pathname}?${paramStr}` : window.location.pathname;
+          window.history.replaceState(null, "", newUrl);
+        } catch (e) {}
       }
+
+      function resetAll() {
+        currentFilter = "all";
+        searchQuery = "";
+        currentSort = "default";
+        if (searchInput) searchInput.value = "";
+        if (sortSelect) sortSelect.value = "default";
+        applyFiltersAndSort();
+      }
+
+      // Event Listeners with Event Delegation
+      if (chipsContainer) {
+        chipsContainer.addEventListener("click", function (e) {
+          const btn = e.target.closest("button[data-f]");
+          if (!btn) return;
+          const targetFilter = btn.getAttribute("data-f");
+          if (!targetFilter || currentFilter === targetFilter) return;
+          currentFilter = targetFilter;
+          applyFiltersAndSort();
+        });
+      }
+
+      if (sortSelect) {
+        sortSelect.addEventListener("change", function () {
+          currentSort = sortSelect.value;
+          applyFiltersAndSort();
+        });
+      }
+
+      if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener("input", function () {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(function () {
+            searchQuery = searchInput.value;
+            applyFiltersAndSort();
+          }, 120);
+        });
+      }
+
+      if (searchClear && searchInput) {
+        searchClear.addEventListener("click", function () {
+          searchInput.value = "";
+          searchQuery = "";
+          applyFiltersAndSort();
+          searchInput.focus();
+        });
+      }
+
+      if (emptyReset) emptyReset.addEventListener("click", resetAll);
+      if (btnResetAll) btnResetAll.addEventListener("click", resetAll);
+      if (clearActive) {
+        clearActive.addEventListener("click", function () {
+          currentFilter = "all";
+          applyFiltersAndSort();
+        });
+      }
+
+      // Run initial filter & sort
+      applyFiltersAndSort();
     }
 
-    // 5. Active filter badges & reset button visibility
-    const isFiltered = currentFilter !== "all" || Boolean(query) || currentSort !== "default";
-    btnResetAll.classList.toggle("hidden", !isFiltered);
-    searchClear.classList.toggle("hidden", !query);
-
-    if (currentFilter !== "all") {
-      activeBadge.classList.remove("hidden");
-      activeBadge.classList.add("inline-flex");
-      activeLabel.textContent = labels[currentFilter];
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initShopCatalog);
     } else {
-      activeBadge.classList.add("hidden");
-      activeBadge.classList.remove("inline-flex");
+      initShopCatalog();
     }
-
-    // 6. Update URL query params without reloading
-    const params = new URLSearchParams();
-    if (currentFilter !== "all") params.set("for", currentFilter);
-    if (query) params.set("q", query);
-    if (currentSort !== "default") params.set("sort", currentSort);
-    const paramStr = params.toString();
-    const newUrl = paramStr ? `${location.pathname}?${paramStr}` : location.pathname;
-    history.replaceState(null, "", newUrl);
-  };
-
-  // Reset function
-  const resetAll = () => {
-    currentFilter = "all";
-    searchQuery = "";
-    currentSort = "default";
-    searchInput.value = "";
-    sortSelect.value = "default";
-    applyFiltersAndSort(true);
-  };
-
-  // Event Listeners
-  chips.forEach((c) => {
-    c.addEventListener("click", () => {
-      const targetFilter = c.dataset.f!;
-      if (currentFilter === targetFilter) return;
-      currentFilter = targetFilter;
-      applyFiltersAndSort(true);
-    });
-  });
-
-  // Search input debounced
-  let searchTimeout: any;
-  searchInput.addEventListener("input", () => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      searchQuery = searchInput.value;
-      applyFiltersAndSort(false);
-    }, 150);
-  });
-
-  searchClear.addEventListener("click", () => {
-    searchInput.value = "";
-    searchQuery = "";
-    applyFiltersAndSort(true);
-    searchInput.focus();
-  });
-
-  // Sort change
-  sortSelect.addEventListener("change", () => {
-    currentSort = sortSelect.value;
-    applyFiltersAndSort(true);
-  });
-
-  // Reset buttons
-  emptyReset.addEventListener("click", resetAll);
-  btnResetAll.addEventListener("click", resetAll);
-  clearActive.addEventListener("click", () => {
-    currentFilter = "all";
-    applyFiltersAndSort(true);
-  });
-
-  // Read initial query params
-  const urlParams = new URLSearchParams(location.search);
-  const initialFor = urlParams.get("for");
-  const initialQ = urlParams.get("q");
-  const initialSort = urlParams.get("sort");
-
-  if (initialFor && chips.some((c) => c.dataset.f === initialFor)) {
-    currentFilter = initialFor;
-  }
-  if (initialQ) {
-    searchQuery = initialQ;
-    searchInput.value = initialQ;
-  }
-  if (initialSort && ["price-asc", "price-desc", "name-asc", "name-desc"].includes(initialSort)) {
-    currentSort = initialSort;
-    sortSelect.value = initialSort;
-  }
-
-  // Initial run
-  applyFiltersAndSort(false);
+    document.addEventListener("astro:page-load", initShopCatalog);
+  })();
 </script>
