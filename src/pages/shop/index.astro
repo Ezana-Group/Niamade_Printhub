@@ -24,13 +24,21 @@ const ld = {
 
 const hasOffers = products.some((p: any) => p.onSale || p.discountBadge);
 const hasCollabs = products.some((p: any) => p.isCollab);
+
+const countFor = (tag: string) => {
+  if (tag === "all") return products.length;
+  if (tag === "sale") return products.filter((p: any) => p.onSale || p.discountBadge).length;
+  if (tag === "collab") return products.filter((p: any) => p.isCollab).length;
+  return products.filter((p: any) => (p.tags || []).includes(tag)).length;
+};
 ---
 <Layout
   title="3D Print Shop"
   jsonLd={ld}
   description="Personalised gifts, branded business pieces, Kenya souvenirs, home décor and useful parts, 3D printed to order in Eldoret. Pay by M-Pesa, delivery across Kenya."
 >
-  <section class="wrap pt-8 md:pt-12">
+  <!-- Full-Width Fluid Container for the Body -->
+  <section class="w-full max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-6 md:pt-10">
     <!-- Breadcrumb -->
     <nav aria-label="Breadcrumb" class="text-sm text-mute flex items-center gap-2">
       <a href="/" class="hover:text-brand transition-colors">Home</a>
@@ -39,16 +47,16 @@ const hasCollabs = products.some((p: any) => p.isCollab);
     </nav>
 
     <!-- Header Section -->
-    <div class="mt-4 md:mt-6">
+    <div class="mt-4 md:mt-6 max-w-4xl">
       <p class="eyebrow rise">3D Print Shop Kenya</p>
-      <h1 style="--d:60ms" class="rise mt-2 text-4xl sm:text-5xl md:text-6xl max-w-3xl">Made to order, just for you.</h1>
-      <p style="--d:120ms" class="rise mt-3 text-lg sm:text-xl text-mute max-w-2xl leading-relaxed">
+      <h1 style="--d:60ms" class="rise mt-2 text-4xl sm:text-5xl md:text-6xl">Made to order, just for you.</h1>
+      <p style="--d:120ms" class="rise mt-3 text-lg sm:text-xl text-mute leading-relaxed">
         Custom 3D printed gifts, branded corporate pieces, Kenya souvenirs, home décor and replacement parts. Hand-calibrated and printed to order in Eldoret, with courier delivery across Kenya.
       </p>
     </div>
 
     <!-- Assurance / Value Strip -->
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 py-4 px-5 rounded-3xl bg-sand/50 border border-line/60">
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 py-3.5 px-5 rounded-3xl bg-sand/50 border border-line/60">
       <div class="flex items-center gap-2.5">
         <span class="w-8 h-8 rounded-full bg-card grid place-items-center text-brand shrink-0 shadow-xs"><Icon name="truck" size={17} /></span>
         <div class="text-xs">
@@ -79,170 +87,258 @@ const hasCollabs = products.some((p: any) => p.isCollab);
       </div>
     </div>
 
-    <!-- Shop Control Bar (Search + Sort) -->
-    <div class="mt-10 p-4 md:p-5 rounded-4xl bg-card border border-line shadow-xs">
-      <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-        <!-- Search Input -->
-        <div class="relative flex-1">
-          <label for="shop-search" class="sr-only">Search products</label>
-          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-mute">
-            <Icon name="search" size={18} />
+    <!-- Mobile-Only Filter Bar (Visible on mobile/tablet, hidden on desktop lg:) -->
+    <div class="lg:hidden mt-8 space-y-3 p-4 rounded-3xl bg-card border border-line shadow-xs">
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-mute">
+          <Icon name="search" size={17} />
+        </div>
+        <input
+          id="shop-search-mobile"
+          type="search"
+          autocomplete="off"
+          placeholder="Search pieces..."
+          class="w-full rounded-2xl border border-line bg-cream/40 pl-9 pr-8 py-2 text-sm text-ink placeholder:text-mute/70 focus:outline-none focus:border-brand"
+        />
+      </div>
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-line/60">
+        <label for="shop-sort-mobile" class="text-xs font-bold uppercase tracking-wider text-mute flex items-center gap-1">
+          <Icon name="sort" size={14} /> Sort:
+        </label>
+        <select
+          id="shop-sort-mobile"
+          class="rounded-xl border border-line bg-card py-1.5 pl-2.5 pr-6 text-xs font-semibold text-ink focus:outline-none focus:border-brand"
+        >
+          <option value="default">Featured / Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A to Z</option>
+          <option value="name-desc">Name: Z to A</option>
+        </select>
+      </div>
+      <!-- Mobile Horizontal Scrollable Chips -->
+      <div class="pt-2 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="chips-mobile">
+        <button type="button" class="chip !text-xs !py-1.5 !px-3 shrink-0" data-f="all" aria-pressed="true">All ({products.length})</button>
+        {hasOffers && <button type="button" class="chip !text-xs !py-1.5 !px-3 shrink-0 font-bold !text-brand border !border-brand/40 bg-brand/5" data-f="sale" aria-pressed="false">🔥 Offers ({countFor("sale")})</button>}
+        {hasCollabs && <button type="button" class="chip !text-xs !py-1.5 !px-3 shrink-0 font-semibold !text-ink border !border-ink/20" data-f="collab" aria-pressed="false">🤝 Collabs ({countFor("collab")})</button>}
+        {occasions.map((o) => (
+          <button type="button" class="chip !text-xs !py-1.5 !px-3 shrink-0" data-f={o.id} aria-pressed="false">
+            {o.label} ({countFor(o.id)})
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Main Store Layout (Sidebar on Left, Products on Right) -->
+    <div class="mt-8 lg:mt-10 lg:grid lg:grid-cols-12 gap-8 xl:gap-10 items-start">
+      
+      <!-- LEFT SIDEBAR: FILTERS & CATEGORIES (Desktop lg:) -->
+      <aside class="hidden lg:block lg:col-span-4 xl:col-span-3 space-y-6 lg:sticky lg:top-24">
+        
+        <!-- Search & Sort Box -->
+        <div class="p-5 rounded-4xl bg-card border border-line shadow-xs space-y-4">
+          <!-- Search Input -->
+          <div>
+            <label for="shop-search" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1.5">
+              Search Catalog
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-mute">
+                <Icon name="search" size={17} />
+              </div>
+              <input
+                id="shop-search"
+                type="search"
+                autocomplete="off"
+                placeholder="Search gifts, vases, parts..."
+                class="w-full rounded-2xl border-2 border-line bg-cream/30 pl-9 pr-9 py-2.5 text-sm text-ink placeholder:text-mute/70 focus:outline-none focus:border-brand focus:bg-card focus:ring-4 focus:ring-brand/10 transition-all"
+              />
+              <button
+                id="search-clear"
+                type="button"
+                class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-mute hover:text-ink transition-colors"
+                aria-label="Clear search query"
+              >
+                <Icon name="close" size={15} />
+              </button>
+            </div>
           </div>
-          <input
-            id="shop-search"
-            type="search"
-            autocomplete="off"
-            placeholder="Search gifts, keychains, desk stands, vases, parts..."
-            class="w-full rounded-2xl border-2 border-line bg-cream/30 pl-10 pr-10 py-2.5 text-[0.95rem] text-ink placeholder:text-mute/70 focus:outline-none focus:border-brand focus:bg-card focus:ring-4 focus:ring-brand/10 transition-all"
-          />
-          <button
-            id="search-clear"
-            type="button"
-            class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-mute hover:text-ink transition-colors"
-            aria-label="Clear search query"
-          >
-            <Icon name="close" size={16} />
-          </button>
+
+          <!-- Sort Select -->
+          <div>
+            <label for="shop-sort" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1.5 flex items-center gap-1.5">
+              <Icon name="sort" size={14} /> Sort By
+            </label>
+            <select
+              id="shop-sort"
+              class="w-full rounded-2xl border-2 border-line bg-card py-2.5 pl-3 pr-8 text-sm font-semibold text-ink focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 cursor-pointer"
+            >
+              <option value="default">Featured / Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A to Z</option>
+              <option value="name-desc">Name: Z to A</option>
+            </select>
+          </div>
         </div>
 
-        <!-- Sort Select -->
-        <div class="flex items-center gap-2.5 shrink-0">
-          <label for="shop-sort" class="text-xs font-bold uppercase tracking-wider text-mute whitespace-nowrap flex items-center gap-1.5">
-            <Icon name="sort" size={14} /> Sort:
-          </label>
-          <select
-            id="shop-sort"
-            class="rounded-xl border-2 border-line bg-card py-2.5 pl-3 pr-8 text-[0.9rem] font-semibold text-ink focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 cursor-pointer"
-          >
-            <option value="default">Featured / Default</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="name-asc">Name: A to Z</option>
-            <option value="name-desc">Name: Z to A</option>
-          </select>
-        </div>
-      </div>
+        <!-- Categories & Occasions List -->
+        <div class="p-5 rounded-4xl bg-card border border-line shadow-xs">
+          <div class="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-line/60">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-mute">Browse Categories</h2>
+            <button
+              id="btn-reset-all"
+              type="button"
+              class="hidden text-xs font-bold text-brand hover:underline inline-flex items-center gap-1"
+            >
+              <Icon name="close" size={12} /> Reset
+            </button>
+          </div>
 
-      <!-- Filter Group Chips -->
-      <div class="mt-4 pt-4 border-t border-line/60">
-        <div class="flex items-center justify-between gap-2 mb-2.5">
-          <span class="text-xs font-bold uppercase tracking-wider text-mute">Browse by Occasion & Category</span>
-          <button
-            id="btn-reset-all"
-            type="button"
-            class="hidden text-xs font-bold text-brand hover:underline inline-flex items-center gap-1"
-          >
-            <Icon name="close" size={12} /> Reset all
-          </button>
-        </div>
-        <div id="chips" role="group" aria-label="Filter by category and occasion" class="flex flex-wrap gap-2">
-          <button type="button" class="chip" data-f="all" aria-pressed="true">All Pieces</button>
-          {hasOffers && (
+          <div id="chips-desktop" role="group" aria-label="Filter by category" class="space-y-1">
             <button
               type="button"
-              class="chip font-bold !text-brand border !border-brand/40 bg-brand/5 hover:!bg-brand hover:!text-white"
-              data-f="sale"
-              aria-pressed="false"
+              class="side-chip w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-[0.92rem] font-medium border border-transparent transition-all duration-150 hover:bg-sand/70 text-ink/85 aria-[pressed=true]:bg-ink aria-[pressed=true]:text-cream aria-[pressed=true]:font-bold text-left cursor-pointer"
+              data-f="all"
+              aria-pressed="true"
             >
-              🔥 Offers & Sale
+              <span>All Pieces</span>
+              <span class="count-badge text-xs px-2 py-0.5 rounded-full bg-sand text-ink font-bold">{countFor("all")}</span>
             </button>
-          )}
-          {hasCollabs && (
-            <button
-              type="button"
-              class="chip font-semibold !text-ink border !border-ink/20 hover:!bg-ink hover:!text-cream transition-colors"
-              data-f="collab"
-              aria-pressed="false"
-            >
-              🤝 Creator Collabs
+
+            {hasOffers && (
+              <button
+                type="button"
+                class="side-chip w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-[0.92rem] font-bold border border-brand/20 bg-brand/5 hover:bg-brand/10 text-brand aria-[pressed=true]:!bg-brand aria-[pressed=true]:!text-white text-left cursor-pointer transition-all duration-150"
+                data-f="sale"
+                aria-pressed="false"
+              >
+                <span>🔥 Offers & Sale</span>
+                <span class="count-badge text-xs px-2 py-0.5 rounded-full bg-brand/15 text-brand font-bold">{countFor("sale")}</span>
+              </button>
+            )}
+
+            {hasCollabs && (
+              <button
+                type="button"
+                class="side-chip w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-[0.92rem] font-semibold border border-ink/10 hover:bg-sand/80 text-ink aria-[pressed=true]:bg-ink aria-[pressed=true]:text-cream text-left cursor-pointer transition-all duration-150"
+                data-f="collab"
+                aria-pressed="false"
+              >
+                <span>🤝 Creator Collabs</span>
+                <span class="count-badge text-xs px-2 py-0.5 rounded-full bg-sand text-ink font-bold">{countFor("collab")}</span>
+              </button>
+            )}
+
+            {occasions.map((o) => (
+              <button
+                type="button"
+                class="side-chip w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-[0.92rem] font-medium border border-transparent transition-all duration-150 hover:bg-sand/70 text-ink/85 aria-[pressed=true]:bg-ink aria-[pressed=true]:text-cream aria-[pressed=true]:font-bold text-left cursor-pointer"
+                data-f={o.id}
+                aria-pressed="false"
+              >
+                <span>{o.label}</span>
+                <span class="count-badge text-xs px-2 py-0.5 rounded-full bg-sand text-ink font-bold">{countFor(o.id)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Custom Request Mini-Card -->
+        <div class="p-5 rounded-4xl bg-sand/60 border border-line text-sm space-y-3">
+          <p class="font-bold text-ink flex items-center gap-2">
+            <Icon name="cube" size={17} /> Need a custom print?
+          </p>
+          <p class="text-xs text-mute leading-relaxed">
+            Upload your 3D file (STL/STEP) or let our team design from your sketch.
+          </p>
+          <div class="pt-1 flex flex-col gap-2">
+            <a href="/custom/" class="btn btn-ink !text-xs !py-2.5 w-full">Upload 3D File</a>
+            <a href={wa("Hi PrintHub, I have a custom design request.")} target="_blank" rel="noopener" class="btn btn-wa !text-xs !py-2.5 w-full">
+              <Icon name="whatsapp" size={15} /> Chat with Designer
+            </a>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT COLUMN: PRODUCT CATALOG & EXPANSIVE GRID -->
+      <main class="lg:col-span-8 xl:col-span-9">
+        
+        <!-- Active Filter Bar & Results Count -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-sm pb-4 border-b border-line/60">
+          <div class="flex items-center gap-2.5">
+            <p id="count" class="font-bold text-ink" role="status" aria-live="polite">
+              Showing all {products.length} pieces
+            </p>
+            <div id="active-badge" class="hidden items-center gap-1.5 px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-bold">
+              <span id="active-label"></span>
+              <button id="clear-active" type="button" class="hover:text-ink transition-colors ml-0.5" aria-label="Remove filter">✕</button>
+            </div>
+          </div>
+          <p class="text-xs text-mute">
+            Hand-crafted &amp; printed to order in Eldoret · Countrywide delivery
+          </p>
+        </div>
+
+        <!-- Expansive Product Grid -->
+        <div id="grid" class="mt-6 grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          {products.map((p) => <ProductCard p={p} filterable />)}
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="empty-state" class="hidden mt-8 py-16 px-6 text-center panel bg-card max-w-xl mx-auto">
+          <div class="w-16 h-16 rounded-full bg-sand/70 text-brand grid place-items-center mx-auto text-2xl">
+            <Icon name="search" size={28} />
+          </div>
+          <h2 class="mt-4 text-2xl font-display">No matching pieces found</h2>
+          <p class="mt-2 text-mute text-sm max-w-md mx-auto">
+            We couldn't find anything matching your search or filters. But don't worry — we can 3D print almost anything you have in mind!
+          </p>
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button id="empty-reset" type="button" class="btn btn-soft text-sm py-2.5 px-5">
+              Reset all filters
             </button>
-          )}
-          {occasions.map((o) => (
-            <button type="button" class="chip" data-f={o.id} aria-pressed="false">
-              {o.label}
-            </button>
-          ))}
+            <a href={wa("Hi PrintHub, I was looking for a specific item on your shop that isn't listed.")} target="_blank" rel="noopener" class="btn btn-wa text-sm py-2.5 px-5">
+              <Icon name="whatsapp" size={16} /> Request custom quote
+            </a>
+          </div>
         </div>
-      </div>
+
+        <!-- How Ordering Works Banner -->
+        <div class="mt-14 p-6 sm:p-8 rounded-5xl bg-sand/60 border border-line">
+          <h2 class="text-2xl sm:text-3xl font-display text-center">How Ordering at PrintHub Works</h2>
+          <p class="mt-1 text-mute text-center text-sm max-w-md mx-auto">From idea to delivery at your doorstep in 3 simple steps.</p>
+          <div class="mt-8 grid sm:grid-cols-3 gap-6">
+            <div class="panel p-5 bg-card text-center sm:text-left">
+              <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">1</span>
+              <h3 class="font-display text-lg">Pick & Personalise</h3>
+              <p class="text-xs text-mute mt-1.5 leading-relaxed">Choose your model, custom text, name, logo, or tell us your favourite filament colour.</p>
+            </div>
+            <div class="panel p-5 bg-card text-center sm:text-left">
+              <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">2</span>
+              <h3 class="font-display text-lg">Pay & Preview</h3>
+              <p class="text-xs text-mute mt-1.5 leading-relaxed">Check out securely via M-Pesa or Card. We confirm 3D slicer details on WhatsApp before manufacturing.</p>
+            </div>
+            <div class="panel p-5 bg-card text-center sm:text-left">
+              <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">3</span>
+              <h3 class="font-display text-lg">Fast Doorstep Delivery</h3>
+              <p class="text-xs text-mute mt-1.5 leading-relaxed">Printed in Eldoret in 24–48 hours, then dispatched countrywide via trusted parcel couriers.</p>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
     </div>
 
-    <!-- Active Filters & Result Count -->
-    <div class="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
-      <div class="flex items-center gap-2">
-        <p id="count" class="font-medium text-mute" role="status" aria-live="polite">
-          Showing all {products.length} pieces
-        </p>
-        <div id="active-badge" class="hidden items-center gap-1 px-2.5 py-0.5 rounded-full bg-sand text-xs font-bold text-ink">
-          <span id="active-label"></span>
-          <button id="clear-active" type="button" class="text-mute hover:text-brand" aria-label="Remove filter">✕</button>
-        </div>
-      </div>
-      <p class="text-xs text-mute hidden sm:block">
-        Need custom colours, sizing or your logo? Every piece is made to order.
-      </p>
-    </div>
-
-    <!-- Product Grid -->
-    <div id="grid" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      {products.map((p) => <ProductCard p={p} filterable />)}
-    </div>
-
-    <!-- Empty State (Hidden by default) -->
-    <div id="empty-state" class="hidden mt-8 py-16 px-6 text-center panel bg-card max-w-xl mx-auto">
-      <div class="w-16 h-16 rounded-full bg-sand/70 text-brand grid place-items-center mx-auto text-2xl">
-        <Icon name="search" size={28} />
-      </div>
-      <h2 class="mt-4 text-2xl font-display">No matching pieces found</h2>
-      <p class="mt-2 text-mute text-sm max-w-md mx-auto">
-        We couldn't find anything matching your search or filters. But don't worry — we can 3D print almost anything you have in mind!
-      </p>
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <button id="empty-reset" type="button" class="btn btn-soft text-sm py-2.5 px-5">
-          Reset all filters
-        </button>
-        <a href={wa("Hi PrintHub, I was looking for a specific item on your shop that isn't listed.")} target="_blank" rel="noopener" class="btn btn-wa text-sm py-2.5 px-5">
-          <Icon name="whatsapp" size={16} /> Request custom quote
-        </a>
-      </div>
-    </div>
-
-    <!-- Note on preview illustrations -->
-    {products.some((p: any) => !p.photos || !p.photos.length) && (
-      <p class="mt-8 text-sm text-mute text-center sm:text-left">
-        Illustrations represent the geometry and finish of each piece. Yours is 3D printed fresh to your exact colour choice.
-      </p>
-    )}
-
-    <!-- How Ordering Works Banner -->
-    <div class="mt-14 p-6 sm:p-8 rounded-5xl bg-sand/60 border border-line">
-      <h2 class="text-2xl sm:text-3xl font-display text-center">How Ordering at PrintHub Works</h2>
-      <p class="mt-1 text-mute text-center text-sm max-w-md mx-auto">From idea to delivery at your doorstep in 3 simple steps.</p>
-      <div class="mt-8 grid sm:grid-cols-3 gap-6">
-        <div class="panel p-5 bg-card text-center sm:text-left">
-          <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">1</span>
-          <h3 class="font-display text-lg">Pick & Personalise</h3>
-          <p class="text-xs text-mute mt-1.5 leading-relaxed">Choose your model, custom text, name, logo, or tell us your favourite filament colour.</p>
-        </div>
-        <div class="panel p-5 bg-card text-center sm:text-left">
-          <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">2</span>
-          <h3 class="font-display text-lg">Pay & Preview</h3>
-          <p class="text-xs text-mute mt-1.5 leading-relaxed">Check out securely via M-Pesa or Card. We confirm 3D slicer details on WhatsApp before manufacturing.</p>
-        </div>
-        <div class="panel p-5 bg-card text-center sm:text-left">
-          <span class="w-8 h-8 rounded-full bg-brand text-white font-bold text-sm grid place-items-center mb-3 sm:mx-0 mx-auto">3</span>
-          <h3 class="font-display text-lg">Fast Doorstep Delivery</h3>
-          <p class="text-xs text-mute mt-1.5 leading-relaxed">Printed in Eldoret in 24–48 hours, then dispatched countrywide via trusted parcel couriers.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom CTA: Custom Design & File Upload -->
-    <div class="mt-12 rounded-5xl bg-sky p-8 md:p-10 flex flex-wrap items-center justify-between gap-6">
-      <div class="max-w-xl">
+    <!-- Bottom Full-Width CTA: Custom Design & File Upload -->
+    <div class="mt-16 rounded-5xl bg-sky p-8 md:p-12 flex flex-wrap items-center justify-between gap-6">
+      <div class="max-w-2xl">
         <p class="eyebrow text-ink font-bold">Have your own STL file or custom idea?</p>
         <h2 class="mt-1 text-3xl md:text-4xl">Don't see what you need in the shop?</h2>
         <p class="mt-2 text-base md:text-lg text-ink/80 leading-relaxed">
-          Most of our work is custom! Upload your 3D files (STL/STEP) for an instant slicing assessment, or chat with our design team.
+          Most of our work is custom! Upload your 3D files (STL/STEP) for an instant slicing assessment, or chat directly with our engineering team on WhatsApp.
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-3">
@@ -266,16 +362,24 @@ const hasCollabs = products.some((p: any) => p.isCollab);
       const items = Array.from(grid.querySelectorAll("[data-tags]"));
       const originalOrder = [...items];
       const count = document.getElementById("count");
-      const searchInput = document.getElementById("shop-search");
+      
+      const searchInputs = [
+        document.getElementById("shop-search"),
+        document.getElementById("shop-search-mobile")
+      ].filter(Boolean);
+
+      const sortSelects = [
+        document.getElementById("shop-sort"),
+        document.getElementById("shop-sort-mobile")
+      ].filter(Boolean);
+
       const searchClear = document.getElementById("search-clear");
-      const sortSelect = document.getElementById("shop-sort");
       const emptyState = document.getElementById("empty-state");
       const emptyReset = document.getElementById("empty-reset");
       const btnResetAll = document.getElementById("btn-reset-all");
       const activeBadge = document.getElementById("active-badge");
       const activeLabel = document.getElementById("active-label");
       const clearActive = document.getElementById("clear-active");
-      const chipsContainer = document.getElementById("chips");
 
       // State
       let currentFilter = "all";
@@ -292,29 +396,39 @@ const hasCollabs = products.some((p: any) => p.isCollab);
         if (initialFor) currentFilter = initialFor;
         if (initialQ) {
           searchQuery = initialQ;
-          if (searchInput) searchInput.value = initialQ;
+          searchInputs.forEach(input => { input.value = initialQ; });
         }
         if (initialSort && ["price-asc", "price-desc", "name-asc", "name-desc"].includes(initialSort)) {
           currentSort = initialSort;
-          if (sortSelect) sortSelect.value = initialSort;
+          sortSelects.forEach(select => { select.value = initialSort; });
         }
       } catch (e) {}
 
       function getChipLabel(filterId) {
-        if (!chipsContainer) return filterId;
-        const btn = chipsContainer.querySelector(`button[data-f="${filterId}"]`);
-        return btn ? btn.textContent.trim().replace(/^[^\w]+/, '') : filterId;
+        const btn = document.querySelector(`button[data-f="${filterId}"]`);
+        if (!btn) return filterId;
+        const span = btn.querySelector("span");
+        return (span ? span.textContent : btn.textContent).trim().replace(/^[^\w]+/, '');
       }
 
       function applyFiltersAndSort() {
-        // 1. Update Chip UI
-        if (chipsContainer) {
-          const chips = chipsContainer.querySelectorAll("button[data-f]");
-          chips.forEach((c) => {
-            const isActive = c.getAttribute("data-f") === currentFilter;
-            c.setAttribute("aria-pressed", String(isActive));
-          });
-        }
+        // 1. Update Chip UI across all buttons with data-f
+        const allButtons = document.querySelectorAll("button[data-f]");
+        allButtons.forEach((c) => {
+          const isActive = c.getAttribute("data-f") === currentFilter;
+          c.setAttribute("aria-pressed", String(isActive));
+          // update count badge style if present
+          const badge = c.querySelector(".count-badge");
+          if (badge) {
+            if (isActive) {
+              badge.classList.remove("bg-sand", "text-ink");
+              badge.classList.add("bg-white/20", "text-cream");
+            } else {
+              badge.classList.remove("bg-white/20", "text-cream");
+              badge.classList.add("bg-sand", "text-ink");
+            }
+          }
+        });
 
         // 2. Filter Items
         const query = (searchQuery || "").trim().toLowerCase();
@@ -403,7 +517,12 @@ const hasCollabs = products.some((p: any) => p.isCollab);
           }
         }
 
-        // 6. Update URL
+        // 6. Synchronize Inputs
+        sortSelects.forEach(select => {
+          if (select.value !== currentSort) select.value = currentSort;
+        });
+
+        // 7. Update URL
         try {
           const params = new URLSearchParams();
           if (currentFilter !== "all") params.set("for", currentFilter);
@@ -419,47 +538,49 @@ const hasCollabs = products.some((p: any) => p.isCollab);
         currentFilter = "all";
         searchQuery = "";
         currentSort = "default";
-        if (searchInput) searchInput.value = "";
-        if (sortSelect) sortSelect.value = "default";
+        searchInputs.forEach(input => { input.value = ""; });
+        sortSelects.forEach(select => { select.value = "default"; });
         applyFiltersAndSort();
       }
 
-      // Event Listeners with Event Delegation
-      if (chipsContainer) {
-        chipsContainer.addEventListener("click", function (e) {
-          const btn = e.target.closest("button[data-f]");
-          if (!btn) return;
-          const targetFilter = btn.getAttribute("data-f");
-          if (!targetFilter || currentFilter === targetFilter) return;
-          currentFilter = targetFilter;
+      // Event Listeners: Click delegation for all filter buttons
+      document.addEventListener("click", function (e) {
+        const btn = e.target.closest("button[data-f]");
+        if (!btn) return;
+        const targetFilter = btn.getAttribute("data-f");
+        if (!targetFilter || currentFilter === targetFilter) return;
+        currentFilter = targetFilter;
+        applyFiltersAndSort();
+      });
+
+      // Sort changes
+      sortSelects.forEach(select => {
+        select.addEventListener("change", function () {
+          currentSort = select.value;
           applyFiltersAndSort();
         });
-      }
+      });
 
-      if (sortSelect) {
-        sortSelect.addEventListener("change", function () {
-          currentSort = sortSelect.value;
-          applyFiltersAndSort();
-        });
-      }
-
-      if (searchInput) {
-        let searchTimeout;
-        searchInput.addEventListener("input", function () {
+      // Search inputs debounced
+      let searchTimeout;
+      searchInputs.forEach(input => {
+        input.addEventListener("input", function () {
           clearTimeout(searchTimeout);
           searchTimeout = setTimeout(function () {
-            searchQuery = searchInput.value;
+            searchQuery = input.value;
+            // sync other search inputs
+            searchInputs.forEach(other => { if (other !== input) other.value = input.value; });
             applyFiltersAndSort();
           }, 120);
         });
-      }
+      });
 
-      if (searchClear && searchInput) {
+      if (searchClear) {
         searchClear.addEventListener("click", function () {
-          searchInput.value = "";
+          searchInputs.forEach(input => { input.value = ""; });
           searchQuery = "";
           applyFiltersAndSort();
-          searchInput.focus();
+          searchInputs[0]?.focus();
         });
       }
 
@@ -472,7 +593,7 @@ const hasCollabs = products.some((p: any) => p.isCollab);
         });
       }
 
-      // Run initial filter & sort
+      // Initial run
       applyFiltersAndSort();
     }
 
