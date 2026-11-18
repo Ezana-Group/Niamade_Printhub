@@ -56,8 +56,8 @@ const ld = {
   <section class="wrap mt-24 grid lg:grid-cols-12 gap-10 items-start">
     <div class="lg:col-span-7">
       <p class="eyebrow">How a business order works</p><h2 class="mt-2 text-4xl md:text-5xl">Simple, and quoted before you pay.</h2>
-      <ol class="mt-8 space-y-4">
-        {biz.map((s, i) => <li class="panel p-6 flex gap-5"><span class="w-11 h-11 shrink-0 rounded-full bg-peach grid place-items-center font-display text-xl font-semibold text-brand">{i + 1}</span><div><h3 class="font-display text-xl">{s.n}</h3><p class="text-mute mt-1">{s.t}</p></div></li>)}
+      <ol class="mt-8 space-y-4" data-reveal-group>
+        {biz.map((s, i) => <li class="press lift panel p-6 flex gap-5"><span class="w-11 h-11 shrink-0 rounded-full bg-peach grid place-items-center font-display text-xl font-semibold text-brand">{i + 1}</span><div><h3 class="font-display text-xl">{s.n}</h3><p class="text-mute mt-1">{s.t}</p></div></li>)}
       </ol>
     </div>
     <aside class="lg:col-span-5 rounded-5xl bg-sky p-8 lg:sticky lg:top-28">

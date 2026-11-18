@@ -113,19 +113,27 @@ const websiteLd = {
   </body>
 </html>
 <script>
-  // Scroll reveal: children of [data-reveal-group] rise in once, staggered by their order within each batch.
-  const groups = document.querySelectorAll<HTMLElement>("[data-reveal-group]");
-  (window as any).__revealReady = true;
-  if (groups.length && document.documentElement.classList.contains("js")) {
-    const io = new IntersectionObserver((entries) => {
-      let k = 0;
-      entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left).forEach((e) => {
-        const el = e.target as HTMLElement;
-        io.unobserve(el);
-        el.animate([{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], { duration: 520, delay: Math.min(k++, 5) * 60, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "backwards" });
-        el.setAttribute("data-in", "");
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
-    groups.forEach((g) => Array.from(g.children).forEach((c) => io.observe(c)));
+  function setupScrollReveals() {
+    const groups = document.querySelectorAll<HTMLElement>("[data-reveal-group]");
+    const singles = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    (window as any).__revealReady = true;
+
+    if ((groups.length || singles.length) && document.documentElement.classList.contains("js")) {
+      const io = new IntersectionObserver((entries) => {
+        let k = 0;
+        entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left).forEach((e) => {
+          const el = e.target as HTMLElement;
+          io.unobserve(el);
+          el.animate([{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 520, delay: Math.min(k++, 5) * 50, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "backwards" });
+          el.setAttribute("data-in", "");
+        });
+      }, { threshold: 0.1, rootMargin: "0px 0px -4% 0px" });
+
+      groups.forEach((g) => Array.from(g.children).forEach((c) => io.observe(c)));
+      singles.forEach((s) => io.observe(s));
+    }
   }
+
+  setupScrollReveals();
+  document.addEventListener("astro:page-load", setupScrollReveals);
 </script>

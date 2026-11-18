@@ -47,13 +47,13 @@ const ld = {
   <!-- HERO -->
   <section class="wrap pt-10 md:pt-16 pb-6 grid lg:grid-cols-12 gap-12 items-center">
     <div class="lg:col-span-7">
-      <div style="--d:0ms" class="rise inline-flex items-center gap-2.5 rounded-full bg-card border border-line px-4 py-2 text-[0.95rem] font-semibold">
-        <span id="open-dot" class="w-2.5 h-2.5 rounded-full bg-mute/50"></span><span id="open-text">Eldoret · quotes on WhatsApp</span>
+      <div style="--d:0ms" class="rise inline-flex items-center gap-2.5 rounded-full bg-card border border-line px-4 py-2 text-[0.95rem] font-semibold shadow-2xs">
+        <span id="open-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse-dot"></span><span id="open-text">Eldoret · quotes on WhatsApp</span>
       </div>
       <p class="eyebrow rise mt-4 block">Custom 3D Printing & Fabrication · Kenya</p>
       <h1 style="--d:60ms" class="rise mt-2 text-[clamp(2.5rem,5.6vw,4.4rem)]">
         Ideas are cheap.
-        <span class="block italic text-brand">Making them real <span class="relative inline-block">is the hard part.<svg class="absolute left-0 -bottom-2 w-full h-3 text-coral" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8c20-8 30 6 50-1s30-7 50 0 30 7 50 0 30-6 46-1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span></span>
+        <span class="block italic text-brand">Making them real <span class="relative inline-block">is the hard part.<svg class="absolute left-0 -bottom-2 w-full h-3 text-coral" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8c20-8 30 6 50-1s30-7 50 0 30 7 50 0 30 7 50 0 30-6 46-1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="animate-draw"/></svg></span></span>
       </h1>
       <p style="--d:130ms" class="rise mt-7 text-xl text-mute max-w-xl">We design, engineer and manufacture custom 3D printed pieces, prototypes and dimensional branding. Based in Eldoret, delivered across Kenya.</p>
       <div style="--d:200ms" class="rise mt-9 flex flex-wrap gap-3">
@@ -69,15 +69,15 @@ const ld = {
     <div class="lg:col-span-5 relative">
       <div class="w-full grid grid-cols-2 gap-4 md:gap-5 max-w-lg mx-auto lg:max-w-none">
         <div class="space-y-4 md:space-y-5 pt-10">
-          <div style="--d:150ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="lithophane-photo-lamp" cat="Gifts" /></div>
-          <div style="--d:300ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="name-keychain" cat="Gifts" /></div>
+          <div style="--d:150ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="lithophane-photo-lamp" cat="Gifts" /></div>
+          <div style="--d:300ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="name-keychain" cat="Gifts" /></div>
         </div>
         <div class="space-y-4 md:space-y-5">
-          <div style="--d:220ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2"><ProductArt slug="geometric-spiral-vase" cat="Home & decor" /></div>
-          <div style="--d:370ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2"><ProductArt slug="kenya-topographic-relief" cat="Kenya" /></div>
+          <div style="--d:220ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="geometric-spiral-vase" cat="Home & decor" /></div>
+          <div style="--d:370ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="kenya-topographic-relief" cat="Kenya" /></div>
         </div>
       </div>
-      <div style="--d:520ms" class="rise absolute -top-3 -left-2 md:-left-5 w-28 h-28 md:w-32 md:h-32 rounded-full bg-butter border-4 border-white shadow-lg grid place-items-center text-center -rotate-6 font-display font-semibold leading-tight text-[0.95rem] md:text-base p-3">Made to order<br />in Eldoret</div>
+      <div style="--d:520ms" class="rise animate-float absolute -top-3 -left-2 md:-left-5 w-28 h-28 md:w-32 md:h-32 rounded-full bg-butter border-4 border-white shadow-lg grid place-items-center text-center font-display font-semibold leading-tight text-[0.95rem] md:text-base p-3 cursor-default">Made to order<br />in Eldoret</div>
     </div>
   </section>
 
@@ -177,7 +177,7 @@ const ld = {
 
   <!-- STUDIO & CORPORATE ENDORSEMENT -->
   <section class="wrap mt-24">
-    <div class="rounded-5xl bg-card border border-line p-8 md:p-11 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <div data-reveal class="rounded-5xl bg-card border border-line p-8 md:p-11 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xs hover-glow transition-all">
       <div class="max-w-2xl">
         <p class="eyebrow">The Studio</p>
         <p class="mt-2 text-lg md:text-xl text-ink/85 leading-relaxed font-display font-medium">
@@ -193,7 +193,7 @@ const ld = {
 
   <!-- SOCIAL -->
   <section class="wrap mt-24">
-    <div class="rounded-5xl bg-peach p-8 md:p-12 text-center">
+    <div data-reveal class="rounded-5xl bg-peach p-8 md:p-12 text-center shadow-xs">
       <p class="eyebrow">Follow along</p>
       <h2 class="mt-2 text-4xl md:text-5xl">See what we are printing this week.</h2>
       <p class="mt-3 text-lg text-ink/75 max-w-xl mx-auto">New prints, work in progress and ideas for your next gift.</p>
@@ -217,7 +217,7 @@ const ld = {
 
   <!-- FINAL CTA -->
   <section class="wrap mt-24">
-    <div class="on-dark rounded-5xl bg-ink text-cream p-8 md:p-14 text-center">
+    <div data-reveal class="on-dark rounded-5xl bg-ink text-cream p-8 md:p-14 text-center shadow-2xl">
       <h2 class="text-4xl md:text-6xl text-cream">Got something in mind?</h2>
       <p class="mt-4 text-cream/75 text-lg max-w-xl mx-auto">Send us a message, even if it is just a rough idea. We will help you shape it.</p>
       <div class="mt-8 flex flex-wrap justify-center gap-3">

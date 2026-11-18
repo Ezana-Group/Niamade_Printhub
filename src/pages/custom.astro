@@ -33,7 +33,7 @@ const ld = {
       <p class="mt-4 text-lg text-ink/80 max-w-2xl">Send the geometry. We run slicing analysis, inspect overhangs, suggest the optimal polymer and layer height, then quote upfront in KES.</p>
       <p class="mt-5"><span class="sticker">Files we accept</span> <span class="ml-2 font-semibold">STL · OBJ · STEP · 3MF</span></p>
       <div data-reveal-group class="mt-9 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {printServices.map((s) => <div class="rounded-3xl bg-card p-6"><h3 class="font-display text-xl">{s.title}</h3><p class="text-mute mt-1.5">{s.text}</p></div>)}
+        {printServices.map((s) => <div class="press lift rounded-3xl bg-card p-6"><h3 class="font-display text-xl">{s.title}</h3><p class="text-mute mt-1.5">{s.text}</p></div>)}
       </div>
       <a href={wa(waMessages.customFile)} target="_blank" rel="noopener" class="btn btn-wa mt-9"><Icon name="whatsapp" size={20} />Send my file</a>
     </div>
@@ -44,7 +44,7 @@ const ld = {
       <p class="eyebrow">Route 2</p><h2 class="mt-2 text-4xl md:text-5xl">I only have an idea</h2>
       <p class="mt-4 text-lg text-ink/80 max-w-2xl">No CAD experience? That is what we are here for. Show us photos, calipers measurements or the broken original. We model it to exact engineering tolerance.</p>
       <div data-reveal-group class="mt-9 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {designServices.map((s) => <div class="rounded-3xl bg-card p-6"><h3 class="font-display text-xl">{s.title}</h3><p class="text-mute mt-1.5">{s.text}</p></div>)}
+        {designServices.map((s) => <div class="press lift rounded-3xl bg-card p-6"><h3 class="font-display text-xl">{s.title}</h3><p class="text-mute mt-1.5">{s.text}</p></div>)}
       </div>
       <p class="mt-8 rounded-3xl bg-white/70 px-6 py-4 max-w-2xl"><span class="font-bold">Transparent billing: </span>design work is quoted and approved first. Once your 3D model is finalised and approved, we quote the physical printing. No surprise invoices.</p>
       <a href={wa(waMessages.customIdea)} target="_blank" rel="noopener" class="btn btn-wa mt-8"><Icon name="whatsapp" size={20} />Tell us your idea</a>
@@ -54,7 +54,7 @@ const ld = {
   <section class="wrap mt-24">
     <div class="max-w-2xl"><p class="eyebrow">Materials</p><h2 class="mt-2 text-4xl md:text-5xl">We help you pick.</h2><p class="mt-4 text-lg text-mute">Not sure which to choose? Tell us what it is for and where it will live, and we will suggest one.</p></div>
     <div data-reveal-group class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      {materials.map((m) => <div class:list={["rounded-4xl p-6", tone[m.tone]]}><h3 class="font-display text-3xl">{m.name}</h3><p class="font-bold mt-1">{m.for}</p><p class="mt-3 text-ink/80">{m.note}</p></div>)}
+      {materials.map((m) => <div class:list={["press lift rounded-4xl p-6", tone[m.tone]]}><h3 class="font-display text-3xl">{m.name}</h3><p class="font-bold mt-1">{m.for}</p><p class="mt-3 text-ink/80">{m.note}</p></div>)}
     </div>
   </section>
 
