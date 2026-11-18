@@ -128,7 +128,10 @@ export const siteSettingsType = defineType({
       type: 'object',
       fields: [
         { name: 'instagram', type: 'string', title: 'Instagram URL' },
+        { name: 'threads', type: 'string', title: 'Threads URL' },
         { name: 'tiktok', type: 'string', title: 'TikTok URL' },
+        { name: 'youtube', type: 'string', title: 'YouTube URL' },
+        { name: 'linkedin', type: 'string', title: 'LinkedIn URL' },
         { name: 'facebook', type: 'string', title: 'Facebook URL' },
         { name: 'googleBusiness', type: 'string', title: 'Google Business Profile URL' },
       ],

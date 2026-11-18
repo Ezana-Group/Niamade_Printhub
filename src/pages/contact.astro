@@ -67,6 +67,33 @@ const ld = {
         <div id="status" role="status" aria-live="polite" class="text-base" hidden></div>
       </form>
     </div>
+    <!-- INTERLINKING -->
+    <div class="mt-16 border-t border-line pt-12">
+      <h2 class="font-display text-2xl font-semibold">Other quick links</h2>
+      <div class="mt-6 grid sm:grid-cols-3 gap-5">
+        <a href="/shop/" class="press lift group rounded-3xl bg-card border border-line p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-display text-lg font-semibold">3D Print Shop</h3>
+            <p class="mt-2 text-sm text-mute">Gifts, décor, and useful pieces ready to order with direct M-Pesa checkout.</p>
+          </div>
+          <span class="mt-4 font-bold text-brand text-sm group-hover:underline">Visit shop →</span>
+        </a>
+        <a href="/custom/" class="press lift group rounded-3xl bg-card border border-line p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-display text-lg font-semibold">Custom 3D Orders</h3>
+            <p class="mt-2 text-sm text-mute">Upload a 3D model or describe an idea for custom CAD modeling &amp; printing.</p>
+          </div>
+          <span class="mt-4 font-bold text-brand text-sm group-hover:underline">Custom orders →</span>
+        </a>
+        <a href="/help/" class="press lift group rounded-3xl bg-card border border-line p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-display text-lg font-semibold">Help &amp; FAQs</h3>
+            <p class="mt-2 text-sm text-mute">Instant answers to pricing, courier delivery, polymers, and file types.</p>
+          </div>
+          <span class="mt-4 font-bold text-brand text-sm group-hover:underline">Read FAQs →</span>
+        </a>
+      </div>
+    </div>
   </section>
 </Layout>
 <script define:vars={{ waBase: wa("").split("?")[0], email: site.email }}>

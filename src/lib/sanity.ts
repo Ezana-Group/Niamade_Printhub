@@ -44,6 +44,16 @@ export interface SanityWhatsAppMessages {
   help?: string;
 }
 
+export interface SanitySocials {
+  instagram?: string;
+  threads?: string;
+  tiktok?: string;
+  youtube?: string;
+  linkedin?: string;
+  facebook?: string;
+  googleBusiness?: string;
+}
+
 export interface SanitySettings {
   name?: string;
   phone?: string;
@@ -52,6 +62,7 @@ export interface SanitySettings {
   city?: string;
   hours?: string[];
   whatsappMessages?: SanityWhatsAppMessages;
+  socials?: SanitySocials;
   paystackPublicKey?: string;
   enableCheckout?: boolean;
 }
@@ -270,6 +281,7 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     city,
     hours,
     whatsappMessages,
+    socials,
     paystackPublicKey,
     enableCheckout
   }`);

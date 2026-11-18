@@ -29,5 +29,33 @@ const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: f
       <div class="max-w-xl"><h2 class="text-3xl md:text-4xl">Still wondering?</h2><p class="mt-2 text-lg text-ink/80">Ask us anything on WhatsApp and we will reply during opening hours.</p></div>
       <a href={wa(waMessages.help)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Ask on WhatsApp</a>
     </div>
+
+    <!-- INTERLINKING: READY TO TAKE ACTION -->
+    <div class="mt-16 border-t border-line pt-12">
+      <h2 class="font-display text-2xl font-semibold">Where would you like to go next?</h2>
+      <div class="mt-6 grid sm:grid-cols-3 gap-5">
+        <a href="/shop/" class="press lift group rounded-3xl bg-card border border-line p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-display text-lg font-semibold">Browse the 3D Print Shop</h3>
+            <p class="mt-2 text-sm text-mute">Explore our catalog of gifts, Kenya souvenirs, and home décor with direct M-Pesa checkout.</p>
+          </div>
+          <span class="mt-4 font-bold text-brand text-sm group-hover:underline">Visit the shop →</span>
+        </a>
+        <a href="/custom/" class="press lift group rounded-3xl bg-card border border-line p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-display text-lg font-semibold">Start a Custom Order</h3>
+            <p class="mt-2 text-sm text-mute">Send an STL, STEP file, broken component, or rough idea for custom CAD modeling and printing.</p>
+          </div>
+          <span class="mt-4 font-bold text-brand text-sm group-hover:underline">Custom orders →</span>
+        </a>
+        <a href="/contact/" class="press lift group rounded-3xl bg-card border border-line p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-display text-lg font-semibold">Contact &amp; Studio Hours</h3>
+            <p class="mt-2 text-sm text-mute">See our physical address in Eldoret, opening hours, phone contacts, and Google Maps location.</p>
+          </div>
+          <span class="mt-4 font-bold text-brand text-sm group-hover:underline">Contact us →</span>
+        </a>
+      </div>
+    </div>
   </section>
 </Layout>
