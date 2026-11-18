@@ -23,7 +23,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('🔥 On Sale / Promotional Pieces')
+                .title('On Sale / Promotional Pieces')
                 .icon(() => '🔥')
                 .child(
                   S.documentList()
@@ -34,7 +34,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('🤝 Client & Creator Collabs')
+                .title('Client & Creator Collabs')
                 .icon(() => '🤝')
                 .child(
                   S.documentList()
