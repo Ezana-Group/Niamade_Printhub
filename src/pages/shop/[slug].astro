@@ -87,7 +87,18 @@ const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell
       <div>
         <p class="eyebrow">{p.cat}</p>
         <h1 class="mt-2 text-4xl md:text-5xl">{p.name}</h1>
-        <p class="mt-5 flex items-baseline gap-3"><span class="font-display text-4xl font-semibold text-brand">{p.price}</span><span class="text-mute">price guide</span></p>
+        <p class="mt-5 flex items-baseline gap-3 flex-wrap">
+          <span class="font-display text-4xl font-semibold text-brand">{p.price}</span>
+          {p.originalPrice && (
+            <span class="text-2xl line-through text-mute/60 font-medium">{p.originalPrice}</span>
+          )}
+          {(p.discountBadge || p.onSale) && (
+            <span class="rounded-full bg-brand/10 text-brand border border-brand/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider">
+              {p.discountBadge || "Discounted"}
+            </span>
+          )}
+          <span class="text-mute">price guide</span>
+        </p>
         <div class="mt-5 text-lg text-ink/85 prose space-y-3 leading-relaxed" set:html={p.blurb} />
         
         {p.sizes && p.sizes.length > 0 && (

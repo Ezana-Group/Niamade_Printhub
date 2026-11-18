@@ -31,10 +31,29 @@ export const productType = defineType({
     }),
     defineField({
       name: 'price',
-      title: 'Price',
+      title: 'Current Price',
       type: 'string',
-      description: 'e.g. KES 1,600 or From KES 2,500',
+      description: 'The active selling price (e.g. KES 1,200 or From KES 800)',
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'originalPrice',
+      title: 'Original / Strikethrough Price (for Price Cuts)',
+      type: 'string',
+      description: 'Optional. e.g. KES 1,600. When set, this displays crossed out next to the current sale price.',
+    }),
+    defineField({
+      name: 'discountBadge',
+      title: 'Discount Badge / Label',
+      type: 'string',
+      description: 'Optional badge text (e.g. "20% OFF", "Save KES 300", "Holiday Sale", "Special Offer"). Defaults to "Sale" if left blank.',
+    }),
+    defineField({
+      name: 'onSale',
+      title: 'Mark as On Sale / Promotional Piece',
+      type: 'boolean',
+      description: 'Toggle on to give this piece high-visibility sale badges on product cards',
+      initialValue: false,
     }),
     defineField({
       name: 'note',

@@ -29,6 +29,9 @@ const ld = {
     <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">Custom 3D printed gifts, branded business pieces, Kenya souvenirs, home décor and replacement parts. Everything is printed to order in Eldoret, with delivery across Kenya.</p>
     <div id="chips" role="group" aria-label="Filter by occasion" class="mt-9 flex flex-wrap gap-2.5">
       <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
+      {products.some((p: any) => p.onSale) && (
+        <button type="button" class="chip font-bold !text-brand border !border-brand/30 hover:!bg-brand hover:!text-white" data-f="sale" aria-pressed="false">🔥 Offers & Sale</button>
+      )}
       {occasions.map((o) => <button type="button" class="chip" data-f={o.id} aria-pressed="false">{o.label}</button>)}
     </div>
     <p id="count" class="mt-4 text-mute" role="status" aria-live="polite">Showing all {products.length} pieces</p>

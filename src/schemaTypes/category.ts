@@ -29,6 +29,12 @@ export const categoryType = defineType({
       title: 'Display Order',
       type: 'number',
     }),
+    defineField({
+      name: 'discountNote',
+      title: 'Category Promo / Discount Note',
+      type: 'string',
+      description: 'e.g. 15% off bulk corporate orders, or Seasonal promo',
+    }),
   ],
   preview: {
     select: {

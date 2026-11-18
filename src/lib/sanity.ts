@@ -8,6 +8,9 @@ export interface SanityProduct {
   name: string;
   cat: string;
   price: string;
+  originalPrice?: string;
+  discountBadge?: string;
+  onSale?: boolean;
   note: string;
   material: string;
   finish: string;
@@ -143,6 +146,9 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     "slug": slug.current,
     "category": coalesce(category->title, category, "Home & decor"),
     price,
+    originalPrice,
+    discountBadge,
+    onSale,
     note,
     material,
     finish,
@@ -183,6 +189,9 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
         name: item.name,
         cat: item.category || "Home & decor",
         price: item.price || "KES 0",
+        originalPrice: item.originalPrice || undefined,
+        discountBadge: item.discountBadge || (item.originalPrice ? "Sale" : undefined),
+        onSale: Boolean(item.onSale || item.originalPrice),
         note: item.note || "",
         material: item.material || "PLA",
         finish: item.finish || "Smooth",

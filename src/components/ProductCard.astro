@@ -2,17 +2,30 @@
 import ProductArt from "./ProductArt.astro";
 import Icon from "./Icon.astro";
 const { p, filterable = false } = Astro.props;
+const allTags = p.onSale ? [...p.tags, "sale"] : p.tags;
 ---
-<a href={`/shop/${p.slug}/`} data-tags={filterable ? p.tags.join(" ") : undefined} class="press lift group panel overflow-hidden flex flex-col h-full">
-  {p.photos.length
-    ? <img src={p.photos[0]} alt={p.name} width="800" height="800" loading="lazy" decoding="async" class="w-full aspect-square object-cover" />
-    : <ProductArt slug={p.slug} cat={p.cat} />}
+<a href={`/shop/${p.slug}/`} data-tags={filterable ? allTags.join(" ") : undefined} class="press lift group panel overflow-hidden flex flex-col h-full">
+  <div class="relative overflow-hidden">
+    {p.photos.length
+      ? <img src={p.photos[0]} alt={p.name} width="800" height="800" loading="lazy" decoding="async" class="w-full aspect-square object-cover" />
+      : <ProductArt slug={p.slug} cat={p.cat} />}
+    {(p.discountBadge || p.onSale) && (
+      <span class="absolute top-3 left-3 z-10 rounded-full bg-brand text-white font-bold text-xs uppercase tracking-wider px-3 py-1 shadow-md">
+        {p.discountBadge || "Sale"}
+      </span>
+    )}
+  </div>
   <div class="p-5 flex flex-col flex-1">
     <p class="text-[0.8rem] font-bold uppercase tracking-[0.1em] text-mute">{p.cat}</p>
     <h3 class="font-display text-[1.35rem] leading-snug mt-1">{p.name}</h3>
     <p class="text-mute mt-1">{p.note}</p>
     <div class="mt-auto pt-4 flex items-center justify-between">
-      <span class="font-bold text-brand">{p.price}</span>
+      <div class="flex items-baseline gap-2 flex-wrap">
+        <span class="font-bold text-brand">{p.price}</span>
+        {p.originalPrice && (
+          <span class="text-sm line-through text-mute/70 font-medium">{p.originalPrice}</span>
+        )}
+      </div>
       <span class="w-9 h-9 rounded-full bg-sand grid place-items-center transition-colors duration-150 group-hover:bg-brand group-hover:text-white"><Icon name="arrow" size={18} /></span>
     </div>
   </div>
