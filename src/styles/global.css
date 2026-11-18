@@ -14,7 +14,8 @@
   .on-dark :focus-visible { outline-color: #FFC857; }
 }
 @layer components {
-  .wrap { @apply max-w-6xl mx-auto px-5 md:px-8; }
+  .wrap { @apply max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12; }
+  .wrap-narrow { @apply max-w-6xl mx-auto px-5 md:px-8; }
   .eyebrow { @apply inline-block text-[0.8rem] font-bold uppercase tracking-[0.12em] text-brand; }
   /* Press feedback is instant; colour and lift changes are quick ease-outs. */
   .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold leading-none whitespace-nowrap;
