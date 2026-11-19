@@ -16,6 +16,9 @@ export interface SanityProduct {
   creatorUrl?: string;
   externalPurchaseUrl?: string;
   purchaseAction?: "whatsapp" | "external" | "both";
+  featuredOnHome?: boolean;
+  featuredOrder?: number;
+  allowDirectCheckout?: boolean;
   note: string;
   material: string;
   finish: string;
@@ -107,6 +110,9 @@ export interface SanityPageContent {
   steps?: Array<{ step: string; title: string; description: string }>;
   ctaHeading?: string;
   ctaBody?: string;
+  heroImage?: string;
+  featuredProducts?: any[];
+  featuredCategories?: any[];
 }
 
 const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || import.meta.env?.SANITY_PROJECT_ID || "m7x6icn3";
@@ -192,6 +198,9 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     originalPrice,
     discountBadge,
     onSale,
+    featuredOnHome,
+    featuredOrder,
+    allowDirectCheckout,
     isCollab,
     creatorName,
     creatorUrl,
@@ -240,6 +249,9 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
         originalPrice: item.originalPrice || undefined,
         discountBadge: item.discountBadge || (item.originalPrice ? "Sale" : undefined),
         onSale: Boolean(item.onSale || item.originalPrice),
+        featuredOnHome: Boolean(item.featuredOnHome),
+        featuredOrder: typeof item.featuredOrder === "number" ? item.featuredOrder : undefined,
+        allowDirectCheckout: Boolean(item.allowDirectCheckout),
         isCollab: Boolean(item.isCollab),
         creatorName: item.creatorName || undefined,
         creatorUrl: item.creatorUrl || undefined,
@@ -398,6 +410,7 @@ export interface SanityOccasion {
   featuredImage?: string;
   tone?: string;
   order?: number;
+  featuredOnHome?: boolean;
 }
 
 export async function fetchPageContentFromSanity(page: string): Promise<SanityPageContent | null> {
@@ -411,7 +424,45 @@ export async function fetchPageContentFromSanity(page: string): Promise<SanityPa
     steps,
     ctaHeading,
     ctaBody,
-    heroImage
+    heroImage,
+    "featuredProducts": featuredProducts[]->{
+      name,
+      "slug": slug.current,
+      "category": coalesce(category->title, category, "Home & decor"),
+      price,
+      originalPrice,
+      discountBadge,
+      onSale,
+      featuredOnHome,
+      featuredOrder,
+      allowDirectCheckout,
+      isCollab,
+      creatorName,
+      creatorUrl,
+      externalPurchaseUrl,
+      purchaseAction,
+      note,
+      material,
+      finish,
+      occasions,
+      blurb,
+      uses,
+      care,
+      photos
+    },
+    "featuredCategories": featuredCategories[]->{
+      _type,
+      "slug": slug.current,
+      title,
+      label,
+      tagId,
+      description,
+      blurb,
+      homeTone,
+      tone,
+      order,
+      featuredImage
+    }
   }`);
 
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
@@ -424,6 +475,48 @@ export async function fetchPageContentFromSanity(page: string): Promise<SanityPa
     return {
       ...result,
       heroImage: urlForImage(result.heroImage) || undefined,
+      featuredProducts: Array.isArray(result.featuredProducts)
+        ? result.featuredProducts.map((item: any) => {
+            const photos: string[] = [];
+            if (Array.isArray(item.photos)) {
+              for (const p of item.photos) {
+                const u = urlForImage(p);
+                if (u) photos.push(u);
+              }
+            }
+            return {
+              slug: item.slug || item.name.toLowerCase().replace(/\s+/g, "-"),
+              name: item.name,
+              cat: item.category || "Home & decor",
+              price: item.price || "KES 0",
+              originalPrice: item.originalPrice || undefined,
+              discountBadge: item.discountBadge || (item.originalPrice ? "Sale" : undefined),
+              onSale: Boolean(item.onSale || item.originalPrice),
+              featuredOnHome: Boolean(item.featuredOnHome),
+              featuredOrder: typeof item.featuredOrder === "number" ? item.featuredOrder : undefined,
+              allowDirectCheckout: Boolean(item.allowDirectCheckout),
+              isCollab: Boolean(item.isCollab),
+              creatorName: item.creatorName || undefined,
+              creatorUrl: item.creatorUrl || undefined,
+              externalPurchaseUrl: item.externalPurchaseUrl || undefined,
+              purchaseAction: item.purchaseAction || (item.externalPurchaseUrl ? "external" : "whatsapp"),
+              note: item.note || "",
+              material: item.material || "PLA",
+              finish: item.finish || "Smooth",
+              tags: Array.isArray(item.occasions) ? item.occasions : [],
+              blurb: typeof item.blurb === "string" ? item.blurb : (blocksToHtml(item.blurb) || blocksToPlainText(item.blurb) || ""),
+              uses: Array.isArray(item.uses) ? item.uses : [],
+              care: typeof item.care === "string" ? item.care : (blocksToHtml(item.care) || blocksToPlainText(item.care) || ""),
+              photos: photos.length ? photos : undefined,
+            };
+          })
+        : undefined,
+      featuredCategories: Array.isArray(result.featuredCategories)
+        ? result.featuredCategories.map((c: any) => ({
+            ...c,
+            featuredImage: urlForImage(c.featuredImage) || undefined,
+          }))
+        : undefined,
     };
   } catch (err) {
     return null;
@@ -492,6 +585,7 @@ export async function fetchOccasionsFromSanity(): Promise<SanityOccasion[] | nul
     blurb,
     tone,
     order,
+    featuredOnHome,
     featuredImage
   }`);
 

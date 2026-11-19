@@ -280,6 +280,14 @@ export const siteSettingsType = defineType({
       description: 'The name that appears on the customer\'s M-Pesa confirmation SMS — usually your registered Safaricom business name. e.g. NIAMADE HUB',
       initialValue: 'NIAMADE HUB',
     }),
+    defineField({
+      name: 'allowCheckoutOnFromPrices',
+      title: 'Allow Direct "Buy Now" on "From" Prices',
+      type: 'boolean',
+      group: 'payments',
+      description: 'Allow customers to checkout directly on variable "From" prices (e.g. "From KES 800") using the base price.',
+      initialValue: false,
+    }),
 
     // ─── 🚚 DELIVERY & SHIPPING RATES ───────────────────────────────
     defineField({

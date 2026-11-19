@@ -54,6 +54,13 @@ export const occasionType = defineType({
       title: 'Display Order',
       type: 'number',
     }),
+    defineField({
+      name: 'featuredOnHome',
+      title: '⭐ Feature on Home Page',
+      type: 'boolean',
+      description: 'Pin this occasion to the home page under "Shop by occasion"',
+      initialValue: true,
+    }),
   ],
   preview: {
     select: {

@@ -14,11 +14,59 @@ const ctaBody = sanityHome?.ctaBody || "Send us a message, even if it is just a 
 
 const bySlug = (s: string) => products.find((p) => p.slug === s);
 const tone: Record<string, string> = { lilac: "bg-lilac", rose: "bg-rose", butter: "bg-butter", mint: "bg-mint", peach: "bg-peach", sky: "bg-sky", sand: "bg-sand" };
-const defaultFeatured = ["name-keychain", "lithophane-photo-lamp", "kenya-topographic-relief", "geometric-spiral-vase", "succulent-planter-set", "big-five-animal-set"];
-const featured = defaultFeatured.map(bySlug).filter(Boolean) as typeof products;
+
+// 1. Featured Products: Sanity Home Page Content -> Products with featuredOnHome toggle -> Fallback defaults
+let featured: typeof products = [];
+if (sanityHome?.featuredProducts && sanityHome.featuredProducts.length > 0) {
+  featured = sanityHome.featuredProducts.map((sp: any) => bySlug(sp.slug) || sp).filter(Boolean);
+} else {
+  const flagged = (products as any[])
+    .filter((p) => p.featuredOnHome)
+    .sort((a, b) => (a.featuredOrder || 99) - (b.featuredOrder || 99));
+  if (flagged.length > 0) {
+    featured = flagged;
+  }
+}
+
+if (!featured || featured.length === 0) {
+  const defaultFeatured = ["name-keychain", "lithophane-photo-lamp", "kenya-topographic-relief", "geometric-spiral-vase", "succulent-planter-set", "big-five-animal-set"];
+  featured = defaultFeatured.map(bySlug).filter(Boolean) as typeof products;
+}
+
 if (featured.length < 6) {
   const remaining = products.filter((p) => !featured.some((f) => f.slug === p.slug)).slice(0, 6 - featured.length);
   featured.push(...remaining);
+}
+
+// 2. Featured Categories / Occasions from Sanity
+let homeOccasions: any[] = [];
+if (sanityHome?.featuredCategories && sanityHome.featuredCategories.length > 0) {
+  homeOccasions = sanityHome.featuredCategories.map((c: any) => {
+    const matchedOccasion = occasions.find((o) => o.id === c.tagId || o.slug === c.slug || o.label === c.label || o.label === c.title);
+    if (matchedOccasion) {
+      return {
+        ...matchedOccasion,
+        label: c.label || c.title || matchedOccasion.label,
+        blurb: c.blurb || c.description || matchedOccasion.blurb,
+        tone: c.tone || c.homeTone || matchedOccasion.tone,
+        featuredImage: c.featuredImage,
+        href: `/shop/for/${matchedOccasion.slug}/`,
+        art: matchedOccasion.art,
+      };
+    }
+    return {
+      id: c.tagId || c.slug || "custom",
+      slug: c.slug || "all",
+      label: c.title || c.label,
+      blurb: c.description || c.blurb || "Explore 3D prints",
+      tone: c.homeTone || c.tone || "peach",
+      featuredImage: c.featuredImage,
+      href: `/shop/?category=${encodeURIComponent(c.title || c.label)}`,
+      art: "name-keychain",
+    };
+  });
+} else {
+  homeOccasions = [...occasions];
 }
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const ld = {
@@ -102,11 +150,19 @@ const ld = {
   <section class="wrap mt-24">
     <div class="max-w-2xl"><p class="eyebrow">Shop by occasion</p><h2 class="mt-2 text-4xl md:text-5xl">What are you celebrating?</h2><p class="mt-4 text-mute text-lg">Start with the moment, and we will point you to something that fits.</p></div>
     <div data-reveal-group class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      {occasions.map((o) => { const pr = bySlug(o.art); return (
-        <a href={`/shop/for/${o.slug}/`} class:list={["press lift group rounded-4xl overflow-hidden flex flex-col", tone[o.tone]]}>
-          <ProductArt slug={pr.slug} cat={pr.cat} class="!aspect-[5/4]" />
-          <div class="p-5"><h3 class="font-display text-xl">{o.label}</h3><p class="text-mute mt-1 text-[0.98rem]">{o.blurb}</p></div>
-        </a>); })}
+      {homeOccasions.map((o) => {
+        const pr = bySlug(o.art) || products[0];
+        return (
+          <a href={o.href || `/shop/for/${o.slug}/`} class:list={["press lift group rounded-4xl overflow-hidden flex flex-col", tone[o.tone] || "bg-peach"]}>
+            {o.featuredImage ? (
+              <img src={o.featuredImage} alt={o.label} class="w-full !aspect-[5/4] object-cover" loading="lazy" />
+            ) : (
+              <ProductArt slug={pr.slug} cat={pr.cat} class="!aspect-[5/4]" />
+            )}
+            <div class="p-5"><h3 class="font-display text-xl">{o.label}</h3><p class="text-mute mt-1 text-[0.98rem]">{o.blurb}</p></div>
+          </a>
+        );
+      })}
       <a href="/shop/" class="press lift group rounded-4xl bg-brand text-white p-6 flex flex-col justify-between min-h-[14rem]">
         <span class="font-display text-3xl leading-tight">See everything in the shop</span>
         <span class="inline-flex items-center gap-2 font-bold">Browse all {products.length} <Icon name="arrow" size={20} /></span>

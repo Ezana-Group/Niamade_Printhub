@@ -41,6 +41,25 @@ export const pageContentType = defineType({
       options: { hotspot: true },
       description: 'Primary visual associated with this page',
     }),
+    // ── HOME PAGE CURATION ──
+    defineField({
+      name: 'featuredProducts',
+      title: '⭐ Home Page Featured Products ("Good places to start")',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'product' }] }],
+      description: 'Handpick and drag to reorder products displayed on the Home Page. If empty, products with "Feature on Home Page" toggled or standard defaults will be shown.',
+      hidden: ({ document }) => document?.page !== 'home',
+    }),
+    defineField({
+      name: 'featuredCategories',
+      title: '🏷️ Home Page Featured Categories ("Shop by occasion")',
+      type: 'array',
+      of: [
+        { type: 'reference', to: [{ type: 'occasion' }, { type: 'category' }] }
+      ],
+      description: 'Choose which occasion/category collections are shown on the home page.',
+      hidden: ({ document }) => document?.page !== 'home',
+    }),
     // ── ABOUT CONTENT ──
     defineField({
       name: 'niamadeHubBlurb',

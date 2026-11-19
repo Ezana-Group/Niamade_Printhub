@@ -50,6 +50,22 @@ export const productType = defineType({
       description: 'One-line summary shown on the product card',
     }),
     defineField({
+      name: 'featuredOnHome',
+      title: '⭐ Feature on Home Page',
+      type: 'boolean',
+      group: 'overview',
+      description: 'Pin this product to the Home Page ("Good places to start" section)',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'featuredOrder',
+      title: 'Home Page Order / Rank',
+      type: 'number',
+      group: 'overview',
+      description: 'Priority rank on the home page (e.g. 1 for first, 2 for second). Lower numbers appear first.',
+      hidden: ({ document }) => !document?.featuredOnHome,
+    }),
+    defineField({
       name: 'photos',
       title: 'Photos',
       type: 'array',
@@ -97,6 +113,14 @@ export const productType = defineType({
       type: 'boolean',
       group: 'pricing',
       description: 'Toggle on to give this piece high-visibility sale badges on product cards and in the shop filter',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'allowDirectCheckout',
+      title: 'Enable "Buy Now" Direct Checkout',
+      type: 'boolean',
+      group: 'pricing',
+      description: 'Forces the "Buy Now" button to show even for "From" variable prices (charges the starting price at checkout).',
       initialValue: false,
     }),
 
