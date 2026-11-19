@@ -18,7 +18,6 @@ export interface SanityProduct {
   purchaseAction?: "whatsapp" | "external" | "both";
   featuredOnHome?: boolean;
   featuredOrder?: number;
-  allowDirectCheckout?: boolean;
   note: string;
   material: string;
   finish: string;
@@ -200,7 +199,6 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
     onSale,
     featuredOnHome,
     featuredOrder,
-    allowDirectCheckout,
     isCollab,
     creatorName,
     creatorUrl,
@@ -251,7 +249,6 @@ export async function fetchProductsFromSanity(): Promise<SanityProduct[] | null>
         onSale: Boolean(item.onSale || item.originalPrice),
         featuredOnHome: Boolean(item.featuredOnHome),
         featuredOrder: typeof item.featuredOrder === "number" ? item.featuredOrder : undefined,
-        allowDirectCheckout: Boolean(item.allowDirectCheckout),
         isCollab: Boolean(item.isCollab),
         creatorName: item.creatorName || undefined,
         creatorUrl: item.creatorUrl || undefined,
@@ -435,7 +432,6 @@ export async function fetchPageContentFromSanity(page: string): Promise<SanityPa
       onSale,
       featuredOnHome,
       featuredOrder,
-      allowDirectCheckout,
       isCollab,
       creatorName,
       creatorUrl,
@@ -494,7 +490,6 @@ export async function fetchPageContentFromSanity(page: string): Promise<SanityPa
               onSale: Boolean(item.onSale || item.originalPrice),
               featuredOnHome: Boolean(item.featuredOnHome),
               featuredOrder: typeof item.featuredOrder === "number" ? item.featuredOrder : undefined,
-              allowDirectCheckout: Boolean(item.allowDirectCheckout),
               isCollab: Boolean(item.isCollab),
               creatorName: item.creatorName || undefined,
               creatorUrl: item.creatorUrl || undefined,

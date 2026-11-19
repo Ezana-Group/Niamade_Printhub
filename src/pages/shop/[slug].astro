@@ -9,9 +9,7 @@ import { productSchemaNode, breadcrumbNode } from "../../lib/schema";
 export function getStaticPaths() { return products.map((p) => ({ params: { slug: p.slug }, props: { p } })); }
 const { p } = Astro.props;
 const n = price(p.price);
-// "from" prices are variable — direct checkout is disabled by default unless explicitly enabled
-const from = p.price.toLowerCase().startsWith("from");
-const canDirectCheckout = n && site.enableCheckout && (!from || p.allowDirectCheckout || (site as any).allowCheckoutOnFromPrices);
+const canDirectCheckout = Boolean(n && site.enableCheckout);
 
 const primaryOccasion = occasions.find((o) => p.tags && p.tags.includes(o.id)) || occasions[0];
 

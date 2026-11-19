@@ -115,14 +115,6 @@ export const productType = defineType({
       description: 'Toggle on to give this piece high-visibility sale badges on product cards and in the shop filter',
       initialValue: false,
     }),
-    defineField({
-      name: 'allowDirectCheckout',
-      title: 'Enable "Buy Now" Direct Checkout',
-      type: 'boolean',
-      group: 'pricing',
-      description: 'Forces the "Buy Now" button to show even for "From" variable prices (charges the starting price at checkout).',
-      initialValue: false,
-    }),
 
     // ─── DESCRIPTION & CONTENT ─────────────────────────────────────
     defineField({

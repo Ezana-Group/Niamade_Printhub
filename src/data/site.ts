@@ -71,7 +71,6 @@ export const site = {
   // Payments & Checkout
   paystackPublicKey: _sanitySettings?.paystackPublicKey || process.env.PUBLIC_PAYSTACK_KEY || import.meta.env?.PUBLIC_PAYSTACK_KEY || "",
   enableCheckout: _sanitySettings?.enableCheckout ?? true,
-  allowCheckoutOnFromPrices: _sanitySettings?.allowCheckoutOnFromPrices ?? false,
   mpesaTillNumber:    _sanitySettings?.mpesaTillNumber    || "",
   mpesaPaybillNumber: _sanitySettings?.mpesaPaybillNumber || "",
   mpesaAccountName:   _sanitySettings?.mpesaAccountName   || "",

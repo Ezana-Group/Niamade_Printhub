@@ -238,10 +238,10 @@ export const siteSettingsType = defineType({
     // ─── 💳 PAYMENTS & CHECKOUT ───────────────────────────────────
     defineField({
       name: 'enableCheckout',
-      title: 'Enable Online Checkout (M-Pesa & Card)',
+      title: 'Enable "Buy Now" Online Checkout (M-Pesa & Card)',
       type: 'boolean',
       group: 'payments',
-      description: 'When ON: products with a fixed KES price show a "Pay with M-Pesa / Card" button. When OFF: all orders go via WhatsApp.',
+      description: 'When ON: products show the "Buy Now" button allowing customers to pay instantly with M-Pesa or Card. When OFF: all orders route to WhatsApp.',
       initialValue: true,
     }),
     defineField({
@@ -279,14 +279,6 @@ export const siteSettingsType = defineType({
       group: 'payments',
       description: 'The name that appears on the customer\'s M-Pesa confirmation SMS — usually your registered Safaricom business name. e.g. NIAMADE HUB',
       initialValue: 'NIAMADE HUB',
-    }),
-    defineField({
-      name: 'allowCheckoutOnFromPrices',
-      title: 'Allow Direct "Buy Now" on "From" Prices',
-      type: 'boolean',
-      group: 'payments',
-      description: 'Allow customers to checkout directly on variable "From" prices (e.g. "From KES 800") using the base price.',
-      initialValue: false,
     }),
 
     // ─── 🚚 DELIVERY & SHIPPING RATES ───────────────────────────────
