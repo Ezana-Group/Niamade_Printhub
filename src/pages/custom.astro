@@ -44,7 +44,10 @@ const ld = {
       <div data-reveal-group class="mt-9 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {printServices.map((s) => <div class="press lift rounded-3xl bg-card p-6"><h3 class="font-display text-xl">{s.title}</h3><p class="text-mute mt-1.5">{s.text}</p></div>)}
       </div>
-      <a href={wa(waMessages.customFile)} target="_blank" rel="noopener" class="btn btn-wa mt-9"><Icon name="whatsapp" size={20} />Send my file</a>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href={wa(waMessages.customFile)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Send file via WhatsApp</a>
+        <a href={`mailto:${site.quotesEmail}?subject=3D%20CAD%20File%20Quote%20Request`} class="btn btn-soft"><Icon name="mail" size={18} />Email CAD file ({site.quotesEmail})</a>
+      </div>
     </div>
   </section>
 

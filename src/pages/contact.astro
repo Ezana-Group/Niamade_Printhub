@@ -45,11 +45,12 @@ const ld = {
         <a href={site.googleBusinessProfile} target="_blank" rel="noopener" class="press lift flex items-center gap-4 panel p-6 hover:border-brand transition-colors"><Icon name="pin" size={26} class="text-brand shrink-0" /><div><span class="block font-display text-xl">Google Business Profile</span><span class="text-mute">Verified on Google & Maps</span></div></a>
         <div class="panel p-6 flex gap-4"><Icon name="clock" size={26} class="text-brand shrink-0" /><div><p class="font-display text-xl">Hours</p><div class="text-mute space-y-0.5">{site.hours.map((h: string) => <p>{h}</p>)}</div><p class="text-mute mt-2 text-[0.97rem]">{site.city}. Collection by appointment.</p><a href="/bookings/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline mt-2">Book a studio slot →</a></div></div>
         <div class="panel p-6">
-          <p class="eyebrow">Company details</p>
+          <p class="eyebrow">Department Contacts</p>
           <dl class="mt-3 space-y-2.5 text-[0.97rem]">
-            <div class="flex justify-between gap-4"><dt class="text-mute">Business Name</dt><dd class="font-semibold text-ink text-right">Niamade Hub</dd></div>
-            <div class="flex justify-between gap-4"><dt class="text-mute">Trading Brand</dt><dd class="font-semibold text-ink text-right">PrintHub Africa</dd></div>
-            <div class="flex justify-between gap-4"><dt class="text-mute">Website</dt><dd class="font-semibold text-brand text-right">printhub.africa</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-mute">General Inquiries</dt><dd class="font-semibold text-right"><a href={`mailto:${site.email}`} class="text-brand hover:underline">{site.email}</a></dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-mute">Consultations & Studio</dt><dd class="font-semibold text-right"><a href={`mailto:${site.bookingEmail}`} class="text-brand hover:underline">{site.bookingEmail}</a></dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-mute">3D Quotes & CAD Files</dt><dd class="font-semibold text-right"><a href={`mailto:${site.quotesEmail}`} class="text-brand hover:underline">{site.quotesEmail}</a></dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-mute">Registered Business</dt><dd class="font-semibold text-ink text-right">Niamade Hub</dd></div>
           </dl>
         </div>
         <ul class="flex gap-3 pt-1" aria-label="Social media">{site.socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener" aria-label={`${s.label}: ${s.handle}`} class="w-12 h-12 rounded-full bg-sand grid place-items-center transition-[background-color,transform] duration-150 hover:bg-peach active:scale-95"><Icon name={s.id} size={22} /></a></li>)}</ul>
@@ -102,7 +103,7 @@ const ld = {
     </div>
   </section>
 </Layout>
-<script define:vars={{ waBase: wa("").split("?")[0], email: site.email }}>
+<script define:vars={{ waBase: wa("").split("?")[0], email: site.quotesEmail || site.email }}>
   const form = document.getElementById("f"), status = document.getElementById("status");
   const check = (el, errId) => { const bad = !el.value.trim(); el.setAttribute("aria-invalid", String(bad)); document.getElementById(errId).hidden = !bad; return !bad; };
   ["name", "msg"].forEach((k) => document.getElementById("f-" + k).addEventListener("input", (e) => { if (e.target.getAttribute("aria-invalid") === "true") check(e.target, "e-" + k); }));

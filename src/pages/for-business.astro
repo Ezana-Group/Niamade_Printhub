@@ -79,6 +79,7 @@ const schemaNodes = [
       <h3 class="font-display text-2xl">What to send us</h3>
       <ul class="mt-5 space-y-3">{send.map((t) => <li class="flex gap-3"><Icon name="check" size={22} class="text-brand shrink-0 mt-0.5" />{t}</li>)}</ul>
       <a href={wa(msg)} target="_blank" rel="noopener" class="btn btn-wa w-full mt-7"><Icon name="whatsapp" size={20} />Send it on WhatsApp</a>
+      <a href={`mailto:${site.quotesEmail}?subject=Corporate%203D%20Print%20Quote%20Request`} class="btn btn-soft w-full mt-3"><Icon name="mail" size={18} />Or email specs ({site.quotesEmail})</a>
     </aside>
   </section>
 

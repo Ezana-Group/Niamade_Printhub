@@ -83,7 +83,7 @@ export async function onRequestPost(context: any) {
     const notificationEmail =
       context.env.QUOTES_NOTIFICATION_EMAIL ||
       context.env.NOTIFICATION_EMAIL ||
-      "hello@printhub.africa";
+      "quotes@printhub.africa";
     const resendKey = context.env.RESEND_API_KEY || "";
 
     if (resendKey) {

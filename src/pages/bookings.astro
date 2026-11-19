@@ -63,7 +63,7 @@ const ld = {
     legalName: site.businessName,
     url: site.url,
     telephone: site.phone,
-    email: site.email,
+    email: site.bookingEmail || site.email,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Eldoret",
@@ -415,6 +415,9 @@ const ld = {
               >
                 <Icon name="calendar" size={19} /> Add to Google Calendar
               </button>
+              <p class="text-xs text-mute text-center pt-1">
+                Questions or design files beforehand? Reach our bookings desk at <a href={`mailto:${site.bookingEmail}`} class="text-brand font-semibold hover:underline">{site.bookingEmail}</a>
+              </p>
             </div>
           </div>
         </div>

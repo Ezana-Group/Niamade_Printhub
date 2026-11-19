@@ -60,10 +60,10 @@ export const siteSettingsType = defineType({
     }),
     defineField({
       name: 'email',
-      title: 'Public Contact Email',
+      title: 'Public General Inquiries Email',
       type: 'string',
       group: 'contact',
-      description: 'e.g. hello@printhub.africa — shown to visitors on the website',
+      description: 'e.g. hello@printhub.africa — shown in header/footer and on the contact page',
       initialValue: 'hello@printhub.africa',
     }),
     defineField({
@@ -73,6 +73,22 @@ export const siteSettingsType = defineType({
       group: 'contact',
       description: 'The email address where consultation and studio booking notifications are sent (defaults to booking@printhub.africa)',
       initialValue: 'booking@printhub.africa',
+    }),
+    defineField({
+      name: 'quotesEmail',
+      title: 'Custom 3D Quotes & CAD Orders Email',
+      type: 'string',
+      group: 'contact',
+      description: 'The email address where 3D file uploads and quote inquiries are sent (defaults to quotes@printhub.africa)',
+      initialValue: 'quotes@printhub.africa',
+    }),
+    defineField({
+      name: 'privacyEmail',
+      title: 'Data Protection & Legal Email',
+      type: 'string',
+      group: 'contact',
+      description: 'The email address for KDPA compliance and CAD confidentiality requests (defaults to privacy@printhub.africa)',
+      initialValue: 'privacy@printhub.africa',
     }),
     defineField({
       name: 'notificationEmail',
