@@ -2,17 +2,23 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import { site } from "../data/site";
+import { fetchLegalPageFromSanity } from "../lib/sanity";
 
-const lastUpdated = "November 17, 2026";
+const sanityLegal = await fetchLegalPageFromSanity("privacy");
+const lastUpdated = sanityLegal?.lastUpdated || "November 17, 2026";
+const pageTitle = sanityLegal?.title || "Privacy Policy & CAD Confidentiality Notice";
+const pageDesc = sanityLegal?.seoDescription || "How Niamade Hub trading as PrintHub Africa collects, protects, and handles personal data and customer CAD files under the Kenya Data Protection Act, 2019.";
+const noticeBanner = sanityLegal?.noticeBanner;
+const sanitySections = sanityLegal?.sections && sanityLegal.sections.length > 0 ? sanityLegal.sections : null;
 ---
 <Layout 
-  title="Privacy Policy & CAD Confidentiality Notice" 
-  description="How Niamade Hub trading as PrintHub Africa collects, protects, and handles personal data and customer CAD files under the Kenya Data Protection Act, 2019."
+  title={pageTitle} 
+  description={pageDesc}
 >
   <section class="wrap pt-10 md:pt-14 pb-16">
     <div class="max-w-4xl">
       <p class="eyebrow rise">Data Protection & Privacy</p>
-      <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">Privacy Policy & CAD Confidentiality Notice</h1>
+      <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">{pageTitle}</h1>
       <p style="--d:120ms" class="rise mt-4 text-lg text-mute">
         Data Controller: <strong class="text-ink font-semibold">Niamade Hub</strong> · Commercial Brand: <strong class="text-ink font-semibold">PrintHub Africa</strong>
       </p>
@@ -22,7 +28,13 @@ const lastUpdated = "November 17, 2026";
     <!-- HIGHLIGHT CALLOUT -->
     <div class="mt-8 rounded-3xl bg-sand border border-line p-6 max-w-4xl">
       <p class="text-sm md:text-base text-ink/85 leading-relaxed">
-        <strong class="font-bold text-ink">Our Core Privacy Commitment:</strong> We respect your privacy and the intellectual property of your engineering designs. We do not sell your personal data, we do not deploy invasive third-party tracking pixels, and we treat your proprietary 3D CAD files as confidential trade assets. This policy explains our statutory compliance under the laws of the Republic of Kenya.
+        {noticeBanner ? (
+          noticeBanner
+        ) : (
+          <>
+            <strong class="font-bold text-ink">Our Core Privacy Commitment:</strong> We respect your privacy and the intellectual property of your engineering designs. We do not sell your personal data, we do not deploy invasive third-party tracking pixels, and we treat your proprietary 3D CAD files as confidential trade assets. This policy explains our statutory compliance under the laws of the Republic of Kenya.
+          </>
+        )}
       </p>
     </div>
 
@@ -31,23 +43,39 @@ const lastUpdated = "November 17, 2026";
       <aside class="lg:col-span-4 rounded-4xl bg-card border border-line p-6 lg:sticky lg:top-28 space-y-2 text-sm">
         <p class="font-bold text-xs uppercase tracking-wider text-brand mb-3">Policy Sections</p>
         <nav aria-label="Privacy Policy Sections" class="space-y-1.5 text-mute">
-          <a href="#1-controller" class="block hover:text-brand transition-colors">1. Data Controller Identity</a>
-          <a href="#2-collection" class="block hover:text-brand transition-colors">2. Information We Collect</a>
-          <a href="#3-cad-confidentiality" class="block hover:text-brand transition-colors">3. CAD & Design Confidentiality</a>
-          <a href="#4-basis" class="block hover:text-brand transition-colors">4. Lawful Basis for Processing</a>
-          <a href="#5-usage" class="block hover:text-brand transition-colors">5. How We Use Your Data</a>
-          <a href="#6-sharing" class="block hover:text-brand transition-colors">6. Data Sharing & Third Parties</a>
-          <a href="#7-cookies" class="block hover:text-brand transition-colors">7. Cookies & Web Tracking</a>
-          <a href="#8-security" class="block hover:text-brand transition-colors">8. Security & Storage</a>
-          <a href="#9-retention" class="block hover:text-brand transition-colors">9. Retention & Disposal</a>
-          <a href="#10-rights" class="block hover:text-brand transition-colors">10. Your Rights Under Kenyan Law</a>
-          <a href="#11-contact" class="block hover:text-brand transition-colors">11. Data Inquiries & ODPC</a>
+          {sanitySections ? (
+            sanitySections.map((sec, i) => (
+              <a href={`#sec-${i + 1}`} class="block hover:text-brand transition-colors">{sec.title || `Section ${i + 1}`}</a>
+            ))
+          ) : (
+            <>
+              <a href="#1-controller" class="block hover:text-brand transition-colors">1. Data Controller Identity</a>
+              <a href="#2-collection" class="block hover:text-brand transition-colors">2. Information We Collect</a>
+              <a href="#3-cad-confidentiality" class="block hover:text-brand transition-colors">3. CAD & Design Confidentiality</a>
+              <a href="#4-basis" class="block hover:text-brand transition-colors">4. Lawful Basis for Processing</a>
+              <a href="#5-usage" class="block hover:text-brand transition-colors">5. How We Use Your Data</a>
+              <a href="#6-sharing" class="block hover:text-brand transition-colors">6. Data Sharing & Third Parties</a>
+              <a href="#7-cookies" class="block hover:text-brand transition-colors">7. Cookies & Web Tracking</a>
+              <a href="#8-security" class="block hover:text-brand transition-colors">8. Security & Storage</a>
+              <a href="#9-retention" class="block hover:text-brand transition-colors">9. Retention & Disposal</a>
+              <a href="#10-rights" class="block hover:text-brand transition-colors">10. Your Rights Under Kenyan Law</a>
+              <a href="#11-contact" class="block hover:text-brand transition-colors">11. Data Inquiries & ODPC</a>
+            </>
+          )}
         </nav>
       </aside>
 
       <!-- POLICY TEXT CONTENT -->
       <div class="lg:col-span-8 space-y-10 text-[1.03rem] text-ink/85 leading-relaxed">
-        
+        {sanitySections ? (
+          sanitySections.map((sec, i) => (
+            <article id={`sec-${i + 1}`} class={`space-y-3 ${i === 0 ? 'pt-2' : 'pt-6 border-t border-line'}`}>
+              <h2 class="font-display text-2xl font-semibold text-ink">{sec.title}</h2>
+              <div class="space-y-3 text-ink/85 leading-relaxed" set:html={sec.content} />
+            </article>
+          ))
+        ) : (
+          <>
         <!-- SECTION 1 -->
         <article id="1-controller" class="space-y-3 pt-2">
           <h2 class="font-display text-2xl font-semibold text-ink">1. Data Controller Identity</h2>
@@ -183,7 +211,6 @@ const lastUpdated = "November 17, 2026";
             <li><strong class="text-ink font-semibold">Right to Data Portability:</strong> To receive your design files and transaction records in a structured, machine-readable format.</li>
           </ul>
         </article>
-
         <!-- SECTION 11 -->
         <article id="11-contact" class="space-y-3 pt-6 border-t border-line">
           <h2 class="font-display text-2xl font-semibold text-ink">11. Data Protection Inquiries & Supervisory Authority</h2>
@@ -201,6 +228,8 @@ const lastUpdated = "November 17, 2026";
             If you believe your personal data rights under the Act have been infringed, you hold the right to lodge a formal complaint with the <strong class="text-ink font-semibold">Office of the Data Protection Commissioner (ODPC) of Kenya</strong> via their official portal at <a href="https://www.odpc.go.ke" target="_blank" rel="noopener" class="text-brand underline">odpc.go.ke</a>.
           </p>
         </article>
+        </>
+        )}
 
       </div>
     </div>

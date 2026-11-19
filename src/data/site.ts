@@ -14,13 +14,24 @@ const _cmsStock = Object.values(_productModules).map((m) => m.default ?? m) as A
 
 import _faqsData from "../content/faqs.json";
 import _settingsData from "../content/settings.json";
-import { fetchProductsFromSanity, fetchFaqsFromSanity, fetchSettingsFromSanity } from "../lib/sanity";
+import {
+  fetchProductsFromSanity,
+  fetchFaqsFromSanity,
+  fetchSettingsFromSanity,
+  fetchMaterialsFromSanity,
+  fetchServicesFromSanity,
+  fetchOccasionsFromSanity,
+} from "../lib/sanity";
 import { fetchProductsFromGoogleSheets } from "../lib/sheets";
 import { fetchProductsFromNotion } from "../lib/notion";
 
 // Live content from Sanity (with fallback to local files)
 const _sanitySettings = await fetchSettingsFromSanity();
 const _sanityFaqs = await fetchFaqsFromSanity();
+const _sanityMaterials = await fetchMaterialsFromSanity();
+const _sanityPrintServices = await fetchServicesFromSanity("printing");
+const _sanityDesignServices = await fetchServicesFromSanity("design");
+const _sanityOccasions = await fetchOccasionsFromSanity();
 
 export const faqs = _sanityFaqs || _faqsData.faqs;
 
@@ -171,12 +182,19 @@ export const products = stock.map((p: any) => {
 export type Product = (typeof products)[number];
 export const price = (p: string) => { const m = p.replace(/,/g, "").match(/\d+/); return m ? Number(m[0]) : undefined; };
 
-export const materials = [
-  { name: "PLA", tone: "peach", for: "Gifts, décor and prototypes", note: "The easiest to print, with the widest range of colours. Not for hot cars or long outdoor use." },
-  { name: "PETG", tone: "sky", for: "Everyday parts and outdoor use", note: "Tough and water-resistant, with a little give. A good all-rounder for useful things." },
-  { name: "TPU", tone: "mint", for: "Flexible pieces", note: "Rubber-like and bendy. Used for grips, seals, bumpers and phone cases." },
-  { name: "PVA", tone: "lilac", for: "Support for tricky shapes", note: "A support material that dissolves in water, so we can print overhangs and complex shapes cleanly." },
-] as const;
+export const materials = (_sanityMaterials && _sanityMaterials.length)
+  ? _sanityMaterials.map((m) => ({
+      name: m.name,
+      tone: (m.tone as any) || "peach",
+      for: m.bestFor || m.fullName || "General 3D Printing",
+      note: m.durability ? `${m.finish ? m.finish + ' · ' : ''}${m.durability}` : (m.finish || m.heatResistance || "Printed to precision in Eldoret."),
+    }))
+  : [
+      { name: "PLA", tone: "peach", for: "Gifts, décor and prototypes", note: "The easiest to print, with the widest range of colours. Not for hot cars or long outdoor use." },
+      { name: "PETG", tone: "sky", for: "Everyday parts and outdoor use", note: "Tough and water-resistant, with a little give. A good all-rounder for useful things." },
+      { name: "TPU", tone: "mint", for: "Flexible pieces", note: "Rubber-like and bendy. Used for grips, seals, bumpers and phone cases." },
+      { name: "PVA", tone: "lilac", for: "Support for tricky shapes", note: "A support material that dissolves in water, so we can print overhangs and complex shapes cleanly." },
+    ];
 
 export const steps = [
   { n: 1, title: "Tell us your idea", text: "Message us on WhatsApp with what you want, a photo, a sketch or your 3D file. No file yet? That's fine." },
@@ -186,19 +204,23 @@ export const steps = [
 
 // FAQs are managed via Sanity Studio / Google Sheets / src/content/faqs.json
 
-export const printServices = [
-  { title: "Printing from your file", text: "Send your 3D model and we print it in PLA, PETG or TPU, after checking it will print well." },
-  { title: "Complex shapes", text: "Tricky overhangs and moving parts are printed with dissolvable PVA supports, so the surface stays clean." },
-  { title: "Prototypes", text: "Hold your idea in your hands, test it, change it, and print it again." },
-  { title: "Small batches", text: "Giveaways, team orders, shop stock. Batches cost less per piece." },
-  { title: "Finishing", text: "Sanding, smoothing, priming and painting are available if you want a polished result." },
-  { title: "Large pieces", text: "Bigger items can often be printed in sections and joined seamlessly." },
-];
+export const printServices = (_sanityPrintServices && _sanityPrintServices.length)
+  ? _sanityPrintServices.map((s) => ({ title: s.title, text: s.description }))
+  : [
+      { title: "Printing from your file", text: "Send your 3D model and we print it in PLA, PETG or TPU, after checking it will print well." },
+      { title: "Complex shapes", text: "Tricky overhangs and moving parts are printed with dissolvable PVA supports, so the surface stays clean." },
+      { title: "Prototypes", text: "Hold your idea in your hands, test it, change it, and print it again." },
+      { title: "Small batches", text: "Giveaways, team orders, shop stock. Batches cost less per piece." },
+      { title: "Finishing", text: "Sanding, smoothing, priming and painting are available if you want a polished result." },
+      { title: "Large pieces", text: "Bigger items can often be printed in sections and joined seamlessly." },
+    ];
 
-export const designServices = [
-  { title: "From a sketch or idea", text: "Draw it on paper or describe it in words, and we turn it into a printable 3D model." },
-  { title: "From photos and measurements", text: "Show us the object and tell us the sizes. We model it so it fits." },
-  { title: "Copying a broken part", text: "Send the old piece and we recreate it, often in a tougher material." },
-  { title: "Logos and lettering", text: "Your logo or text turned into a raised 3D sign, plate or keychain." },
-  { title: "Fixing or improving a file", text: "Have a model that won't print well? We clean it up so it does." },
-];
+export const designServices = (_sanityDesignServices && _sanityDesignServices.length)
+  ? _sanityDesignServices.map((s) => ({ title: s.title, text: s.description }))
+  : [
+      { title: "From a sketch or idea", text: "Draw it on paper or describe it in words, and we turn it into a printable 3D model." },
+      { title: "From photos and measurements", text: "Show us the object and tell us the sizes. We model it so it fits." },
+      { title: "Copying a broken part", text: "Send the old piece and we recreate it, often in a tougher material." },
+      { title: "Logos and lettering", text: "Your logo or text turned into a raised 3D sign, plate or keychain." },
+      { title: "Fixing or improving a file", text: "Have a model that won't print well? We clean it up so it does." },
+    ];

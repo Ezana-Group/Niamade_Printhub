@@ -2,17 +2,23 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import { site, wa } from "../data/site";
+import { fetchLegalPageFromSanity } from "../lib/sanity";
 
-const lastUpdated = "November 17, 2026";
+const sanityLegal = await fetchLegalPageFromSanity("terms");
+const lastUpdated = sanityLegal?.lastUpdated || "November 17, 2026";
+const pageTitle = sanityLegal?.title || "Terms of Service & Manufacturing Agreement";
+const pageDesc = sanityLegal?.seoDescription || "Terms and conditions governing custom 3D printing, CAD design, prototyping and manufacturing services by Niamade Hub trading as PrintHub Africa.";
+const noticeBanner = sanityLegal?.noticeBanner;
+const sanitySections = sanityLegal?.sections && sanityLegal.sections.length > 0 ? sanityLegal.sections : null;
 ---
 <Layout 
-  title="Terms of Service & Manufacturing Agreement" 
-  description="Terms and conditions governing custom 3D printing, CAD design, prototyping and manufacturing services by Niamade Hub trading as PrintHub Africa."
+  title={pageTitle} 
+  description={pageDesc}
 >
   <section class="wrap pt-10 md:pt-14 pb-16">
     <div class="max-w-4xl">
       <p class="eyebrow rise">Legal & Governance</p>
-      <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">Terms of Service & Manufacturing Agreement</h1>
+      <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">{pageTitle}</h1>
       <p style="--d:120ms" class="rise mt-4 text-lg text-mute">
         Registered Business Identity: <strong class="text-ink font-semibold">Niamade Hub</strong> · Commercial Trading Brand: <strong class="text-ink font-semibold">PrintHub Africa</strong>
       </p>
@@ -22,7 +28,13 @@ const lastUpdated = "November 17, 2026";
     <!-- NOTICE BANNER -->
     <div class="mt-8 rounded-3xl bg-sand border border-line p-6 max-w-4xl">
       <p class="text-sm md:text-base text-ink/85 leading-relaxed">
-        <strong class="font-bold text-ink">Important Notice on Made-to-Order Manufacturing:</strong> PrintHub Africa provides bespoke custom additive manufacturing and digital design services. Under Kenyan Consumer Protection standards, bespoke items manufactured according to customer-supplied files, specifications, or personalized configurations cannot be cancelled or returned for a change of mind once physical production or digital modeling has commenced. Please review the material tolerances, quotation, and deposit terms below prior to confirming your order.
+        {noticeBanner ? (
+          noticeBanner
+        ) : (
+          <>
+            <strong class="font-bold text-ink">Important Notice on Made-to-Order Manufacturing:</strong> PrintHub Africa provides bespoke custom additive manufacturing and digital design services. Under Kenyan Consumer Protection standards, bespoke items manufactured according to customer-supplied files, specifications, or personalized configurations cannot be cancelled or returned for a change of mind once physical production or digital modeling has commenced. Please review the material tolerances, quotation, and deposit terms below prior to confirming your order.
+          </>
+        )}
       </p>
     </div>
 
@@ -31,24 +43,40 @@ const lastUpdated = "November 17, 2026";
       <aside class="lg:col-span-4 rounded-4xl bg-card border border-line p-6 lg:sticky lg:top-28 space-y-2 text-sm">
         <p class="font-bold text-xs uppercase tracking-wider text-brand mb-3">Table of Contents</p>
         <nav aria-label="Terms of Service Sections" class="space-y-1.5 text-mute">
-          <a href="#1-entity" class="block hover:text-brand transition-colors">1. Contracting Entity & Acceptance</a>
-          <a href="#2-services" class="block hover:text-brand transition-colors">2. Scope of Services</a>
-          <a href="#3-quotes" class="block hover:text-brand transition-colors">3. Quotations & Order Formation</a>
-          <a href="#4-payments" class="block hover:text-brand transition-colors">4. Payment Terms & M-Pesa</a>
-          <a href="#5-custom-nature" class="block hover:text-brand transition-colors">5. Custom Orders & Cancellations</a>
-          <a href="#6-ip-indemnity" class="block hover:text-brand transition-colors">6. Customer IP & Trademark Indemnity</a>
-          <a href="#7-tolerances" class="block hover:text-brand transition-colors">7. Manufacturing Realities & Tolerances</a>
-          <a href="#8-inspection" class="block hover:text-brand transition-colors">8. Quality Inspection & Defect Remedy</a>
-          <a href="#9-delivery" class="block hover:text-brand transition-colors">9. Delivery, Collection & Transit Risk</a>
-          <a href="#10-liability" class="block hover:text-brand transition-colors">10. Limitation of Liability</a>
-          <a href="#11-force-majeure" class="block hover:text-brand transition-colors">11. Force Majeure</a>
-          <a href="#12-governing-law" class="block hover:text-brand transition-colors">12. Governing Law & Dispute Resolution</a>
+          {sanitySections ? (
+            sanitySections.map((sec, i) => (
+              <a href={`#sec-${i + 1}`} class="block hover:text-brand transition-colors">{sec.title || `Section ${i + 1}`}</a>
+            ))
+          ) : (
+            <>
+              <a href="#1-entity" class="block hover:text-brand transition-colors">1. Contracting Entity & Acceptance</a>
+              <a href="#2-services" class="block hover:text-brand transition-colors">2. Scope of Services</a>
+              <a href="#3-quotes" class="block hover:text-brand transition-colors">3. Quotations & Order Formation</a>
+              <a href="#4-payments" class="block hover:text-brand transition-colors">4. Payment Terms & M-Pesa</a>
+              <a href="#5-custom-nature" class="block hover:text-brand transition-colors">5. Custom Orders & Cancellations</a>
+              <a href="#6-ip-indemnity" class="block hover:text-brand transition-colors">6. Customer IP & Trademark Indemnity</a>
+              <a href="#7-tolerances" class="block hover:text-brand transition-colors">7. Manufacturing Realities & Tolerances</a>
+              <a href="#8-inspection" class="block hover:text-brand transition-colors">8. Quality Inspection & Defect Remedy</a>
+              <a href="#9-delivery" class="block hover:text-brand transition-colors">9. Delivery, Collection & Transit Risk</a>
+              <a href="#10-liability" class="block hover:text-brand transition-colors">10. Limitation of Liability</a>
+              <a href="#11-force-majeure" class="block hover:text-brand transition-colors">11. Force Majeure</a>
+              <a href="#12-governing-law" class="block hover:text-brand transition-colors">12. Governing Law & Dispute Resolution</a>
+            </>
+          )}
         </nav>
       </aside>
 
       <!-- TERMS TEXT CONTENT -->
       <div class="lg:col-span-8 space-y-10 text-[1.03rem] text-ink/85 leading-relaxed">
-        
+        {sanitySections ? (
+          sanitySections.map((sec, i) => (
+            <article id={`sec-${i + 1}`} class={`space-y-3 ${i === 0 ? 'pt-2' : 'pt-6 border-t border-line'}`}>
+              <h2 class="font-display text-2xl font-semibold text-ink">{sec.title}</h2>
+              <div class="space-y-3 text-ink/85 leading-relaxed" set:html={sec.content} />
+            </article>
+          ))
+        ) : (
+          <>
         <!-- SECTION 1 -->
         <article id="1-entity" class="space-y-3 pt-2">
           <h2 class="font-display text-2xl font-semibold text-ink">1. Contracting Entity & Acceptance of Terms</h2>
@@ -197,6 +225,8 @@ const lastUpdated = "November 17, 2026";
             In the event of any controversy, claim, or dispute arising out of or relating to this Agreement, the parties shall first attempt in good faith to resolve the matter amicably through direct commercial consultation. If unresolved within thirty (30) days, the dispute shall be subject to the exclusive jurisdiction of the competent courts sitting in <strong class="text-ink font-semibold">Eldoret, Uasin Gishu County, Kenya</strong>.
           </p>
         </article>
+        </>
+        )}
 
         <!-- CONTACT -->
         <div class="pt-8 border-t border-line space-y-3">
