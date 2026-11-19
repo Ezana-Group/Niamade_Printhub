@@ -716,6 +716,42 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
     updateTotal();
   });
 
+  // ── Rebuild Zone Select dynamically from live Sanity rates ──────────────────
+  function rebuildZoneSelect(rates: any[]) {
+    if (!zoneSelect) return;
+    const courierOnly = rates.filter((r) => !r.isPickup);
+    if (courierOnly.length === 0) return;
+
+    zoneSelect.innerHTML = courierOnly
+      .map(
+        (r) =>
+          `<option value="${r.city}" data-fee="${r.fee}" data-days="${r.estimatedDays || ''}">
+            ${r.city} — KES ${Number(r.fee).toLocaleString()} ${r.estimatedDays ? `(${r.estimatedDays})` : ''}
+          </option>`
+      )
+      .join('');
+  }
+
+  // ── Fetch Live Delivery Rates directly from Sanity Studio API ────────────────
+  async function loadLiveDeliveryRates() {
+    try {
+      const res = await fetch(
+        "https://m7x6icn3.api.sanity.io/v2023-08-01/data/query/production?query=*[_type%20==%20%22siteSettings%22][0]{deliveryRates}"
+      );
+      if (!res.ok) return;
+      const { result } = await res.json();
+      if (result && Array.isArray(result.deliveryRates) && result.deliveryRates.length > 0) {
+        deliveryRatesList = result.deliveryRates;
+        rebuildZoneSelect(deliveryRatesList);
+        updateTotal();
+      }
+    } catch (e) {
+      // Fallback gracefully to pre-built defaults
+    }
+  }
+
+  loadLiveDeliveryRates();
+
   // ── Step 1 -> Step 2 (Amazon-style accordion collapse) ───────────────────────
   btnGoto2?.addEventListener("click", () => {
     const name = (document.getElementById("cust-name") as HTMLInputElement)?.value.trim();
