@@ -144,9 +144,11 @@ export async function onRequestPost(context: any) {
       }
     }
 
-    // 2. Dispatch Email Alert to Admin (printhubafrica3@gmail.com)
+    // 2. Dispatch Email Alert to Admin (booking@printhub.africa)
     const notificationEmail =
-      context.env.NOTIFICATION_EMAIL || "printhubafrica3@gmail.com";
+      context.env.BOOKING_NOTIFICATION_EMAIL ||
+      context.env.NOTIFICATION_EMAIL ||
+      "booking@printhub.africa";
     const resendKey = context.env.RESEND_API_KEY || "";
 
     if (resendKey) {
@@ -158,7 +160,7 @@ export async function onRequestPost(context: any) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "PrintHub Bookings <onboarding@resend.dev>",
+            from: context.env.BOOKING_FROM_EMAIL || "PrintHub Bookings <onboarding@resend.dev>",
             to: [notificationEmail],
             subject: `📅 New Booking [${bookingRef}]: ${customerName} (${service})`,
             html: `

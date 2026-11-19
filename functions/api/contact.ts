@@ -81,7 +81,9 @@ export async function onRequestPost(context: any) {
 
     // 2. Dispatch Email Notification
     const notificationEmail =
-      context.env.NOTIFICATION_EMAIL || "printhubafrica3@gmail.com";
+      context.env.QUOTES_NOTIFICATION_EMAIL ||
+      context.env.NOTIFICATION_EMAIL ||
+      "hello@printhub.africa";
     const resendKey = context.env.RESEND_API_KEY || "";
 
     if (resendKey) {
@@ -93,7 +95,7 @@ export async function onRequestPost(context: any) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "PrintHub Quotes <onboarding@resend.dev>",
+            from: context.env.QUOTES_FROM_EMAIL || "PrintHub Quotes <onboarding@resend.dev>",
             to: [notificationEmail],
             subject: `💬 New Quote Request from ${name} (${service})`,
             html: `
