@@ -95,6 +95,9 @@ export async function onRequestPost(context: any) {
   const colour = data.metadata?.colour || "";
   const customNote = data.metadata?.custom_note || "";
   const delivery = data.metadata?.delivery || "";
+  const deliveryCity = data.metadata?.deliveryCity || "";
+  const deliveryFeeKes = Number(data.metadata?.deliveryFeeKes) || 0;
+  const subtotalKes = Number(data.metadata?.subtotalKes) || (amountKes - deliveryFeeKes);
   const orderRef = data.metadata?.orderRef || `PH-ORD-${Math.floor(10000 + Math.random() * 90000)}`;
   const paidAt = new Date().toISOString();
 
@@ -128,6 +131,9 @@ export async function onRequestPost(context: any) {
                 colour,
                 customNote,
                 delivery,
+                deliveryCity,
+                deliveryFeeKes,
+                subtotalKes,
                 amountKes,
                 customerName,
                 customerEmail,
@@ -185,7 +191,9 @@ export async function onRequestPost(context: any) {
                   <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Quantity:</td><td>${quantity}</td></tr>
                   ${customNote ? `<tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Customisation:</td><td>${customNote}</td></tr>` : ""}
                   ${delivery ? `<tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Delivery:</td><td>${delivery}</td></tr>` : ""}
-                  <tr><td style="padding: 8px 0; font-weight: bold;">Amount Paid:</td><td><strong>KES ${amountKes.toLocaleString()}</strong></td></tr>
+                  <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Items Subtotal:</td><td>KES ${subtotalKes.toLocaleString()}</td></tr>
+                  <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Delivery Fee:</td><td>${deliveryFeeKes === 0 ? "FREE" : `KES ${deliveryFeeKes.toLocaleString()}`}</td></tr>
+                  <tr><td style="padding: 8px 0; font-weight: bold;">Total Paid:</td><td><strong>KES ${amountKes.toLocaleString()}</strong></td></tr>
                 </table>
               </div>
 
@@ -235,6 +243,8 @@ export async function onRequestPost(context: any) {
                   <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Quantity:</td><td>${quantity}</td></tr>
                   ${customNote ? `<tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Customisation:</td><td>${customNote}</td></tr>` : ""}
                   ${delivery ? `<tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Delivery:</td><td>${delivery}</td></tr>` : ""}
+                  <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Items Subtotal:</td><td>KES ${subtotalKes.toLocaleString()}</td></tr>
+                  <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Delivery Fee:</td><td>${deliveryFeeKes === 0 ? "FREE" : `KES ${deliveryFeeKes.toLocaleString()}`}</td></tr>
                   <tr><td style="padding: 8px 0; font-weight: bold;">Amount Paid:</td><td><strong>KES ${amountKes.toLocaleString()}</strong> ✅</td></tr>
                 </table>
               </div>

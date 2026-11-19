@@ -62,13 +62,31 @@ export const orderType = defineType({
     }),
     defineField({
       name: 'delivery',
-      title: 'Delivery Town / Collection',
+      title: 'Delivery Town / Full Address',
       type: 'string',
       group: 'overview',
     }),
     defineField({
+      name: 'deliveryCity',
+      title: 'Delivery City / Region',
+      type: 'string',
+      group: 'overview',
+    }),
+    defineField({
+      name: 'deliveryFeeKes',
+      title: 'Delivery Fee (KES)',
+      type: 'number',
+      group: 'overview',
+    }),
+    defineField({
+      name: 'subtotalKes',
+      title: 'Items Subtotal (KES)',
+      type: 'number',
+      group: 'overview',
+    }),
+    defineField({
       name: 'amountKes',
-      title: 'Amount Paid (KES)',
+      title: 'Total Amount Paid (KES)',
       type: 'number',
       group: 'overview',
     }),

@@ -16,6 +16,10 @@ const productsData = products.map((p: any) => ({
   customPrompt: p.customizationPrompt || "",
 }));
 
+const deliveryRates = site.deliveryRates || [];
+const courierRates = deliveryRates.filter((r: any) => !r.isPickup);
+const pickupRate = deliveryRates.find((r: any) => r.isPickup) || { city: "Eldoret Studio Pickup (Free)", fee: 0, estimatedDays: "Ready in 24–48h" };
+
 const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
 ---
 <Layout
@@ -151,7 +155,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                   2
                 </span>
                 <div>
-                  <h2 class="font-display text-xl sm:text-2xl font-bold text-ink">Delivery Address & Details</h2>
+                  <h2 class="font-display text-xl sm:text-2xl font-bold text-ink">Delivery Address & Pricing</h2>
                   <p id="summary-step-2" class="text-sm sm:text-base text-mute mt-0.5 hidden font-medium"></p>
                 </div>
               </div>
@@ -177,7 +181,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                     <input type="radio" name="delivery_type" value="courier" checked class="mt-1 accent-brand w-4 h-4" />
                     <div>
                       <p class="font-bold text-ink text-base">Courier Delivery</p>
-                      <p class="text-xs sm:text-sm text-mute mt-0.5">Delivered to your home, office, or pickup point anywhere in Kenya.</p>
+                      <p class="text-xs sm:text-sm text-mute mt-0.5">Delivered to your doorstep or pickup point across Kenya.</p>
                     </div>
                   </label>
 
@@ -185,7 +189,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                     <input type="radio" name="delivery_type" value="pickup" class="mt-1 accent-brand w-4 h-4" />
                     <div>
                       <p class="font-bold text-ink text-base">Free Eldoret Studio Pickup</p>
-                      <p class="text-xs sm:text-sm text-mute mt-0.5">Collect free from PrintHub Africa / Niamade Hub studio in Eldoret.</p>
+                      <p class="text-xs sm:text-sm text-mute mt-0.5">Collect directly from our Eldoret studio at zero cost.</p>
                     </div>
                   </label>
                 </div>
@@ -193,29 +197,49 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
 
               <!-- Address Fields (Shown for Courier) -->
               <div id="courier-fields-wrap" class="space-y-4 pt-1">
+                
+                <!-- City / Regional Shipping Zone (Managed in Sanity) -->
+                <div>
+                  <label for="del-zone-select" class="block text-base font-bold text-ink mb-1.5">
+                    Select Your Delivery City / Region <span class="text-brand">*</span>
+                  </label>
+                  <select
+                    id="del-zone-select"
+                    name="delivery_zone"
+                    class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
+                  >
+                    {courierRates.map((r: any) => (
+                      <option value={r.city} data-fee={r.fee} data-days={r.estimatedDays || ""}>
+                        {r.city} — KES {r.fee.toLocaleString()} {r.estimatedDays ? `(${r.estimatedDays})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <p class="mt-1.5 text-xs sm:text-sm text-mute">Delivery rates are configured per city & county.</p>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label for="del-town" class="block text-base font-bold text-ink mb-1.5">
-                      Town / City <span class="text-brand">*</span>
+                      Specific Town / Sub-County <span class="text-brand">*</span>
                     </label>
                     <input
                       type="text"
                       id="del-town"
                       name="delivery_town"
-                      placeholder="e.g. Nairobi, Mombasa, Eldoret, Kisumu"
+                      placeholder="e.g. Westlands, Nyali, Milimani"
                       class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                     />
                   </div>
 
                   <div>
                     <label for="del-area" class="block text-base font-bold text-ink mb-1.5">
-                      Estate / Suburb / Area <span class="text-brand">*</span>
+                      Estate / Street / Road <span class="text-brand">*</span>
                     </label>
                     <input
                       type="text"
                       id="del-area"
                       name="delivery_area"
-                      placeholder="e.g. Westlands, Kilimani, Pioneer, Nyali"
+                      placeholder="e.g. Mpaka Rd, Kilimani Ring Rd"
                       class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                     />
                   </div>
@@ -223,26 +247,26 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
 
                 <div>
                   <label for="del-address" class="block text-base font-bold text-ink mb-1.5">
-                    Specific Street, Building, or Apartment Details <span class="text-brand">*</span>
+                    Building, Apartment, Floor or Gate Details <span class="text-brand">*</span>
                   </label>
                   <input
                     type="text"
                     id="del-address"
                     name="delivery_address"
-                    placeholder="e.g. Mpaka Road, Woodvale Place, 3rd Floor, Suite 4B"
+                    placeholder="e.g. Woodvale Place, 3rd Floor, Suite 4B (or House #7)"
                     class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                   />
                 </div>
 
                 <div>
                   <label for="del-landmark" class="block text-base font-bold text-ink mb-1.5">
-                    Nearby Landmark / Special Delivery Instructions (Optional)
+                    Nearby Landmark or Delivery Instructions (Optional)
                   </label>
                   <input
                     type="text"
                     id="del-landmark"
                     name="delivery_landmark"
-                    placeholder="e.g. Opposite Shell Petrol Station, call before arrival"
+                    placeholder="e.g. Opposite Shell Petrol Station, call upon arrival"
                     class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                   />
                 </div>
@@ -250,9 +274,9 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
 
               <!-- Pickup info note (Shown for Studio Pickup) -->
               <div id="pickup-info-wrap" class="hidden p-4 rounded-2xl bg-sand/60 border border-line text-sm text-ink space-y-1">
-                <p class="font-bold text-base text-brand">📍 PrintHub Africa Studio Pickup</p>
+                <p class="font-bold text-base text-brand">📍 PrintHub Africa Studio Pickup — KES 0 (FREE)</p>
                 <p class="text-ink/80 text-sm">Niamade Hub, Eldoret, Uasin Gishu County, Kenya.</p>
-                <p class="text-mute text-xs">Hours: Mon–Fri 8:00 AM – 6:00 PM · Sat 9:00 AM – 3:00 PM</p>
+                <p class="text-mute text-xs">Hours: Mon–Fri 8:00 AM – 6:00 PM · Sat 9:00 AM – 3:00 PM · {pickupRate.estimatedDays || "Ready in 24–48h"}</p>
               </div>
 
               <!-- Customisation / 3D Print Request Note -->
@@ -449,13 +473,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
           <!-- Price Breakdown Table -->
           <div class="space-y-3.5 pt-4 border-t border-line/70 text-base">
             <div class="flex justify-between items-center text-ink/80">
-              <span class="font-medium">Unit Price</span>
-              <span id="summary-unit-price" class="font-bold text-ink text-base">KES 0</span>
+              <span class="font-medium">Items Subtotal</span>
+              <span id="summary-subtotal" class="font-bold text-ink text-base">KES 0</span>
             </div>
             <div class="flex justify-between items-center text-ink/80">
               <span class="font-medium">Delivery Fee</span>
-              <span id="summary-delivery-note" class="text-xs sm:text-sm font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
-                At cost / Free Pickup
+              <span id="summary-delivery-note" class="text-sm font-bold text-ink">
+                Free Studio Pickup
               </span>
             </div>
             <div class="pt-4 border-t border-line flex justify-between items-baseline">
@@ -501,11 +525,12 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
     </div>
   </div>
 
-  <!-- Hidden Paystack Configuration Storage -->
+  <!-- Hidden Paystack & Delivery Configuration Storage -->
   <div
     id="checkout-config"
     data-paystack-key={site.paystackPublicKey || ""}
     data-products={JSON.stringify(productsData)}
+    data-delivery-rates={JSON.stringify(deliveryRates)}
     data-whatsapp={site.whatsapp || "254792732929"}
     data-till={site.mpesaTillNumber || ""}
     data-paybill={site.mpesaPaybillNumber || ""}
@@ -534,10 +559,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
   const whatsappNum = cfg?.dataset.whatsapp || "254792732929";
   
   let productsList: any[] = [];
+  let deliveryRatesList: any[] = [];
   try {
     productsList = JSON.parse(cfg?.dataset.products || "[]");
+    deliveryRatesList = JSON.parse(cfg?.dataset.deliveryRates || "[]");
   } catch (e) {
     productsList = [];
+    deliveryRatesList = [];
   }
 
   // Parse URL Parameters
@@ -561,7 +589,8 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
   const elVariant = document.getElementById("summary-variant-line");
   const elImg = document.getElementById("summary-img") as HTMLImageElement | null;
   const elImgFallback = document.getElementById("summary-img-fallback");
-  const elUnitPrice = document.getElementById("summary-unit-price");
+  const elSubtotal = document.getElementById("summary-subtotal");
+  const elDeliveryNote = document.getElementById("summary-delivery-note");
   const elTotal = document.getElementById("summary-total");
   const elQtyVal = document.getElementById("qty-val");
   const btnQtyMinus = document.getElementById("qty-minus");
@@ -594,6 +623,22 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
   const btnGoto2 = document.getElementById("btn-goto-step-2");
   const btnGoto3 = document.getElementById("btn-goto-step-3");
 
+  const zoneSelect = document.getElementById("del-zone-select") as HTMLSelectElement | null;
+
+  // Current Delivery Fee Calculation
+  function getCurrentDeliveryFee(): { fee: number; city: string } {
+    const delType = (document.querySelector('input[name="delivery_type"]:checked') as HTMLInputElement)?.value;
+    if (delType === "pickup") {
+      return { fee: 0, city: "Eldoret Studio Pickup (Free)" };
+    }
+    if (zoneSelect && zoneSelect.selectedOptions.length > 0) {
+      const opt = zoneSelect.selectedOptions[0];
+      const fee = parseInt(opt.dataset.fee || "350", 10);
+      return { fee, city: opt.value };
+    }
+    return { fee: 350, city: "Kenya Courier" };
+  }
+
   // Hydrate Initial Summary
   if (elTitle) elTitle.textContent = productName;
   if (elVariant) {
@@ -610,9 +655,15 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
   }
 
   function updateTotal() {
-    const total = unitPrice * currentQty;
+    const subtotal = unitPrice * currentQty;
+    const { fee: delFee, city: delCity } = getCurrentDeliveryFee();
+    const total = subtotal + delFee;
+
     if (elQtyVal) elQtyVal.textContent = String(currentQty);
-    if (elUnitPrice) elUnitPrice.textContent = `KES ${unitPrice.toLocaleString()}`;
+    if (elSubtotal) elSubtotal.textContent = `KES ${subtotal.toLocaleString()}`;
+    if (elDeliveryNote) {
+      elDeliveryNote.textContent = delFee === 0 ? "FREE (Studio Pickup)" : `+ KES ${delFee.toLocaleString()} (${delCity})`;
+    }
     if (elTotal) elTotal.textContent = `KES ${total.toLocaleString()}`;
 
     const methodChoice = (document.querySelector('input[name="payment_choice"]:checked') as HTMLInputElement)?.value;
@@ -656,7 +707,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         courierWrap?.classList.remove("hidden");
         pickupWrap?.classList.add("hidden");
       }
+      updateTotal();
     });
+  });
+
+  // When city zone changes, update delivery fee & total
+  zoneSelect?.addEventListener("change", () => {
+    updateTotal();
   });
 
   // ── Step 1 -> Step 2 (Amazon-style accordion collapse) ───────────────────────
@@ -730,28 +787,30 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
     let delSummaryText = "";
 
     if (delType === "pickup") {
-      delSummaryText = "Free Studio Pickup (Eldoret)";
+      delSummaryText = "Free Studio Pickup (Eldoret) — KES 0";
     } else {
+      const cityZone = zoneSelect?.value || "Nairobi";
       const town = (document.getElementById("del-town") as HTMLInputElement)?.value.trim();
       const area = (document.getElementById("del-area") as HTMLInputElement)?.value.trim();
       const address = (document.getElementById("del-address") as HTMLInputElement)?.value.trim();
 
       if (!town) {
-        alert("Please enter your Delivery Town / City.");
+        alert("Please enter your Specific Town or Sub-County.");
         document.getElementById("del-town")?.focus();
         return;
       }
       if (!area) {
-        alert("Please enter your Estate or Area.");
+        alert("Please enter your Estate or Street.");
         document.getElementById("del-area")?.focus();
         return;
       }
       if (!address) {
-        alert("Please enter your specific Street, Building, or Apartment.");
+        alert("Please enter your Building, Floor, or Apartment details.");
         document.getElementById("del-address")?.focus();
         return;
       }
-      delSummaryText = `${town}, ${area} (${address})`;
+      const { fee: delFee } = getCurrentDeliveryFee();
+      delSummaryText = `${cityZone} (${town}, ${area}) · KES ${delFee.toLocaleString()}`;
     }
 
     const customText = (document.getElementById("cust-custom") as HTMLInputElement)?.value.trim();
@@ -844,10 +903,14 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
 
     const delType = (document.querySelector('input[name="delivery_type"]:checked') as HTMLInputElement)?.value;
     let fullDeliveryString = "";
+    let selectedCity = "";
+    const { fee: deliveryFeeKes, city: rateCity } = getCurrentDeliveryFee();
 
     if (delType === "pickup") {
+      selectedCity = "Eldoret Studio";
       fullDeliveryString = "Free Eldoret Studio Pickup";
     } else {
+      selectedCity = zoneSelect?.value || rateCity;
       const town = (document.getElementById("del-town") as HTMLInputElement)?.value.trim();
       const area = (document.getElementById("del-area") as HTMLInputElement)?.value.trim();
       const address = (document.getElementById("del-address") as HTMLInputElement)?.value.trim();
@@ -858,12 +921,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         showError("Please complete your delivery address details.");
         return;
       }
-      fullDeliveryString = `${town}, ${area}, ${address}${landmark ? ` (Landmark: ${landmark})` : ""}`;
+      fullDeliveryString = `${selectedCity} — ${town}, ${area}, ${address}${landmark ? ` (Landmark: ${landmark})` : ""}`;
     }
 
     const custom = (document.getElementById("cust-custom") as HTMLInputElement)?.value.trim();
     const choice = (document.querySelector('input[name="payment_choice"]:checked') as HTMLInputElement)?.value || "paystack";
-    const totalKes = unitPrice * currentQty;
+    const subtotalKes = unitPrice * currentQty;
+    const totalKes = subtotalKes + deliveryFeeKes;
     const orderRef = "PH-ORD-" + Date.now().toString().slice(-5) + "-" + Math.random().toString(36).substr(2, 4).toUpperCase();
 
     // Flow A: Manual M-Pesa Till / Paybill
@@ -875,9 +939,11 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         `Size: ${paramSize || "Standard"}\n` +
         `Colour: ${paramColour || "Standard"}\n` +
         `Quantity: ${currentQty}\n` +
-        `Delivery: ${fullDeliveryString}\n` +
+        `Items Subtotal: KES ${subtotalKes.toLocaleString()}\n` +
+        `Delivery Fee: KES ${deliveryFeeKes.toLocaleString()} (${selectedCity})\n` +
+        `Total to Pay: KES ${totalKes.toLocaleString()}\n` +
+        `Delivery Address: ${fullDeliveryString}\n` +
         (custom ? `Custom: ${custom}\n` : "") +
-        `Total: KES ${totalKes.toLocaleString()}\n\n` +
         `Customer: ${name}\n` +
         `Email: ${email}\n` +
         `Phone: ${phone}\n\n` +
@@ -902,7 +968,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
     // Flow B: Paystack Instant STK Push & Card
     if (!paystackKey || !paystackKey.startsWith("pk_")) {
       const waFallback = encodeURIComponent(
-        `🛍️ DIRECT ORDER — PrintHub Africa\n\nProduct: ${productName}\nQty: ${currentQty}\nTotal: KES ${totalKes.toLocaleString()}\nCustomer: ${name} (${phone})\nDelivery: ${fullDeliveryString}`
+        `🛍️ DIRECT ORDER — PrintHub Africa\n\nProduct: ${productName}\nQty: ${currentQty}\nSubtotal: KES ${subtotalKes.toLocaleString()}\nDelivery (${selectedCity}): KES ${deliveryFeeKes.toLocaleString()}\nTotal: KES ${totalKes.toLocaleString()}\nCustomer: ${name} (${phone})\nAddress: ${fullDeliveryString}`
       );
       window.open(`https://wa.me/${whatsappNum}?text=${waFallback}`, "_blank");
       return;
@@ -934,11 +1000,17 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         quantity: String(currentQty),
         custom_note: custom,
         delivery: fullDeliveryString,
+        deliveryCity: selectedCity,
+        deliveryFeeKes: String(deliveryFeeKes),
+        subtotalKes: String(subtotalKes),
+        amountKes: String(totalKes),
         custom_fields: [
           { display_name: "Order Ref", variable_name: "orderRef", value: orderRef },
           { display_name: "Product", variable_name: "product", value: productName },
           { display_name: "Quantity", variable_name: "quantity", value: String(currentQty) },
-          { display_name: "Delivery", variable_name: "delivery", value: fullDeliveryString },
+          { display_name: "Delivery City", variable_name: "delivery_city", value: selectedCity },
+          { display_name: "Delivery Fee", variable_name: "delivery_fee", value: `KES ${deliveryFeeKes}` },
+          { display_name: "Delivery Address", variable_name: "delivery_address", value: fullDeliveryString },
           { display_name: "Phone", variable_name: "phone", value: phone },
         ],
       };
@@ -972,12 +1044,14 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
             `Size: ${paramSize || "Standard"}\n` +
             `Colour: ${paramColour || "Standard"}\n` +
             `Qty: ${currentQty}\n` +
-            `Delivery: ${fullDeliveryString}\n` +
+            `Subtotal: KES ${subtotalKes.toLocaleString()}\n` +
+            `Delivery Fee: KES ${deliveryFeeKes.toLocaleString()} (${selectedCity})\n` +
+            `Total Paid: KES ${totalKes.toLocaleString()}\n` +
+            `Address: ${fullDeliveryString}\n` +
             (custom ? `Custom: ${custom}\n` : "") +
             `Customer: ${name}\n` +
             `Email: ${email}\n` +
             `Phone: ${phone}\n` +
-            `Amount: KES ${totalKes.toLocaleString()}\n` +
             `Paystack Ref: ${response.reference}\n` +
             `Status: ✅ PAID (M-Pesa / Card)`
           );

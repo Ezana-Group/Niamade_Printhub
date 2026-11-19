@@ -54,11 +54,21 @@ export interface SanitySocials {
   googleBusiness?: string;
 }
 
+export interface SanityDeliveryRate {
+  city: string;
+  fee: number;
+  estimatedDays?: string;
+  isPickup?: boolean;
+}
+
 export interface SanitySettings {
   name?: string;
   phone?: string;
   whatsapp?: string;
   email?: string;
+  bookingEmail?: string;
+  quotesEmail?: string;
+  privacyEmail?: string;
   notificationEmail?: string;
   resendApiKey?: string;
   city?: string;
@@ -67,6 +77,11 @@ export interface SanitySettings {
   socials?: SanitySocials;
   paystackPublicKey?: string;
   enableCheckout?: boolean;
+  mpesaTillNumber?: string;
+  mpesaPaybillNumber?: string;
+  mpesaAccountName?: string;
+  mpesaBusinessName?: string;
+  deliveryRates?: SanityDeliveryRate[];
   easyAppointmentsUrl?: string;
   enableEasyAppointmentsEmbed?: boolean;
   bookingNotice?: string;
@@ -288,6 +303,9 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     phone,
     whatsapp,
     email,
+    bookingEmail,
+    quotesEmail,
+    privacyEmail,
     notificationEmail,
     resendApiKey,
     city,
@@ -296,6 +314,11 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     socials,
     paystackPublicKey,
     enableCheckout,
+    mpesaTillNumber,
+    mpesaPaybillNumber,
+    mpesaAccountName,
+    mpesaBusinessName,
+    deliveryRates,
     easyAppointmentsUrl,
     enableEasyAppointmentsEmbed,
     bookingNotice

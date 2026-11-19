@@ -15,6 +15,7 @@ export const siteSettingsType = defineType({
     { name: 'socials',    title: '📣 Social Media'      },
     { name: 'messages',   title: '💬 WhatsApp Messages' },
     { name: 'payments',   title: '💳 Payments & Checkout' },
+    { name: 'shipping',   title: '🚚 Delivery & Rates' },
     { name: 'site',       title: '🌐 Site & Banners'    },
   ],
 
@@ -278,6 +279,73 @@ export const siteSettingsType = defineType({
       group: 'payments',
       description: 'The name that appears on the customer\'s M-Pesa confirmation SMS — usually your registered Safaricom business name. e.g. NIAMADE HUB',
       initialValue: 'NIAMADE HUB',
+    }),
+
+    // ─── 🚚 DELIVERY & SHIPPING RATES ───────────────────────────────
+    defineField({
+      name: 'deliveryRates',
+      title: 'City & Regional Delivery Pricing',
+      type: 'array',
+      group: 'shipping',
+      description: 'Define delivery fees per town or county. When a customer selects their town during checkout, the shipping fee is automatically calculated and added to the M-Pesa/Card total.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'city',
+              title: 'City / Region Name',
+              type: 'string',
+              description: 'e.g. Nairobi, Eldoret Town, Mombasa, Kisumu, Nakuru, Rest of Kenya',
+              validation: (rule: any) => rule.required(),
+            },
+            {
+              name: 'fee',
+              title: 'Delivery Fee in KES',
+              type: 'number',
+              description: 'Enter 0 for free pickup/delivery. e.g. 350',
+              validation: (rule: any) => rule.required().min(0),
+            },
+            {
+              name: 'estimatedDays',
+              title: 'Estimated Delivery Time',
+              type: 'string',
+              description: 'e.g. Next day, 1–2 business days',
+            },
+            {
+              name: 'isPickup',
+              title: 'Is Studio / In-Person Pickup',
+              type: 'boolean',
+              description: 'Toggle on if this is in-person collection at the Eldoret studio (fee will be KES 0)',
+              initialValue: false,
+            },
+          ],
+          preview: {
+            select: {
+              title: 'city',
+              fee: 'fee',
+              days: 'estimatedDays',
+              isPickup: 'isPickup',
+            },
+            prepare({ title, fee, days, isPickup }: any) {
+              const feeStr = fee === 0 ? 'FREE' : `KES ${fee?.toLocaleString() || '0'}`;
+              return {
+                title: `${title || 'City'} — ${feeStr}`,
+                subtitle: `${isPickup ? '📍 Studio Pickup' : '🚚 Courier'} ${days ? `· ${days}` : ''}`,
+              };
+            },
+          },
+        },
+      ],
+      initialValue: [
+        { city: 'Eldoret Studio Pickup (Free)', fee: 0, estimatedDays: 'Ready in 24–48h', isPickup: true },
+        { city: 'Eldoret Town Delivery', fee: 150, estimatedDays: 'Same day after printing', isPickup: false },
+        { city: 'Nairobi', fee: 350, estimatedDays: '1 business day (Courier)', isPickup: false },
+        { city: 'Nakuru / Central Kenya', fee: 350, estimatedDays: '1–2 business days', isPickup: false },
+        { city: 'Kisumu / Western Kenya', fee: 350, estimatedDays: '1–2 business days', isPickup: false },
+        { city: 'Mombasa / Coast', fee: 450, estimatedDays: '2 business days', isPickup: false },
+        { city: 'Rest of Kenya (Other Counties)', fee: 400, estimatedDays: '2–3 business days', isPickup: false },
+      ],
     }),
 
     // ─── 🌐 SITE & BANNERS ────────────────────────────────────────

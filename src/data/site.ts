@@ -75,6 +75,18 @@ export const site = {
   mpesaPaybillNumber: _sanitySettings?.mpesaPaybillNumber || "",
   mpesaAccountName:   _sanitySettings?.mpesaAccountName   || "",
   mpesaBusinessName:  _sanitySettings?.mpesaBusinessName  || "NIAMADE HUB",
+  // Delivery & Shipping Rates (Configurable via Sanity Studio -> Delivery & Rates)
+  deliveryRates: _sanitySettings?.deliveryRates && _sanitySettings.deliveryRates.length > 0
+    ? _sanitySettings.deliveryRates
+    : [
+        { city: "Eldoret Studio Pickup (Free)", fee: 0, estimatedDays: "Ready in 24–48h", isPickup: true },
+        { city: "Eldoret Town Delivery", fee: 150, estimatedDays: "Same day after printing", isPickup: false },
+        { city: "Nairobi", fee: 350, estimatedDays: "1 business day (Courier)", isPickup: false },
+        { city: "Nakuru / Central Kenya", fee: 350, estimatedDays: "1–2 business days", isPickup: false },
+        { city: "Kisumu / Western Kenya", fee: 350, estimatedDays: "1–2 business days", isPickup: false },
+        { city: "Mombasa / Coast", fee: 450, estimatedDays: "2 business days", isPickup: false },
+        { city: "Rest of Kenya (Other Counties)", fee: 400, estimatedDays: "2–3 business days", isPickup: false },
+      ],
   // Bookings & Easy!Appointments
   easyAppointmentsUrl: _sanitySettings?.easyAppointmentsUrl || process.env.PUBLIC_EASYAPPOINTMENTS_URL || import.meta.env?.PUBLIC_EASYAPPOINTMENTS_URL || "",
   enableEasyAppointmentsEmbed: _sanitySettings?.enableEasyAppointmentsEmbed ?? false,

@@ -4,6 +4,75 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title('PrintHub Africa')
     .items([
+      // ─── 🛍️ SHOP ORDERS & FULFILMENT ──────────────────────────────
+      S.listItem()
+        .title('Shop Orders & Fulfilment')
+        .icon(() => '🛍️')
+        .child(
+          S.list()
+            .title('Customer Orders')
+            .items([
+              S.listItem()
+                .title('All Orders')
+                .icon(() => '📋')
+                .schemaType('order')
+                .child(
+                  S.documentTypeList('order')
+                    .title('All Customer Orders')
+                    .defaultOrdering([
+                      { field: 'createdAt', direction: 'desc' },
+                      { field: '_createdAt', direction: 'desc' },
+                    ])
+                ),
+
+              S.listItem()
+                .title('✅ Paid — In Print Queue')
+                .icon(() => '🖨️')
+                .child(
+                  S.documentList()
+                    .title('Paid Orders (Queue)')
+                    .schemaType('order')
+                    .filter('_type == "order" && paymentStatus == "paid" && (fulfilmentStatus == "queued" || fulfilmentStatus == "printing")')
+                    .defaultOrdering([{ field: 'paidAt', direction: 'asc' }])
+                ),
+
+              S.listItem()
+                .title('🚚 Dispatched / Ready for Pickup')
+                .icon(() => '📦')
+                .child(
+                  S.documentList()
+                    .title('Dispatched / Ready Orders')
+                    .schemaType('order')
+                    .filter('_type == "order" && (fulfilmentStatus == "ready" || fulfilmentStatus == "dispatched")')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+
+              S.listItem()
+                .title('⏳ Pending Payment')
+                .icon(() => '⏳')
+                .child(
+                  S.documentList()
+                    .title('Pending Orders')
+                    .schemaType('order')
+                    .filter('_type == "order" && paymentStatus == "pending"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+
+              S.listItem()
+                .title('✔️ Completed / Delivered')
+                .icon(() => '✔️')
+                .child(
+                  S.documentList()
+                    .title('Delivered Orders')
+                    .schemaType('order')
+                    .filter('_type == "order" && fulfilmentStatus == "delivered"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+            ])
+        ),
+
+      S.divider(),
+
       // ─── 📅 CUSTOMER BOOKINGS & APPOINTMENTS ───────────────────────
       S.listItem()
         .title('Customer Bookings & Appointments')
