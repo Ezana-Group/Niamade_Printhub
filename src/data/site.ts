@@ -24,6 +24,11 @@ const _sanityFaqs = await fetchFaqsFromSanity();
 
 export const faqs = _sanityFaqs || _faqsData.faqs;
 
+const rawTiktok = _sanitySettings?.socials?.tiktok;
+const tiktokHref = rawTiktok
+  ? rawTiktok.replace(/@printhub\.africa\/?$/i, "@printhub_africa").replace("@printhub.africa", "@printhub_africa")
+  : "https://www.tiktok.com/@printhub_africa";
+
 export const site = {
   name: _sanitySettings?.name || _settingsData.name,
   businessName: "Niamade Hub",
@@ -42,7 +47,7 @@ export const site = {
   socials: [
     { id: "instagram", label: "Instagram", handle: "@printhub.africa", href: _sanitySettings?.socials?.instagram || "https://www.instagram.com/printhub.africa/" },
     { id: "threads", label: "Threads", handle: "@printhub.africa", href: _sanitySettings?.socials?.threads || "https://www.threads.com/@printhub.africa" },
-    { id: "tiktok", label: "TikTok", handle: "@printhub_africa", href: _sanitySettings?.socials?.tiktok || "https://www.tiktok.com/@printhub_africa" },
+    { id: "tiktok", label: "TikTok", handle: "@printhub_africa", href: tiktokHref },
     { id: "youtube", label: "YouTube", handle: "@PrinthubAfrica", href: _sanitySettings?.socials?.youtube || "https://www.youtube.com/@PrinthubAfrica" },
     { id: "linkedin", label: "LinkedIn", handle: "PrintHub Africa", href: _sanitySettings?.socials?.linkedin || "https://www.linkedin.com/company/printhub-africa" },
   ],

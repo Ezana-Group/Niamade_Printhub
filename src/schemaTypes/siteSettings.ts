@@ -120,7 +120,7 @@ export const siteSettingsType = defineType({
       fields: [
         { name: 'instagram',      type: 'string', title: 'Instagram',             description: 'e.g. https://www.instagram.com/printhub.africa' },
         { name: 'threads',        type: 'string', title: 'Threads',               description: 'e.g. https://www.threads.com/@printhub.africa' },
-        { name: 'tiktok',         type: 'string', title: 'TikTok',                description: 'e.g. https://www.tiktok.com/@printhub.africa' },
+        { name: 'tiktok',         type: 'string', title: 'TikTok',                description: 'e.g. https://www.tiktok.com/@printhub_africa' },
         { name: 'youtube',        type: 'string', title: 'YouTube',               description: 'e.g. https://www.youtube.com/@PrinthubAfrica' },
         { name: 'facebook',       type: 'string', title: 'Facebook',              description: 'e.g. https://www.facebook.com/printhub.africa' },
         { name: 'linkedin',       type: 'string', title: 'LinkedIn',              description: 'e.g. https://www.linkedin.com/company/printhub-africa' },
