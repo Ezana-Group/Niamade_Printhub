@@ -3,7 +3,6 @@ import Layout from "../../layouts/Layout.astro";
 import ProductArt from "../../components/ProductArt.astro";
 import ProductCard from "../../components/ProductCard.astro";
 import Icon from "../../components/Icon.astro";
-import CheckoutModal from "../../components/CheckoutModal.astro";
 import { products, occasions, site, wa, waMessages, price } from "../../data/site";
 import { productSchemaNode, breadcrumbNode } from "../../lib/schema";
 
@@ -199,15 +198,6 @@ const specs = [
     <h2 class="text-3xl md:text-4xl">You might also like</h2>
     <div data-reveal-group class="mt-8 grid sm:grid-cols-3 gap-5">{more.map((o) => <ProductCard p={o} />)}</div>
   </section>}
-
-  <CheckoutModal
-    paystackKey={site.paystackPublicKey || ""}
-    mpesaTill={site.mpesaTillNumber || ""}
-    mpesaPaybill={site.mpesaPaybillNumber || ""}
-    mpesaAccount={site.mpesaAccountName || ""}
-    mpesaBusinessName={site.mpesaBusinessName || "NIAMADE HUB"}
-    whatsapp={site.whatsapp || "254792732929"}
-  />
 </Layout>
 <script>
   const main = document.getElementById("main") as HTMLImageElement | null, thumbs = document.querySelectorAll<HTMLButtonElement>(".thumb");
@@ -224,29 +214,24 @@ const specs = [
     if (!reduce) { main.getAnimations().forEach((a) => a.cancel()); main.animate([{ opacity: 0.25 }, { opacity: 1 }], { duration: 220, easing: "cubic-bezier(0.23, 1, 0.32, 1)" }); }
   }));
 
-  // Direct Online Checkout Trigger (M-Pesa / Card)
+  // Direct Online Checkout Trigger (Redirects to Dedicated /checkout Page)
   const payBtn = document.getElementById("pay-direct-btn") as HTMLButtonElement | null;
   if (payBtn) {
     payBtn.addEventListener("click", () => {
       const selSize = document.querySelector<HTMLButtonElement>(".size-chip[aria-selected='true']")?.dataset.val || "";
       const selColour = document.querySelector<HTMLButtonElement>(".colour-chip[aria-selected='true']")?.dataset.val || "";
       const customVal = (document.getElementById("custom-text") as HTMLInputElement | null)?.value?.trim() || "";
-      const hasCustom = payBtn.dataset.hasCustom === "true" || !!customVal;
-      const api = (window as any).__phbCheckout;
-      if (api && api.open) {
-        api.open({
-          productName: payBtn.dataset.name || "",
-          productSlug: payBtn.dataset.slug || "",
-          unitPriceKes: parseInt(payBtn.dataset.price || "0", 10),
-          size: selSize,
-          colour: selColour,
-          hasCustom: hasCustom,
-        });
-        if (customVal) {
-          const coCustom = document.getElementById("co-custom") as HTMLInputElement | null;
-          if (coCustom) coCustom.value = customVal;
-        }
-      }
+      
+      const q = new URLSearchParams();
+      if (payBtn.dataset.slug) q.set("slug", payBtn.dataset.slug);
+      if (payBtn.dataset.name) q.set("product", payBtn.dataset.name);
+      if (payBtn.dataset.price) q.set("price", payBtn.dataset.price);
+      if (selSize) q.set("size", selSize);
+      if (selColour) q.set("colour", selColour);
+      if (customVal) q.set("custom", customVal);
+      q.set("qty", "1");
+
+      window.location.href = `/checkout/?${q.toString()}`;
     });
   }
 
