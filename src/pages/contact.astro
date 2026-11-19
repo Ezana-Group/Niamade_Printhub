@@ -128,7 +128,36 @@ const ld = {
           quantity: d.get("qty"),
           message: d.get("msg"),
         }),
-      }).catch((err) => console.warn("Contact API background sync:", err));
+      })
+      .then((res) => {
+        if (!res.ok) throw new Error("Endpoint returned " + res.status);
+      })
+      .catch((err) => {
+        console.warn("Contact API endpoint unavailable, saving directly to Sanity...", err);
+        fetch("https://m7x6icn3.api.sanity.io/v2023-08-01/data/mutate/production", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer skygOrLXyMmWLsjwtorwFxjPeKvB0GuiuVuGQzX8EVUCekz5F47hrIDfU39i4iiBdThNKYOUKsSQFID0UhsfiyHDkgoynGxZHE2YJi28RLxEBctoJ7gPynRki1QM75knT1WSbVnjigmRSTpoqR3z7yNvnMgRELuI6hFhO7LuaQgrKjNnogO9",
+          },
+          body: JSON.stringify({
+            mutations: [{
+              create: {
+                _type: "contactInquiry",
+                name: String(d.get("name") || "").trim(),
+                phone: "",
+                email: "",
+                service: String(d.get("svc") || "General Quote Request").trim(),
+                material: String(d.get("mat") || "Advise me").trim(),
+                quantity: Number(d.get("qty")) || 1,
+                message: String(d.get("msg") || "").trim(),
+                status: "new",
+                createdAt: new Date().toISOString(),
+              }
+            }]
+          }),
+        }).catch((e) => console.error("Direct Sanity contact save error:", e));
+      });
     } catch (_) {}
 
     // Open WhatsApp, and always leave visible fallbacks: pop-up blockers and in-app browsers can swallow window.open.

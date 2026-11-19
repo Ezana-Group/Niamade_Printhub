@@ -582,6 +582,9 @@ const ld = {
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<span class="inline-block animate-spin mr-2">⏳</span> Reserving consultation...`;
 
+      let savedInSanity = false;
+      let finalRef = data.bookingRef;
+
       try {
         const res = await fetch("/api/bookings", {
           method: "POST",
@@ -589,41 +592,71 @@ const ld = {
           body: JSON.stringify(data),
         });
 
-        const result = await res.json().catch(() => ({}));
-        const finalRef = result.bookingRef || data.bookingRef;
-
-        form.classList.add("hidden");
-        successView.classList.remove("hidden");
-
-        document.getElementById("succ-ref").textContent = finalRef;
-        document.getElementById("succ-service").textContent = String(data.service);
-        document.getElementById("succ-datetime").textContent = `${data.appointmentDate} at ${data.appointmentTime}`;
-        document.getElementById("succ-mode").textContent = String(data.meetingType).replace("_", " ");
-
-        const waMsg = `Hi PrintHub, I just locked in a consultation on your website!\n\nBooking Ref: ${finalRef}\nService: ${data.service}\nDate: ${data.appointmentDate} at ${data.appointmentTime}\nMode: ${data.meetingType}\nName: ${data.customerName}\nPhone: ${data.customerPhone}\n\nProject Notes: ${data.projectDetails || "None"}`;
-        const waUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(waMsg)}`;
-        document.getElementById("succ-wa-link").href = waUrl;
-
-        const gcalBtn = document.getElementById("succ-cal-btn");
-        gcalBtn.addEventListener("click", () => {
-          const title = encodeURIComponent(`PrintHub Africa Consultation: ${data.service} (${finalRef})`);
-          const details = encodeURIComponent(`PrintHub Africa 3D Printing & Design Consultation.\nReference: ${finalRef}\nMode: ${data.meetingType}\nWhatsApp: +${whatsappPhone}`);
-          const location = encodeURIComponent(data.meetingType === "in_person" ? "PrintHub Africa Studio, Eldoret, Kenya" : "WhatsApp / Virtual Call");
-          const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
-          window.open(gcalUrl, "_blank");
-        });
+        if (res.ok) {
+          const result = await res.json().catch(() => ({}));
+          finalRef = result.bookingRef || data.bookingRef;
+          savedInSanity = true;
+        } else {
+          throw new Error(`Endpoint returned status ${res.status}`);
+        }
       } catch (err) {
-        console.warn("API offline or static mode, generating WhatsApp fallback", err);
-        form.classList.add("hidden");
-        successView.classList.remove("hidden");
-        document.getElementById("succ-ref").textContent = data.bookingRef;
-        document.getElementById("succ-service").textContent = String(data.service);
-        document.getElementById("succ-datetime").textContent = `${data.appointmentDate} at ${data.appointmentTime}`;
-        document.getElementById("succ-mode").textContent = String(data.meetingType).replace("_", " ");
-
-        const waMsg = `Hi PrintHub, I'd like to confirm my consultation booking!\n\nBooking Ref: ${data.bookingRef}\nService: ${data.service}\nDate: ${data.appointmentDate} at ${data.appointmentTime}\nMode: ${data.meetingType}\nName: ${data.customerName}\nPhone: ${data.customerPhone}\n\nNotes: ${data.projectDetails || "None"}`;
-        document.getElementById("succ-wa-link").href = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(waMsg)}`;
+        console.warn("API route not available, saving directly to Sanity Studio...", err);
+        // Direct Sanity Mutation Fallback
+        try {
+          const sanityRes = await fetch("https://m7x6icn3.api.sanity.io/v2023-08-01/data/mutate/production", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer skygOrLXyMmWLsjwtorwFxjPeKvB0GuiuVuGQzX8EVUCekz5F47hrIDfU39i4iiBdThNKYOUKsSQFID0UhsfiyHDkgoynGxZHE2YJi28RLxEBctoJ7gPynRki1QM75knT1WSbVnjigmRSTpoqR3z7yNvnMgRELuI6hFhO7LuaQgrKjNnogO9",
+            },
+            body: JSON.stringify({
+              mutations: [{
+                create: {
+                  _type: "booking",
+                  bookingRef: data.bookingRef,
+                  customerName: String(data.customerName || "").trim(),
+                  customerPhone: String(data.customerPhone || "").trim(),
+                  customerEmail: String(data.customerEmail || "").trim(),
+                  service: String(data.service || "").trim(),
+                  appointmentDate: data.appointmentDate,
+                  appointmentTime: data.appointmentTime,
+                  meetingType: data.meetingType,
+                  duration: 30,
+                  projectDetails: String(data.projectDetails || "").trim(),
+                  status: "pending",
+                  adminNotes: "",
+                  source: "website-direct",
+                  createdAt: new Date().toISOString(),
+                }
+              }]
+            }),
+          });
+          if (sanityRes.ok) savedInSanity = true;
+        } catch (sanityErr) {
+          console.error("Direct Sanity save error:", sanityErr);
+        }
       }
+
+      form.classList.add("hidden");
+      successView.classList.remove("hidden");
+
+      document.getElementById("succ-ref").textContent = finalRef;
+      document.getElementById("succ-service").textContent = String(data.service);
+      document.getElementById("succ-datetime").textContent = `${data.appointmentDate} at ${data.appointmentTime}`;
+      document.getElementById("succ-mode").textContent = String(data.meetingType).replace("_", " ");
+
+      const waMsg = `Hi PrintHub, I just locked in a consultation on your website!\n\nBooking Ref: ${finalRef}\nService: ${data.service}\nDate: ${data.appointmentDate} at ${data.appointmentTime}\nMode: ${data.meetingType}\nName: ${data.customerName}\nPhone: ${data.customerPhone}\n\nProject Notes: ${data.projectDetails || "None"}`;
+      const waUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(waMsg)}`;
+      document.getElementById("succ-wa-link").href = waUrl;
+
+      const gcalBtn = document.getElementById("succ-cal-btn");
+      gcalBtn.addEventListener("click", () => {
+        const title = encodeURIComponent(`PrintHub Africa Consultation: ${data.service} (${finalRef})`);
+        const details = encodeURIComponent(`PrintHub Africa 3D Printing & Design Consultation.\nReference: ${finalRef}\nMode: ${data.meetingType}\nWhatsApp: +${whatsappPhone}`);
+        const location = encodeURIComponent(data.meetingType === "in_person" ? "PrintHub Africa Studio, Eldoret, Kenya" : "WhatsApp / Virtual Call");
+        const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
+        window.open(gcalUrl, "_blank");
+      });
     });
   }
 </script>

@@ -9,7 +9,7 @@ interface Env {
   RESEND_API_KEY?: string;
 }
 
-export const onRequestOptions: PagesFunction<Env> = async () => {
+export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
     headers: {
@@ -18,9 +18,9 @@ export const onRequestOptions: PagesFunction<Env> = async () => {
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
-};
+}
 
-export const onRequestPost: PagesFunction<Env> = async (context) => {
+export async function onRequestPost(context: any) {
   const corsHeaders = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
