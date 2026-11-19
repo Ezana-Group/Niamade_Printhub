@@ -9,8 +9,10 @@ import { serviceType } from './service'
 import { occasionType } from './occasion'
 import { bookingType } from './booking'
 import { contactInquiryType } from './contactInquiry'
+import { orderType } from './order'
 
 export const schemaTypes = [
+  orderType,
   bookingType,
   contactInquiryType,
   productType,

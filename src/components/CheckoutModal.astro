@@ -264,19 +264,40 @@ const { paystackKey } = Astro.props;
   // ── Paystack popup ────────────────────────────────────────────────────────────
   function launchPaystack(formData: FormData) {
     const totalKobo = getTotal() * 100;
-    const ref = "PHB-" + Date.now() + "-" + Math.random().toString(36).substr(2, 5).toUpperCase();
+    const orderRef = "PH-ORD-" + Date.now() + "-" + Math.random().toString(36).substr(2, 4).toUpperCase();
+    const paystackRef = "PHB-" + Date.now() + "-" + Math.random().toString(36).substr(2, 5).toUpperCase();
 
     const qtyInput = el("co-qty") as HTMLInputElement | null;
     const customInput = el("co-custom") as HTMLInputElement | null;
-    const meta = {
-      product: orderCtx.productName,
-      slug: orderCtx.productSlug,
-      size: orderCtx.size || "N/A",
-      colour: orderCtx.colour || "N/A",
-      quantity: qtyInput?.value || "1",
-      custom_note: customInput?.value || "",
-      delivery: (formData.get("delivery") as string) || "Standard Delivery / Eldoret",
-      phone: formData.get("phone") as string,
+    const customerName = (formData.get("name") as string) || "";
+    const customerPhone = (formData.get("phone") as string) || "";
+    const deliveryVal = (formData.get("delivery") as string) || "Standard Delivery / Eldoret";
+    const customNoteVal = customInput?.value || "";
+    const qtyVal = qtyInput?.value || "1";
+
+    // Top-level metadata keys are what /api/paystack webhook reads from data.metadata.*
+    const metadata = {
+      orderRef,
+      name: customerName,
+      phone: customerPhone,
+      productName: orderCtx.productName,
+      productSlug: orderCtx.productSlug || "",
+      size: orderCtx.size || "",
+      colour: orderCtx.colour || "",
+      quantity: qtyVal,
+      custom_note: customNoteVal,
+      delivery: deliveryVal,
+      // Also include pretty custom_fields for the Paystack dashboard view
+      custom_fields: [
+        { display_name: "Order Ref",   variable_name: "orderRef",     value: orderRef },
+        { display_name: "Product",     variable_name: "product",      value: orderCtx.productName },
+        { display_name: "Size",        variable_name: "size",         value: orderCtx.size || "N/A" },
+        { display_name: "Colour",      variable_name: "colour",       value: orderCtx.colour || "N/A" },
+        { display_name: "Quantity",    variable_name: "quantity",     value: qtyVal },
+        { display_name: "Delivery",    variable_name: "delivery",     value: deliveryVal },
+        { display_name: "Custom Note", variable_name: "custom_note",  value: customNoteVal || "None" },
+        { display_name: "Phone",       variable_name: "phone",        value: customerPhone },
+      ],
     };
 
     const handler = (window as any).PaystackPop.setup({
@@ -284,11 +305,11 @@ const { paystackKey } = Astro.props;
       email: formData.get("email"),
       amount: totalKobo,
       currency: "KES",
-      ref,
-      firstname: ((formData.get("name") as string) || "").split(" ")[0],
-      lastname: ((formData.get("name") as string) || "").split(" ").slice(1).join(" ") || "",
-      phone: formData.get("phone"),
-      metadata: { custom_fields: Object.entries(meta).map(([k, v]) => ({ display_name: k.replace(/_/g, " "), variable_name: k, value: v })) },
+      ref: paystackRef,
+      firstname: customerName.split(" ")[0],
+      lastname: customerName.split(" ").slice(1).join(" ") || "",
+      phone: customerPhone,
+      metadata,
       label: `PrintHub Africa – ${orderCtx.productName}`,
 
       onClose: function () {
@@ -307,18 +328,19 @@ const { paystackKey } = Astro.props;
       callback: function (response: any) {
         closeModal();
         const waText = encodeURIComponent(
-          `🛍️ NEW PAID ORDER — PrintHub Africa\n\nProduct: ${orderCtx.productName}\nSize: ${meta.size}\nColour: ${meta.colour}\nQty: ${meta.quantity}\nDelivery: ${meta.delivery}\nCustom: ${meta.custom_note || "None"}\n\nCustomer: ${formData.get("name")}\nEmail: ${formData.get("email")}\nPhone: ${meta.phone}\n\nAmount: KES ${(totalKobo / 100).toLocaleString()}\nPaystack Ref: ${response.reference}\nStatus: ✅ PAID (M-Pesa / Card)`
+          `🛍️ NEW PAID ORDER — PrintHub Africa\n\nRef: ${orderRef}\nProduct: ${orderCtx.productName}\nSize: ${metadata.size || "N/A"}\nColour: ${metadata.colour || "N/A"}\nQty: ${qtyVal}\nDelivery: ${deliveryVal}\nCustom: ${customNoteVal || "None"}\n\nCustomer: ${customerName}\nEmail: ${formData.get("email")}\nPhone: ${customerPhone}\n\nAmount: KES ${(totalKobo / 100).toLocaleString()}\nPaystack Ref: ${response.reference}\nStatus: ✅ PAID (M-Pesa / Card)`
         );
         window.open(`https://wa.me/254792732929?text=${waText}`, "_blank");
 
         const params = new URLSearchParams({
           product: orderCtx.productName,
-          ref: response.reference,
-          name: (formData.get("name") as string) || "",
-          qty: meta.quantity,
-          size: meta.size,
-          colour: meta.colour,
-          delivery: meta.delivery,
+          ref: orderRef,
+          paystackRef: response.reference,
+          name: customerName,
+          qty: qtyVal,
+          size: metadata.size || "",
+          colour: metadata.colour || "",
+          delivery: deliveryVal,
           amount: (totalKobo / 100).toString(),
         });
         window.location.href = `/order-confirmed/?${params.toString()}`;
