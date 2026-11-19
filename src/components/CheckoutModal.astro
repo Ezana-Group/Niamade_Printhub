@@ -8,8 +8,20 @@
  */
 interface Props {
   paystackKey: string;
+  mpesaTill?: string;
+  mpesaPaybill?: string;
+  mpesaAccount?: string;
+  mpesaBusinessName?: string;
+  whatsapp?: string;
 }
-const { paystackKey } = Astro.props;
+const {
+  paystackKey,
+  mpesaTill = "",
+  mpesaPaybill = "",
+  mpesaAccount = "",
+  mpesaBusinessName = "NIAMADE HUB",
+  whatsapp = "254792732929",
+} = Astro.props;
 ---
 
 <!-- Checkout Modal Overlay -->
@@ -19,6 +31,11 @@ const { paystackKey } = Astro.props;
   aria-modal="true"
   aria-labelledby="checkout-title"
   data-paystack-key={paystackKey}
+  data-mpesa-till={mpesaTill}
+  data-mpesa-paybill={mpesaPaybill}
+  data-mpesa-account={mpesaAccount}
+  data-mpesa-business={mpesaBusinessName}
+  data-whatsapp={whatsapp}
   class="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4 touch-none"
   style="display:none!important"
 >
@@ -159,6 +176,85 @@ const { paystackKey } = Astro.props;
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
         Pay securely with Paystack
       </button>
+
+      <!-- Manual M-Pesa fallback (shown only when till/paybill configured in Sanity) -->
+      <div id="co-manual-mpesa" class="hidden">
+        <div class="relative flex items-center gap-3 my-1">
+          <div class="flex-1 border-t border-line"></div>
+          <span class="text-xs text-mute font-medium">or pay manually</span>
+          <div class="flex-1 border-t border-line"></div>
+        </div>
+
+        <!-- Collapsible trigger -->
+        <button
+          type="button"
+          id="co-manual-toggle"
+          class="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-sand border border-line text-sm font-semibold hover:bg-sand/80 transition-colors"
+          aria-expanded="false"
+          aria-controls="co-manual-panel"
+        >
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-green-600 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M11 15H6l7-14v8h5l-7 14v-8z"/></svg>
+            Pay via M-Pesa (Till / Paybill)
+          </span>
+          <svg id="co-manual-chevron" class="w-4 h-4 text-mute transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+
+        <!-- Collapsible panel -->
+        <div id="co-manual-panel" class="hidden mt-2 rounded-2xl border border-line bg-white overflow-hidden text-sm">
+          <!-- Till -->
+          <div id="co-till-section" class="hidden p-4 border-b border-line">
+            <p class="font-bold text-ink mb-2">M-Pesa Buy Goods (Till)</p>
+            <div class="space-y-1.5 text-sm">
+              <div class="flex justify-between">
+                <span class="text-mute">Till Number</span>
+                <span class="font-mono font-bold" id="co-till-num"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-mute">Business Name</span>
+                <span class="font-semibold" id="co-till-name"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-mute">Amount</span>
+                <span class="font-bold text-brand" id="co-till-amount"></span>
+              </div>
+            </div>
+          </div>
+          <!-- Paybill -->
+          <div id="co-paybill-section" class="hidden p-4 border-b border-line">
+            <p class="font-bold text-ink mb-2">M-Pesa Paybill</p>
+            <div class="space-y-1.5 text-sm">
+              <div class="flex justify-between">
+                <span class="text-mute">Paybill Number</span>
+                <span class="font-mono font-bold" id="co-paybill-num"></span>
+              </div>
+              <div id="co-account-row" class="hidden flex justify-between">
+                <span class="text-mute">Account</span>
+                <span class="font-semibold" id="co-paybill-account"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-mute">Amount</span>
+                <span class="font-bold text-brand" id="co-paybill-amount"></span>
+              </div>
+            </div>
+          </div>
+          <!-- Instructions -->
+          <div class="p-4 bg-sand/40">
+            <p class="font-semibold mb-2 text-ink">After paying:</p>
+            <p class="text-mute text-xs leading-relaxed">Send your M-Pesa confirmation SMS code to us on WhatsApp and we'll confirm your order manually.</p>
+            <a
+              id="co-manual-wa"
+              href="#"
+              target="_blank"
+              rel="noopener"
+              class="mt-3 flex items-center justify-center gap-2 w-full rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-4 transition-colors text-sm"
+            >
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Send receipt on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </div>
@@ -196,6 +292,7 @@ const { paystackKey } = Astro.props;
         : "—";
     }
     renderDetailBlock(qty);
+    updateManualAmounts();
   }
 
   function renderDetailBlock(qty: number) {
@@ -222,6 +319,63 @@ const { paystackKey } = Astro.props;
   const dragHandleEl = el("checkout-drag-handle");
   const closeBtnEl = el("checkout-close");
   const paystackKey = modalEl?.getAttribute("data-paystack-key") || "";
+  const mpesaTill     = modalEl?.getAttribute("data-mpesa-till") || "";
+  const mpesaPaybill  = modalEl?.getAttribute("data-mpesa-paybill") || "";
+  const mpesaAccount  = modalEl?.getAttribute("data-mpesa-account") || "";
+  const mpesaBusiness = modalEl?.getAttribute("data-mpesa-business") || "NIAMADE HUB";
+  const whatsappNum   = modalEl?.getAttribute("data-whatsapp") || "254792732929";
+
+  // ── Manual M-Pesa fallback setup ─────────────────────────────────────────────
+  const hasManualMpesa = mpesaTill || mpesaPaybill;
+  const manualSection  = el("co-manual-mpesa");
+  const toggleBtn      = el("co-manual-toggle");
+  const panel          = el("co-manual-panel");
+  const chevron        = el("co-manual-chevron");
+
+  if (hasManualMpesa && manualSection) {
+    manualSection.classList.remove("hidden");
+
+    // Populate Till section
+    if (mpesaTill) {
+      el("co-till-section")?.classList.remove("hidden");
+      const tn = el("co-till-num");   if (tn) tn.textContent = mpesaTill;
+      const tb = el("co-till-name");  if (tb) tb.textContent = mpesaBusiness;
+    }
+
+    // Populate Paybill section
+    if (mpesaPaybill) {
+      el("co-paybill-section")?.classList.remove("hidden");
+      const pn = el("co-paybill-num"); if (pn) pn.textContent = mpesaPaybill;
+      if (mpesaAccount) {
+        el("co-account-row")?.classList.remove("hidden");
+        const pa = el("co-paybill-account"); if (pa) pa.textContent = mpesaAccount;
+      }
+    }
+
+    // Toggle collapse
+    toggleBtn?.addEventListener("click", () => {
+      const isOpen = panel?.classList.toggle("hidden") === false;
+      toggleBtn.setAttribute("aria-expanded", String(isOpen));
+      chevron?.classList.toggle("rotate-180", isOpen);
+      updateManualAmounts();
+    });
+  }
+
+  function updateManualAmounts() {
+    const kes = getTotal();
+    const fmt = kes > 0 ? `KES ${kes.toLocaleString()}` : "—";
+    const ta = el("co-till-amount");    if (ta) ta.textContent = fmt;
+    const pa = el("co-paybill-amount"); if (pa) pa.textContent = fmt;
+
+    // Update WhatsApp link with current order details
+    const waLink = el("co-manual-wa") as HTMLAnchorElement | null;
+    if (waLink) {
+      const text = encodeURIComponent(
+        `Hi PrintHub! I paid for my order via M-Pesa.\n\nProduct: ${orderCtx.productName}\nAmount: ${fmt}\n\n[Paste your M-Pesa confirmation SMS code here]`
+      );
+      waLink.href = `https://wa.me/${whatsappNum}?text=${text}`;
+    }
+  }
 
   let sheetController: ReturnType<typeof initCheckoutSheet> | null = null;
   if (modalEl && backdropEl && panelEl) {
@@ -248,7 +402,12 @@ const { paystackKey } = Astro.props;
     el("co-error")?.classList.add("hidden");
     const customRow = el("co-custom-row");
     if (customRow) customRow.style.display = ctx.hasCustom ? "block" : "none";
+    // Collapse manual panel on open
+    panel?.classList.add("hidden");
+    chevron?.classList.remove("rotate-180");
+    toggleBtn?.setAttribute("aria-expanded", "false");
     updateTotal();
+    updateManualAmounts();
 
     if (sheetController) {
       sheetController.open(triggerEl);

@@ -250,6 +250,35 @@ export const siteSettingsType = defineType({
       group: 'payments',
       description: 'Paste your Paystack Public Key here (starts with pk_live_ or pk_test_). Get it from Paystack Dashboard → Settings → API Keys & Webhooks. Leave empty to route all checkout orders to WhatsApp instead.',
     }),
+    defineField({
+      name: 'mpesaTillNumber',
+      title: 'M-Pesa Till Number (Buy Goods)',
+      type: 'string',
+      group: 'payments',
+      description: 'Your Safaricom Buy Goods Till Number — shown to customers as a manual payment fallback when STK Push fails. e.g. 5012345',
+    }),
+    defineField({
+      name: 'mpesaPaybillNumber',
+      title: 'M-Pesa Paybill Number',
+      type: 'string',
+      group: 'payments',
+      description: 'Your Safaricom Paybill business number — if you use Paybill instead of or alongside a Till. e.g. 522522 (Equity)',
+    }),
+    defineField({
+      name: 'mpesaAccountName',
+      title: 'M-Pesa Paybill Account Name',
+      type: 'string',
+      group: 'payments',
+      description: 'The account name customers enter when paying via Paybill. e.g. PrintHub or your phone number. Leave blank if using Till only.',
+    }),
+    defineField({
+      name: 'mpesaBusinessName',
+      title: 'M-Pesa Business / Till Display Name',
+      type: 'string',
+      group: 'payments',
+      description: 'The name that appears on the customer\'s M-Pesa confirmation SMS — usually your registered Safaricom business name. e.g. NIAMADE HUB',
+      initialValue: 'NIAMADE HUB',
+    }),
 
     // ─── 🌐 SITE & BANNERS ────────────────────────────────────────
     defineField({

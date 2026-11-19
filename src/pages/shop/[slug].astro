@@ -200,7 +200,14 @@ const specs = [
     <div data-reveal-group class="mt-8 grid sm:grid-cols-3 gap-5">{more.map((o) => <ProductCard p={o} />)}</div>
   </section>}
 
-  <CheckoutModal paystackKey={site.paystackPublicKey || ""} />
+  <CheckoutModal
+    paystackKey={site.paystackPublicKey || ""}
+    mpesaTill={site.mpesaTillNumber || ""}
+    mpesaPaybill={site.mpesaPaybillNumber || ""}
+    mpesaAccount={site.mpesaAccountName || ""}
+    mpesaBusinessName={site.mpesaBusinessName || "NIAMADE HUB"}
+    whatsapp={site.whatsapp || "254792732929"}
+  />
 </Layout>
 <script>
   const main = document.getElementById("main") as HTMLImageElement | null, thumbs = document.querySelectorAll<HTMLButtonElement>(".thumb");

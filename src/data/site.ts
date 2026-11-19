@@ -71,6 +71,10 @@ export const site = {
   // Payments & Checkout
   paystackPublicKey: _sanitySettings?.paystackPublicKey || process.env.PUBLIC_PAYSTACK_KEY || import.meta.env?.PUBLIC_PAYSTACK_KEY || "",
   enableCheckout: _sanitySettings?.enableCheckout ?? true,
+  mpesaTillNumber:    _sanitySettings?.mpesaTillNumber    || "",
+  mpesaPaybillNumber: _sanitySettings?.mpesaPaybillNumber || "",
+  mpesaAccountName:   _sanitySettings?.mpesaAccountName   || "",
+  mpesaBusinessName:  _sanitySettings?.mpesaBusinessName  || "NIAMADE HUB",
   // Bookings & Easy!Appointments
   easyAppointmentsUrl: _sanitySettings?.easyAppointmentsUrl || process.env.PUBLIC_EASYAPPOINTMENTS_URL || import.meta.env?.PUBLIC_EASYAPPOINTMENTS_URL || "",
   enableEasyAppointmentsEmbed: _sanitySettings?.enableEasyAppointmentsEmbed ?? false,
