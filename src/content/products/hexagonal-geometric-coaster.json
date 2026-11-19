@@ -1,0 +1,15 @@
+{
+  "slug": "hexagonal-geometric-coaster",
+  "name": "Hexagonal Geometric Coaster",
+  "cat": "Home & decor",
+  "price": "KES 450",
+  "originalPrice": "KES 600",
+  "discountBadge": "25% OFF",
+  "note": "Sold individually or as set of 4",
+  "material": "PETG / PLA",
+  "finish": "Matte textured",
+  "tags": ["home", "gift"],
+  "blurb": "Modern heat-resistant geometric drink coaster printed with precision concentric infill patterns.",
+  "uses": ["Coffee table protection", "Desk accessory", "Housewarming gift"],
+  "care": "Wipe with damp cloth. Heat resistant up to 70°C."
+}

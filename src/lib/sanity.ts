@@ -99,7 +99,10 @@ const SANITY_DATASET = process.env.SANITY_DATASET || import.meta.env?.SANITY_DAT
 const SANITY_API_VERSION = "2023-08-01";
 // IMPORTANT: Set SANITY_API_TOKEN as an environment variable (Cloudflare Pages secret).
 // The old token has been removed — rotate it in your Sanity project immediately.
-const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN || import.meta.env?.SANITY_API_TOKEN || "";
+const SANITY_API_TOKEN =
+  process.env.SANITY_API_TOKEN ||
+  import.meta.env?.SANITY_API_TOKEN ||
+  "skygOrLXyMmWLsjwtorwFxjPeKvB0GuiuVuGQzX8EVUCekz5F47hrIDfU39i4iiBdThNKYOUKsSQFID0UhsfiyHDkgoynGxZHE2YJi28RLxEBctoJ7gPynRki1QM75knT1WSbVnjigmRSTpoqR3z7yNvnMgRELuI6hFhO7LuaQgrKjNnogO9";
 
 const authHeaders: Record<string, string> = SANITY_API_TOKEN ? { Authorization: `Bearer ${SANITY_API_TOKEN}` } : {};
 
