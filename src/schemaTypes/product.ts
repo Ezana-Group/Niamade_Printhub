@@ -54,6 +54,10 @@ export const productType = defineType({
       title: 'Photos',
       type: 'array',
       group: 'overview',
+      description: 'Drag and drop multiple images at once here from your computer, or add them individually.',
+      options: {
+        layout: 'grid',
+      },
       of: [
         {
           type: 'image',
