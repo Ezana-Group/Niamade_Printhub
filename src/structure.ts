@@ -26,7 +26,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('✅ Paid — In Print Queue')
+                .title('Paid — In Print Queue')
                 .icon(() => '🖨️')
                 .child(
                   S.documentList()
@@ -37,8 +37,8 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('🚚 Dispatched / Ready for Pickup')
-                .icon(() => '📦')
+                .title('Dispatched / Ready for Pickup')
+                .icon(() => '🚚')
                 .child(
                   S.documentList()
                     .title('Dispatched / Ready Orders')
@@ -48,7 +48,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('⏳ Pending Payment')
+                .title('Pending Payment')
                 .icon(() => '⏳')
                 .child(
                   S.documentList()
@@ -59,7 +59,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('✔️ Completed / Delivered')
+                .title('Completed / Delivered')
                 .icon(() => '✔️')
                 .child(
                   S.documentList()
