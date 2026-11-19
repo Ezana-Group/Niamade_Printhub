@@ -2,6 +2,12 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import { faqs, wa, waMessages } from "../data/site";
+import { fetchPageContentFromSanity } from "../lib/sanity";
+
+const sanityHelp = await fetchPageContentFromSanity("help");
+const heroHeading = sanityHelp?.heroHeading || "Questions, answered.";
+const heroSubtext = sanityHelp?.heroSubtext || "Ordering, paying, delivery and looking after your print. Can't find it? Message us and we will reply.";
+
 const groups = [...new Set(faqs.map((f) => f.group))];
 const id = (g: string) => g.toLowerCase().replace(/[^a-z]+/g, "-");
 const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: (f.a || "").replace(/<[^>]+>/g, "").trim() } })) };
@@ -9,8 +15,8 @@ const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: f
 <Layout title="Help & FAQs" jsonLd={ld} description="Answers about ordering, paying by M-Pesa, delivery across Kenya, materials and caring for your 3D print.">
   <section class="wrap pt-10 md:pt-14">
     <p class="eyebrow rise">Help</p>
-    <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl">Questions, answered.</h1>
-    <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">Ordering, paying, delivery and looking after your print. Can't find it? Message us and we will reply.</p>
+    <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl">{heroHeading}</h1>
+    <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">{heroSubtext}</p>
     <nav aria-label="Jump to a topic" class="mt-8 flex flex-wrap gap-2.5">{groups.map((g) => <a href={`#${id(g)}`} class="chip">{g}</a>)}</nav>
     <div class="mt-12 space-y-14">
       {groups.map((g) => (

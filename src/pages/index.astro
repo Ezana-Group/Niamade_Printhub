@@ -4,10 +4,22 @@ import ProductArt from "../components/ProductArt.astro";
 import ProductCard from "../components/ProductCard.astro";
 import Icon from "../components/Icon.astro";
 import { site, wa, waMessages, products, occasions, steps, faqs } from "../data/site";
+import { fetchPageContentFromSanity } from "../lib/sanity";
 
-const bySlug = (s: string) => products.find((p) => p.slug === s)!;
+const sanityHome = await fetchPageContentFromSanity("home");
+const heroHeading = sanityHome?.heroHeading;
+const heroSubtext = sanityHome?.heroSubtext || "We design, engineer and manufacture custom 3D printed pieces, prototypes and dimensional branding. Based in Eldoret, delivered across Kenya.";
+const ctaHeading = sanityHome?.ctaHeading || "Got something in mind?";
+const ctaBody = sanityHome?.ctaBody || "Send us a message, even if it is just a rough idea. We will help you shape it.";
+
+const bySlug = (s: string) => products.find((p) => p.slug === s);
 const tone: Record<string, string> = { lilac: "bg-lilac", rose: "bg-rose", butter: "bg-butter", mint: "bg-mint", peach: "bg-peach", sky: "bg-sky", sand: "bg-sand" };
-const featured = ["name-keychain", "lithophane-photo-lamp", "kenya-topographic-relief", "geometric-spiral-vase", "succulent-planter-set", "big-five-animal-set"].map(bySlug);
+const defaultFeatured = ["name-keychain", "lithophane-photo-lamp", "kenya-topographic-relief", "geometric-spiral-vase", "succulent-planter-set", "big-five-animal-set"];
+const featured = defaultFeatured.map(bySlug).filter(Boolean) as typeof products;
+if (featured.length < 6) {
+  const remaining = products.filter((p) => !featured.some((f) => f.slug === p.slug)).slice(0, 6 - featured.length);
+  featured.push(...remaining);
+}
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const ld = {
   "@context": "https://schema.org",
@@ -51,11 +63,15 @@ const ld = {
         <span id="open-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse-dot"></span><span id="open-text">Eldoret · quotes on WhatsApp</span>
       </div>
       <p class="eyebrow rise mt-4 block">Custom 3D Printing & Fabrication · Kenya</p>
-      <h1 style="--d:60ms" class="rise-lcp mt-2 text-[clamp(2.5rem,5.6vw,4.4rem)]">
-        Ideas are cheap.
-        <span class="block italic text-brand">Making them real <span class="relative inline-block">is the hard part.<svg class="absolute left-0 -bottom-2 w-full h-3 text-coral" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8c20-8 30 6 50-1s30-7 50 0 30 7 50 0 30 7 50 0 30-6 46-1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="animate-draw"/></svg></span></span>
-      </h1>
-      <p style="--d:130ms" class="rise mt-7 text-xl text-mute max-w-xl">We design, engineer and manufacture custom 3D printed pieces, prototypes and dimensional branding. Based in Eldoret, delivered across Kenya.</p>
+      {heroHeading ? (
+        <h1 style="--d:60ms" class="rise-lcp mt-2 text-[clamp(2.5rem,5.6vw,4.4rem)]" set:html={heroHeading} />
+      ) : (
+        <h1 style="--d:60ms" class="rise-lcp mt-2 text-[clamp(2.5rem,5.6vw,4.4rem)]">
+          Ideas are cheap.
+          <span class="block italic text-brand">Making them real <span class="relative inline-block">is the hard part.<svg class="absolute left-0 -bottom-2 w-full h-3 text-coral" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8c20-8 30 6 50-1s30-7 50 0 30 7 50 0 30 7 50 0 30-6 46-1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="animate-draw"/></svg></span></span>
+        </h1>
+      )}
+      <p style="--d:130ms" class="rise mt-7 text-xl text-mute max-w-xl">{heroSubtext}</p>
       <div style="--d:200ms" class="rise mt-9 flex flex-wrap gap-3">
         <a href="/shop/" class="btn btn-primary">Explore What We Do <Icon name="arrow" size={18} /></a>
         <a href={wa(waMessages.general)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Have Something in Mind?</a>
@@ -218,8 +234,8 @@ const ld = {
   <!-- FINAL CTA -->
   <section class="wrap mt-24">
     <div data-reveal class="on-dark rounded-5xl bg-ink text-cream p-8 md:p-14 text-center shadow-2xl">
-      <h2 class="text-4xl md:text-6xl text-cream">Got something in mind?</h2>
-      <p class="mt-4 text-cream/75 text-lg max-w-xl mx-auto">Send us a message, even if it is just a rough idea. We will help you shape it.</p>
+      <h2 class="text-4xl md:text-6xl text-cream">{ctaHeading}</h2>
+      <p class="mt-4 text-cream/75 text-lg max-w-xl mx-auto">{ctaBody}</p>
       <div class="mt-8 flex flex-wrap justify-center gap-3">
         <a href={wa(waMessages.general)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Chat on WhatsApp</a>
         <a href={`tel:${site.phone.replace(/\s/g, "")}`} class="btn bg-white/10 text-cream hover:bg-white/20"><Icon name="phone" size={18} />{site.phone}</a>

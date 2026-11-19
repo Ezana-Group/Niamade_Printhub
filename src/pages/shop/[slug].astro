@@ -33,7 +33,16 @@ const orderMsg = p.waMessage
     : `Hi PrintHub, I'd like to order: ${p.name} (${p.price}). Size: ___  Colour: ___  Quantity: ___`;
 const more = products.filter((o) => o.slug !== p.slug && o.tags.some((t) => p.tags.includes(t))).slice(0, 3);
 const tagLabels = p.tags.map((t) => occasions.find((o) => o.id === t)!).filter(Boolean);
-const specs = [["Material", p.material], ["Finish", p.finish], ["Colours", "Tell us your colour when you order"], ["Timing", "Confirmed when we send your quote"], ["Delivery", "Courier across Kenya, or free collection in Eldoret"]];
+const coloursText = (p.colours && p.colours.length) ? p.colours.join(", ") : "Tell us your colour when you order";
+const sizesText = (p.sizes && p.sizes.length) ? p.sizes.join(", ") : null;
+const specs = [
+  ["Material", p.material],
+  ["Finish", p.finish],
+  ...(sizesText ? [["Sizes", sizesText]] : []),
+  ["Colours", coloursText],
+  ["Timing", "Confirmed when we send your quote"],
+  ["Delivery", "Courier across Kenya, or free collection in Eldoret"],
+];
 ---
 <Layout title={`${p.name} · 3D Printed in Kenya`} waMsg={orderMsg} jsonLd={schemaNodes} image={p.photos[0]} description={`${p.name}: ${p.note}. ${p.blurb}`}>
   <section class="wrap pt-8 md:pt-12">

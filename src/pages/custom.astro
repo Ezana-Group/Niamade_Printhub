@@ -2,6 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import { site, wa, waMessages, materials, printServices, designServices } from "../data/site";
+import { fetchPageContentFromSanity } from "../lib/sanity";
+
+const sanityCustom = await fetchPageContentFromSanity("custom");
+const heroHeading = sanityCustom?.heroHeading || "Bring a file. Or just an obsession.";
+const heroSubtext = sanityCustom?.heroSubtext || "Got a clean CAD export? Great. Got a broken gear and a sketch on a napkin? Also great. Pick the route that matches your situation.";
 const tone: Record<string, string> = { peach: "bg-peach", sky: "bg-sky", mint: "bg-mint", lilac: "bg-lilac" };
 
 const ld = {
@@ -22,8 +27,8 @@ const ld = {
 <Layout title="Custom Orders" waMsg="Hi PrintHub, I'd like a custom 3D print." jsonLd={ld} description="Bring your 3D file or just an idea. PrintHub Africa prints and designs custom 3D pieces in PLA, PETG and TPU in Eldoret, Kenya. Quote first, pay by M-Pesa.">
   <section class="wrap pt-10 md:pt-14">
     <p class="eyebrow rise">Custom 3D Printing & CAD Design · Kenya</p>
-    <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl max-w-3xl">Bring a file. Or just an obsession.</h1>
-    <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">Got a clean CAD export? Great. Got a broken gear and a sketch on a napkin? Also great. Pick the route that matches your situation.</p>
+    <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl max-w-3xl">{heroHeading}</h1>
+    <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">{heroSubtext}</p>
     <div style="--d:180ms" class="rise mt-8 flex flex-wrap gap-3"><a href="#print" class="btn btn-soft">I have a 3D file</a><a href="#design" class="btn btn-soft">I only have an idea</a></div>
   </section>
 
