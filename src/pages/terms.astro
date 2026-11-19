@@ -16,29 +16,30 @@ const sanitySections = sanityLegal?.sections && sanityLegal.sections.length > 0 
   description={pageDesc}
 >
   <section class="wrap pt-10 md:pt-14 pb-16">
-    <div class="max-w-4xl">
-      <p class="eyebrow rise">Legal & Governance</p>
-      <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">{pageTitle}</h1>
-      <p style="--d:120ms" class="rise mt-4 text-lg text-mute">
-        Registered Business Identity: <strong class="text-ink font-semibold">Niamade Hub</strong> · Commercial Trading Brand: <strong class="text-ink font-semibold">PrintHub Africa</strong>
-      </p>
-      <p style="--d:160ms" class="rise mt-1 text-sm text-mute">Last Revised: {lastUpdated} · Jurisdiction: Republic of Kenya</p>
-    </div>
+    <div class="max-w-5xl mx-auto">
+      <div>
+        <p class="eyebrow rise">Legal & Governance</p>
+        <h1 style="--d:60ms" class="rise mt-2 text-4xl md:text-5xl font-display font-semibold">{pageTitle}</h1>
+        <p style="--d:120ms" class="rise mt-4 text-lg text-mute">
+          Registered Business Identity: <strong class="text-ink font-semibold">Niamade Hub</strong> · Commercial Trading Brand: <strong class="text-ink font-semibold">PrintHub Africa</strong>
+        </p>
+        <p style="--d:160ms" class="rise mt-1 text-sm text-mute">Last Revised: {lastUpdated} · Jurisdiction: Republic of Kenya</p>
+      </div>
 
-    <!-- NOTICE BANNER -->
-    <div class="mt-8 rounded-3xl bg-sand border border-line p-6 max-w-4xl">
-      <p class="text-sm md:text-base text-ink/85 leading-relaxed">
-        {noticeBanner ? (
-          noticeBanner
-        ) : (
-          <>
-            <strong class="font-bold text-ink">Important Notice on Made-to-Order Manufacturing:</strong> PrintHub Africa provides bespoke custom additive manufacturing and digital design services. Under Kenyan Consumer Protection standards, bespoke items manufactured according to customer-supplied files, specifications, or personalized configurations cannot be cancelled or returned for a change of mind once physical production or digital modeling has commenced. Please review the material tolerances, quotation, and deposit terms below prior to confirming your order.
-          </>
-        )}
-      </p>
-    </div>
+      <!-- NOTICE BANNER -->
+      <div class="mt-8 rounded-3xl bg-sand border border-line p-6">
+        <p class="text-sm md:text-base text-ink/85 leading-relaxed">
+          {noticeBanner ? (
+            noticeBanner
+          ) : (
+            <>
+              <strong class="font-bold text-ink">Important Notice on Made-to-Order Manufacturing:</strong> PrintHub Africa provides bespoke custom additive manufacturing and digital design services. Under Kenyan Consumer Protection standards, bespoke items manufactured according to customer-supplied files, specifications, or personalized configurations cannot be cancelled or returned for a change of mind once physical production or digital modeling has commenced. Please review the material tolerances, quotation, and deposit terms below prior to confirming your order.
+            </>
+          )}
+        </p>
+      </div>
 
-    <div class="mt-12 grid lg:grid-cols-12 gap-10 items-start max-w-5xl">
+      <div class="mt-12 grid lg:grid-cols-12 gap-10 items-start">
       <!-- TABLE OF CONTENTS (STICKY ON DESKTOP) -->
       <aside class="lg:col-span-4 rounded-4xl bg-card border border-line p-6 lg:sticky lg:top-28 space-y-2 text-sm">
         <p class="font-bold text-xs uppercase tracking-wider text-brand mb-3">Table of Contents</p>
@@ -244,5 +245,6 @@ const sanitySections = sanityLegal?.sections && sanityLegal.sections.length > 0 
 
       </div>
     </div>
+  </div>
   </section>
 </Layout>
