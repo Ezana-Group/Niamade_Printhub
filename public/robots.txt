@@ -1,4 +1,61 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: OAI-SearchBot
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: ChatGPT-User
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: Claude-SearchBot
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: Claude-User
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: PerplexityBot
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: Perplexity-User
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: Applebot
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+User-agent: Bingbot
+Disallow: /admin/
+Disallow: /api/
+Disallow: /clean-cache/
+
+# Training crawlers — allowed by default.
+# To opt out of training data collection, add "Disallow: /" under GPTBot, ClaudeBot, Google-Extended, or Applebot-Extended.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
 
 Sitemap: https://printhub.africa/sitemap.xml

@@ -1,0 +1,133 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Icon from "../../components/Icon.astro";
+import { guides, type Guide } from "../../data/guides";
+import { site, wa, waMessages } from "../../data/site";
+import { ids, breadcrumbNode } from "../../lib/schema";
+
+export function getStaticPaths() {
+  return guides.map((g) => ({
+    params: { slug: g.slug },
+    props: { guide: g },
+  }));
+}
+
+interface Props {
+  guide: Guide;
+}
+
+const { guide } = Astro.props;
+const currentUrl = `${site.url}/guides/${guide.slug}/`;
+
+const related = guides.filter((g) => guide.relatedSlugs.includes(g.slug));
+
+const schemaNodes = [
+  {
+    "@type": "Article",
+    "@id": `${currentUrl}#article`,
+    headline: guide.title,
+    description: guide.metaDesc,
+    dateModified: guide.updatedAt,
+    datePublished: "2026-01-10",
+    mainEntityOfPage: currentUrl,
+    inLanguage: "en-KE",
+    author: {
+      "@id": ids.business,
+    },
+    publisher: {
+      "@id": ids.business,
+    },
+    image: `${site.url}/og.png`,
+  },
+  breadcrumbNode([
+    { name: "Home", url: `${site.url}/` },
+    { name: "Guides", url: `${site.url}/guides/` },
+    { name: guide.title, url: currentUrl },
+  ]),
+];
+
+const waText = `Hi PrintHub, I read your guide "${guide.title}" and would like to ask about a 3D printing project.`;
+---
+
+<Layout
+  title={guide.seoTitle}
+  description={guide.metaDesc}
+  jsonLd={schemaNodes}
+>
+  <!-- Reading Progress Bar (A7.7) -->
+  <div class="reading-progress-bar" aria-hidden="true"></div>
+
+  <article class="wrap pt-10 md:pt-16 pb-16 max-w-4xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="text-sm text-mute">
+      <a href="/" class="hover:text-brand">Home</a>
+      <span aria-hidden="true" class="mx-1.5">/</span>
+      <a href="/guides/" class="hover:text-brand">Guides</a>
+      <span aria-hidden="true" class="mx-1.5">/</span>
+      <span class="text-ink font-semibold truncate" aria-current="page">{guide.title}</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="mt-6 border-b border-line pb-8">
+      <p class="eyebrow">Engineering Guide · {guide.readTime}</p>
+      <h1 class="mt-2 text-3xl sm:text-4xl md:text-5xl font-display font-semibold leading-tight text-balance">
+        {guide.title}
+      </h1>
+      <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-mute">
+        <span>Published by <strong>PrintHub Africa</strong></span>
+        <span>·</span>
+        <span>Updated: <time datetime={guide.updatedAt} class="font-medium text-ink">{new Date(guide.updatedAt).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" })}</time></span>
+      </div>
+      <p class="mt-6 text-xl text-ink/80 leading-relaxed font-sans font-normal">
+        {guide.content.lead}
+      </p>
+    </header>
+
+    <!-- Body Sections -->
+    <div class="mt-10 space-y-12 text-ink/90 leading-relaxed text-[1.0625rem]">
+      {guide.content.sections.map((sec) => (
+        <section class="space-y-4">
+          <h2 class="font-display text-2xl md:text-3xl font-semibold text-ink">
+            {sec.heading}
+          </h2>
+          <div class="prose-content space-y-4 leading-relaxed" set:html={sec.bodyHtml} />
+        </section>
+      ))}
+    </div>
+
+    <!-- Practical Application CTA -->
+    <div class="mt-14 rounded-5xl bg-sand/80 border border-line p-8 md:p-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="max-w-xl">
+        <h2 class="font-display text-2xl font-semibold">Have a file to slice or a part to replicate?</h2>
+        <p class="mt-2 text-mute text-sm">
+          Send your STEP/STL file or photos of your broken piece to our Eldoret workshop for inspection and a firm quote in KES.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-3 shrink-0">
+        <a href="/custom/" class="btn btn-soft">Custom Orders <Icon name="arrow" size={16} /></a>
+        <a href={wa(waText)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={18} />Ask on WhatsApp</a>
+      </div>
+    </div>
+
+    <!-- Related Guides -->
+    {related.length > 0 && (
+      <section class="mt-16 pt-10 border-t border-line">
+        <h2 class="font-display text-2xl font-semibold mb-6">Related Engineering Guides</h2>
+        <div class="grid sm:grid-cols-2 gap-5">
+          {related.map((r) => (
+            <a href={`/guides/${r.slug}/`} class="press lift panel p-6 bg-card hover:border-brand/40 flex flex-col justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-wider font-semibold text-mute">{r.readTime}</p>
+                <h3 class="font-display text-xl font-semibold mt-1 group-hover:text-brand">{r.title}</h3>
+                <p class="text-mute text-sm mt-2">{r.summary}</p>
+              </div>
+              <span class="mt-4 text-sm font-bold text-brand inline-flex items-center gap-1.5">
+                Read guide <Icon name="arrow" size={14} />
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</Layout>

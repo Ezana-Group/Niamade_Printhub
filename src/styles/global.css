@@ -1,43 +1,174 @@
-@tailwind base; @tailwind components; @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Part A: Motion System & Spring Tokens (Apple Design Principles)
+   ========================================================================== */
+
 :root {
+  /* Standard easing fallbacks */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Spring tokens generated from real harmonic oscillator step response */
+  /* Smooth: damping 1.0, response 0.40s, settle ~540ms */
+  --spring-smooth: linear(0, 0.0139, 0.0495, 0.0995, 0.1582, 0.2215, 0.2864, 0.3507, 0.4129, 0.472, 0.5273, 0.5786, 0.6256, 0.6685, 0.7073, 0.7423, 0.7736, 0.8015, 0.8263, 0.8483, 0.8677, 0.8848, 0.8998, 0.913, 0.9246, 0.9347, 0.9435, 0.9511, 0.9578, 0.9636, 0.9686, 0.9729, 0.9767, 0.98, 0.9828, 0.9852, 0.9873, 0.9891, 0.9906, 0.992, 0.9931, 0.9941, 0.995, 0.9957, 0.9963, 0.9968, 0.9973, 0.9977, 1);
+  --spring-smooth-d: 540ms;
+
+  /* Snappy: damping 1.0, response 0.28s, settle ~380ms */
+  --spring-snappy: linear(0, 0.014, 0.05, 0.1004, 0.1595, 0.2232, 0.2885, 0.3531, 0.4155, 0.4747, 0.5301, 0.5814, 0.6285, 0.6713, 0.71, 0.7449, 0.776, 0.8038, 0.8285, 0.8503, 0.8696, 0.8866, 0.9015, 0.9145, 0.9259, 0.9359, 0.9446, 0.9521, 0.9587, 0.9644, 0.9693, 0.9736, 0.9773, 0.9805, 0.9832, 0.9856, 0.9877, 0.9894, 0.9909, 0.9922, 0.9934, 0.9943, 0.9951, 0.9958, 0.9964, 0.997, 0.9974, 0.9978, 1);
+  --spring-snappy-d: 380ms;
+
+  /* Bounce: damping 0.8, response 0.30s, settle ~380ms (momentum gestures) */
+  --spring-bounce: linear(0, 0.0126, 0.046, 0.0946, 0.1538, 0.2195, 0.2887, 0.3589, 0.4282, 0.4951, 0.5586, 0.618, 0.6727, 0.7225, 0.7675, 0.8075, 0.8429, 0.8738, 0.9005, 0.9234, 0.9428, 0.9591, 0.9726, 0.9836, 0.9924, 0.9993, 1.0047, 1.0087, 1.0115, 1.0134, 1.0146, 1.0151, 1.0151, 1.0148, 1.0142, 1.0134, 1.0124, 1.0114, 1.0103, 1.0093, 1.0082, 1.0072, 1.0063, 1.0054, 1.0046, 1.0039, 1.0033, 1.0027, 1);
+  --spring-bounce-d: 380ms;
+
+  /* Color transition tokens */
+  --t-colors: background-color 160ms var(--spring-snappy), border-color 160ms var(--spring-snappy), color 160ms var(--spring-snappy), box-shadow 160ms var(--spring-snappy);
 }
+
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root {
+    --spring-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+    --spring-snappy: cubic-bezier(0.23, 1, 0.32, 1);
+    --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+/* @property for scroll-driven counter */
+@property --pct {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* Cross-document View Transitions */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: 160ms ease-out both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 260ms ease-out both vt-fade-in;
+}
+
+@keyframes vt-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+header.sticky {
+  view-transition-name: header;
+}
+
 @layer base {
-  html { scroll-behavior: smooth; scroll-padding-top: 6.5rem; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; }
-  body { @apply bg-cream text-ink font-sans text-[1.0625rem] leading-relaxed min-h-screen flex flex-col; }
-  h1, h2, h3 { @apply font-display font-semibold; letter-spacing: -0.015em; text-wrap: balance; }
-  h1 { letter-spacing: -0.025em; line-height: 1.04; }
-  p, li { text-wrap: pretty; }
-  ::selection { @apply bg-coral text-ink; }
-  :focus-visible { outline: 3px solid #A6360A; outline-offset: 3px; border-radius: 0.5rem; }
-  .on-dark :focus-visible { outline-color: #FFC857; }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6.5rem;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    font-optical-sizing: auto;
+  }
+  body {
+    @apply bg-cream text-ink font-sans text-[1.0625rem] leading-relaxed min-h-screen flex flex-col;
+    font-optical-sizing: auto;
+  }
+  h1, h2, h3 {
+    @apply font-display font-semibold;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+  h1 {
+    letter-spacing: -0.025em;
+    line-height: 1.04;
+  }
+  h2 {
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  h3 {
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  p, li {
+    text-wrap: pretty;
+    line-height: 1.6;
+  }
+  ::selection {
+    @apply bg-coral text-ink;
+  }
+  :focus-visible {
+    outline: 3px solid #A6360A;
+    outline-offset: 3px;
+    border-radius: 0.5rem;
+  }
+  .on-dark :focus-visible {
+    outline-color: #FFC857;
+  }
 }
+
 @layer components {
   .wrap { @apply max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12; }
   .wrap-narrow { @apply max-w-6xl mx-auto px-5 md:px-8; }
   .eyebrow { @apply inline-block text-[0.8rem] font-bold uppercase tracking-[0.12em] text-brand; }
-  /* Press feedback is instant; colour and lift changes are quick ease-outs. */
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold leading-none whitespace-nowrap;
-    transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
-    touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-  .btn:active { transform: scale(0.97); }
+
+  /* Buttons & Chips with Apple-grade press feedback (80ms press, snappy release) */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold leading-none whitespace-nowrap;
+    transition: transform var(--spring-snappy-d) var(--spring-snappy), var(--t-colors);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active {
+    transform: scale(0.97);
+    transition: transform 80ms ease-out;
+  }
   .btn-primary { @apply bg-brand text-white hover:bg-[#8A2D07]; }
   .btn-wa { @apply bg-wa text-white hover:bg-[#0E6B32]; }
   .btn-soft { @apply bg-card text-ink border-2 border-line hover:border-ink; }
   .btn-ink { @apply bg-ink text-cream hover:bg-[#44302a]; }
-  .chip { @apply rounded-full border-2 border-line bg-card px-4 py-2 text-[0.95rem] font-semibold hover:border-ink;
-    transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out); touch-action: manipulation; }
-  button.chip:active { transform: scale(0.97); }
+
+  .chip {
+    @apply rounded-full border-2 border-line bg-card px-4 py-2 text-[0.95rem] font-semibold hover:border-ink;
+    transition: transform var(--spring-snappy-d) var(--spring-snappy), var(--t-colors);
+    touch-action: manipulation;
+  }
+  button.chip:active, .chip:active {
+    transform: scale(0.97);
+    transition: transform 80ms ease-out;
+  }
   .chip[aria-pressed="true"] { @apply bg-ink text-cream border-ink; }
+
   .panel { @apply rounded-4xl bg-card border border-line; }
-  .field { @apply w-full rounded-2xl border-2 border-line bg-card px-4 py-3 text-base focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/15; transition: border-color 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
+  .field {
+    @apply w-full rounded-2xl border-2 border-line bg-card px-4 py-3 text-base focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/15;
+    transition: border-color 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+  }
   .field[aria-invalid="true"] { border-color: #B42318; }
   .lbl { @apply block text-sm font-bold mb-1.5; }
   .err { @apply text-sm mt-1.5 font-semibold; color: #B42318; }
-  .press { transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out); }
-  .press:active { transform: scale(0.985); }
-  .lift { transition: transform 260ms var(--ease-out), box-shadow 260ms var(--ease-out), border-color 260ms var(--ease-out); }
+
+  /* Pressable cards */
+  .press {
+    transition: transform var(--spring-snappy-d) var(--spring-snappy), box-shadow var(--spring-smooth-d) var(--spring-smooth), border-color 160ms var(--ease-out);
+    touch-action: manipulation;
+  }
+  .press:active {
+    transform: scale(0.985);
+    transition: transform 80ms ease-out;
+  }
+
+  /* Hover Lift on smooth spring */
+  .lift {
+    transition: transform var(--spring-smooth-d) var(--spring-smooth), box-shadow var(--spring-smooth-d) var(--spring-smooth), border-color 160ms var(--ease-out);
+  }
   @media (hover: hover) {
     .lift:hover {
       transform: translateY(-6px);
@@ -48,10 +179,32 @@
       box-shadow: 0 12px 28px -10px rgba(43, 29, 22, 0.15);
     }
   }
+
+  /* Hero tilted cards settling flat on bounce spring */
+  .hero-card {
+    transition: transform var(--spring-bounce-d) var(--spring-bounce);
+  }
+  @media (hover: hover) {
+    .hero-card:hover {
+      transform: none !important;
+    }
+  }
+  .hero-card:active {
+    transform: none !important;
+  }
+
   .sticker { @apply inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-bold bg-butter text-ink; }
 }
 
-/* ---- Dynamic Animations ---- */
+/* ---- Material & Chrome ---- */
+.hdr-glass {
+  background: rgba(255, 248, 238, 0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 24px -14px rgba(43, 29, 22, 0.35);
+}
+
+/* ---- Capped Loops (Restraint: No infinite animations) ---- */
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(-6deg); }
   50% { transform: translateY(-8px) rotate(-4deg); }
@@ -62,7 +215,7 @@
 }
 @keyframes pulse-dot {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.6; }
+  50% { transform: scale(1.35); opacity: 0.65; }
 }
 @keyframes draw-path {
   from { stroke-dashoffset: 350; }
@@ -74,13 +227,13 @@
 }
 
 .animate-float {
-  animation: float 5s ease-in-out infinite;
+  animation: float 5s ease-in-out 3 forwards;
 }
 .animate-float-subtle {
-  animation: float-subtle 4.5s ease-in-out infinite;
+  animation: float-subtle 4.5s ease-in-out 3 forwards;
 }
 .animate-pulse-dot {
-  animation: pulse-dot 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse-dot 2.2s cubic-bezier(0.4, 0, 0.6, 1) 5 forwards;
 }
 .animate-draw {
   stroke-dasharray: 350;
@@ -97,47 +250,331 @@
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-  animation: shimmer-sweep 3s ease-in-out infinite;
+  animation: shimmer-sweep 3s ease-in-out 2 forwards;
   pointer-events: none;
 }
 
-/* ---- Product illustrations ---- */
+/* ---- Product Illustrations & "Printed" Reveal ---- */
 .art .a { fill: var(--a); } .art .b { fill: var(--b); } .art .c { fill: var(--c); }
 .art .k { fill: #2B1D16; } .art .w { fill: #FFFDF8; }
 .art .s, .art .sc, .art .sw { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .art .s { stroke: #2B1D16; } .art .sc { stroke: var(--c); } .art .sw { stroke: #FFFDF8; }
 .art .sh { fill: #2B1D16; opacity: 0.09; }
-/* second copy of the artwork painted with thin horizontal lines = the "printed layers" look */
 .art .tex * { fill: url(#layers) !important; stroke: none; }
 .art .tex .s, .art .tex .sc, .art .tex .sw, .art .tex .n, .art .tex .sh { display: none; }
-.art svg { transition: transform 360ms var(--ease-out); }
+.art svg { transition: transform var(--spring-smooth-d) var(--spring-smooth); }
 @media (hover: hover) { a:hover .art svg { transform: scale(1.05) rotate(-1.5deg); } }
 
-/* ---- Entrances ---- */
-@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
-.rise { animation: rise 580ms var(--ease-out) backwards; animation-delay: var(--d, 0ms); } /* backwards fill: nothing lingers, so :active still works */
-.js [data-reveal-group] > :not([data-in]),
-.js [data-reveal]:not([data-in]) { opacity: 0; } /* .js is only set in <head> when motion is allowed */
+/* A3.4: "Printed" product art reveal (clip-path bottom-up) */
+@keyframes print-build {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0); }
+}
+.art-printed-reveal {
+  animation: print-build 900ms var(--ease-out) backwards;
+  animation-delay: var(--art-d, 0ms);
+}
 
-/* ---- Menus ---- */
-.menu-panel { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-8px) scale(0.98); transform-origin: top right;
-  transition: opacity 140ms var(--ease-out), transform 140ms var(--ease-out), visibility 0s linear 140ms; }
-.menu-panel[data-open="true"] { opacity: 1; visibility: visible; pointer-events: auto; transform: none;
-  transition: opacity 220ms var(--ease-out), transform 260ms var(--ease-drawer), visibility 0s; }
-.ico-top, .ico-bot { transform-box: view-box; transform-origin: 12px 12px; transition: transform 220ms var(--ease-out); }
+/* ---- Entrances ---- */
+/* General rise for decorative elements */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.rise {
+  animation: rise 580ms var(--spring-smooth) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+/* A3.5: Hero LCP elements (H1, subhead, primary CTAs) MUST use transform-only entrance (no opacity 0 delay) */
+@keyframes rise-transform-only {
+  from { transform: translateY(14px); }
+  to { transform: none; }
+}
+.rise-lcp {
+  animation: rise-transform-only 580ms var(--spring-smooth) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+.js [data-reveal-group] > :not([data-in]),
+.js [data-reveal]:not([data-in]) {
+  opacity: 0;
+}
+
+/* ---- Mobile Menu (Materializes from trigger button) ---- */
+.menu-panel {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.96);
+  filter: blur(6px);
+  transform-origin: top right;
+  transition: opacity 140ms ease-in, transform 140ms ease-in, filter 140ms ease-in, visibility 0s linear 140ms;
+}
+.menu-panel[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  filter: none;
+  transition: opacity 220ms var(--spring-smooth), transform var(--spring-smooth-d) var(--spring-smooth), filter 220ms var(--spring-smooth), visibility 0s;
+}
+
+/* Icon morphing on snappy spring */
+.ico-top, .ico-bot {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  transition: transform var(--spring-snappy-d) var(--spring-snappy);
+}
 [aria-expanded="true"] .ico-top { transform: rotate(45deg) translateY(4px); }
 [aria-expanded="true"] .ico-bot { transform: rotate(-45deg) translateY(-4px); }
-details > summary { list-style: none; } details > summary::-webkit-details-marker { display: none; }
-details .plus { transition: transform 220ms var(--ease-out); } details[open] .plus { transform: rotate(45deg); }
 
-/* ---- Preferences ---- */
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .rise, .animate-pulse { animation: none; }
-  .menu-panel { transform: none; transition: opacity 120ms linear, visibility 0s; }
-  .ico-top, .ico-bot, details .plus, .art svg { transition: none; }
-  .btn:active, .press:active, button.chip:active { transform: none; }
-  .lift:hover, a:hover .art svg { transform: none !important; }
+/* FAQ Accordion rotation on snappy spring */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details .plus {
+  transition: transform var(--spring-snappy-d) var(--spring-snappy);
 }
-@media (prefers-reduced-transparency: reduce) { .hdr-glass { background: #FFF8EE; backdrop-filter: none; -webkit-backdrop-filter: none; } }
-@media (prefers-contrast: more) { .panel, .chip, .field { border-color: #2B1D16; } }
+details[open] .plus {
+  transform: rotate(45deg);
+}
+
+/* ==========================================================================
+   Part A7: Apple-Style Scroll-Driven Animations
+   ========================================================================== */
+
+/* Reading progress bar */
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #A6360A;
+  z-index: 100;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* 1. Reading progress bar on scroll */
+    .reading-progress-bar {
+      animation: read-progress linear both;
+      animation-timeline: scroll(root);
+    }
+    @keyframes read-progress {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    /* 2. Header settles on scroll */
+    header.sticky > div:first-child {
+      animation: header-settle linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 120px;
+    }
+    @keyframes header-settle {
+      to {
+        scale: 0.985;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 32px -10px rgba(43, 29, 22, 0.45);
+      }
+    }
+
+    /* 3. Hero depth: two columns drift at different speeds */
+    .hero-art-col-left {
+      animation: hero-col-left linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0vh 90vh;
+    }
+    .hero-art-col-right {
+      animation: hero-col-right linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0vh 90vh;
+    }
+    @keyframes hero-col-left {
+      to { translate: 0 -30px; }
+    }
+    @keyframes hero-col-right {
+      to { translate: 0 26px; }
+    }
+
+    /* 4. Statement section: scroll-scrubbed words */
+    .sd-word {
+      display: inline-block;
+      opacity: 0.2;
+      animation: word-brighten linear both;
+      animation-timeline: view();
+      animation-range: cover calc(12% + var(--i, 0) * 0.5%) cover calc(36% + var(--i, 0) * 0.5%);
+    }
+    @keyframes word-brighten {
+      to { opacity: 1; }
+    }
+
+    /* 5. Panels scale into place */
+    .sd-scale {
+      animation: panel-scale-anim linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 75%;
+    }
+    @keyframes panel-scale-anim {
+      from {
+        scale: 0.93;
+        opacity: 0.35;
+      }
+      to {
+        scale: 1;
+        opacity: 1;
+      }
+    }
+
+    /* 6. Parallax layers */
+    .sd-par {
+      animation: par-drift-anim linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    @keyframes par-drift-anim {
+      from { translate: 0 var(--y, 20px); }
+      to { translate: 0 calc(-1 * var(--y, 20px)); }
+    }
+
+    /* 7. Pinned "How it works" story (signature piece at >=768px) */
+    @media (min-width: 768px) {
+      .how-story-pinned {
+        height: 320vh;
+        view-timeline: --how block;
+      }
+      .how-stage {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+      }
+
+      /* Live "Printing N%" counter */
+      .how-counter {
+        animation: how-count-anim linear both;
+        animation-timeline: --how;
+        animation-range: cover 26% cover 68%;
+        counter-reset: pct var(--pct);
+      }
+      .how-counter::after {
+        content: counter(pct) "%";
+      }
+      @keyframes how-count-anim {
+        from { --pct: 0; }
+        to { --pct: 100; }
+      }
+
+      /* Product art prints bottom-up as you scroll */
+      .how-art-print {
+        clip-path: inset(100% 0 0 0);
+        animation: how-art-anim linear both;
+        animation-timeline: --how;
+        animation-range: cover 26% cover 68%;
+      }
+      @keyframes how-art-anim {
+        to { clip-path: inset(0); }
+      }
+
+      /* Crossfading steps: Step 1 (bright -> fades out), Step 2 (fades in -> fades out), Step 3 (fades in -> stays bright) */
+      .how-step-1 {
+        opacity: 1;
+        animation: step1-anim linear both;
+        animation-timeline: --how;
+        animation-range: cover 24% cover 41.3%;
+      }
+      @keyframes step1-anim {
+        0% { opacity: 1; }
+        100% { opacity: 0.25; }
+      }
+
+      .how-step-2 {
+        opacity: 0.25;
+        animation: step2-anim linear both;
+        animation-timeline: --how;
+        animation-range: cover 24% cover 58.6%;
+      }
+      @keyframes step2-anim {
+        0% { opacity: 0.25; }
+        50% { opacity: 1; }
+        100% { opacity: 0.25; }
+      }
+
+      .how-step-3 {
+        opacity: 0.25;
+        animation: step3-anim linear both;
+        animation-timeline: --how;
+        animation-range: cover 41.3% cover 76%;
+      }
+      @keyframes step3-anim {
+        0% { opacity: 0.25; }
+        100% { opacity: 1; }
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   A4. Accessibility and Preferences (Non-negotiable)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .rise, .rise-lcp, .animate-float, .animate-float-subtle, .animate-pulse-dot, .animate-draw, .shimmer-badge::after, .art-printed-reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .menu-panel {
+    transform: none !important;
+    filter: none !important;
+    transition: opacity 120ms linear, visibility 0s !important;
+  }
+  .ico-top, .ico-bot, details .plus, .art svg {
+    transition: none !important;
+  }
+  .btn:active, .press:active, button.chip:active, .chip:active {
+    transform: none !important;
+  }
+  .lift:hover, .lift-sm:hover, a:hover .art svg, .hero-card:hover {
+    transform: none !important;
+  }
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation: none !important;
+  }
+  .how-step-1, .how-step-2, .how-step-3 {
+    opacity: 1 !important;
+  }
+  .how-art-print {
+    clip-path: none !important;
+  }
+  .sd-word {
+    opacity: 1 !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .hdr-glass {
+    background: #FFF8EE !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .panel, .chip, .field {
+    border-color: #2B1D16 !important;
+  }
+  .eyebrow {
+    color: #6F2305 !important;
+  }
+}

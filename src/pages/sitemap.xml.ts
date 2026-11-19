@@ -1,34 +1,92 @@
 import type { APIRoute } from "astro";
-import { products, site } from "../data/site";
+import { products, site, occasions } from "../data/site";
+import { guides } from "../data/guides";
 
-const pages = [
-  { path: "/", priority: "1.0", changefreq: "weekly" },
-  { path: "/shop", priority: "0.9", changefreq: "weekly" },
-  { path: "/for-business", priority: "0.9", changefreq: "monthly" },
-  { path: "/custom", priority: "0.9", changefreq: "monthly" },
-  { path: "/help", priority: "0.7", changefreq: "monthly" },
-  { path: "/about", priority: "0.7", changefreq: "monthly" },
-  { path: "/contact", priority: "0.8", changefreq: "monthly" },
-  { path: "/terms", priority: "0.4", changefreq: "yearly" },
-  { path: "/privacy", priority: "0.4", changefreq: "yearly" },
-  ...products.map((p) => ({ path: `/shop/${p.slug}`, priority: "0.8", changefreq: "weekly" })),
+// Static pages (no lastmod — no real date)
+const staticPages = [
+  "/",
+  "/shop/",
+  "/for-business/",
+  "/custom/",
+  "/help/",
+  "/about/",
+  "/contact/",
+  "/terms/",
+  "/privacy/",
+  "/guides/",
 ];
 
-const today = new Date().toISOString().split("T")[0];
+function esc(s: string) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function urlEntry(
+  loc: string,
+  lastmod?: string,
+  images?: { loc: string; title?: string }[]
+): string {
+  const imgXml =
+    images
+      ?.map(
+        (img) =>
+          `    <image:image>\n      <image:loc>${img.loc}</image:loc>${
+            img.title
+              ? `\n      <image:title>${esc(img.title)}</image:title>`
+              : ""
+          }\n    </image:image>`
+      )
+      .join("\n") ?? "";
+  return `  <url>\n    <loc>${loc}</loc>${
+    lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ""
+  }${imgXml ? "\n" + imgXml : ""}\n  </url>`;
+}
 
 export const GET: APIRoute = () => {
-  const urls = pages
-    .map(
-      (p) => `  <url>
-    <loc>${site.url}${p.path === "/" ? "/" : p.path + "/"}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${p.changefreq}</changefreq>
-    <priority>${p.priority}</priority>
-  </url>`
-    )
-    .join("\n");
-  return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
-    { headers: { "Content-Type": "application/xml" } }
-  );
+  const entries: string[] = [];
+
+  // Static pages
+  for (const path of staticPages) {
+    entries.push(urlEntry(`${site.url}${path}`));
+  }
+
+  // Occasion pages (only those with matching products)
+  for (const o of occasions) {
+    const hasProducts = products.some(
+      (p) =>
+        (p as any).occasions?.includes(o.id) ||
+        (p as any).cat === o.id ||
+        (p as any).tags?.includes(o.id)
+    );
+    if (hasProducts) {
+      entries.push(urlEntry(`${site.url}/shop/for/${o.slug}/`));
+    }
+  }
+
+  // Product pages with optional image entries
+  for (const p of products) {
+    const lastmod = (p as any)._updatedAt
+      ? (p as any)._updatedAt.split("T")[0]
+      : undefined;
+    const photo = (p as any).photo;
+    const images = photo
+      ? [{ loc: new URL(photo, site.url).href, title: p.name }]
+      : undefined;
+    entries.push(urlEntry(`${site.url}/shop/${p.slug}/`, lastmod, images));
+  }
+
+  // Guide pages
+  for (const g of guides) {
+    const lastmod = g.updatedAt ? g.updatedAt.split("T")[0] : undefined;
+    entries.push(urlEntry(`${site.url}/guides/${g.slug}/`, lastmod));
+  }
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${entries.join("\n")}
+</urlset>`;
+
+  return new Response(xml, {
+    headers: { "Content-Type": "application/xml" },
+  });
 };

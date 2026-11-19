@@ -1,13 +1,19 @@
-# Force-clear all cached service workers and bundles on /admin without clearing auth storage
-/admin
+/admin*
+  X-Robots-Tag: noindex, nofollow
   Clear-Site-Data: "cache"
   Cache-Control: no-cache, no-store, must-revalidate
 
-/admin/
-  Clear-Site-Data: "cache"
-  Cache-Control: no-cache, no-store, must-revalidate
+/api/*
+  X-Robots-Tag: noindex, nofollow
 
-/admin/*
-  Clear-Site-Data: "cache"
-  Cache-Control: no-cache, no-store, must-revalidate
+/clean-cache/
+  X-Robots-Tag: noindex, nofollow
 
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains

@@ -11,30 +11,30 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Icon from "../components/Icon.astro";
 import { site, wa } from "../data/site";
+import { buildSchemaGraph } from "../lib/schema";
 const { title, waMsg, image = "/og.png", jsonLd, description = "Made-to-order 3D printing in Eldoret, Kenya. Personalised gifts, branded business pieces, Kenya souvenirs and useful parts. Pay by M-Pesa, delivery across Kenya.", robots = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" } = Astro.props;
 const full = title === "PrintHub Africa" ? "PrintHub Africa | Custom 3D Printing in Eldoret, Kenya" : `${title} | PrintHub Africa`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImage = new URL(image, site.url).href;
-
-const websiteLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "PrintHub Africa",
-  alternateName: ["PrintHub", "PrintHub Kenya", "Niamade Hub"],
-  url: site.url,
-  inLanguage: "en-KE",
-  description: "Custom made-to-order 3D printing, CAD design, and dimensional fabrication in Eldoret, Kenya by Niamade Hub."
-};
+function clipDesc(s: string, max = 158) {
+  if (s.length <= max) return s;
+  const cut = s.lastIndexOf(' ', max);
+  return s.slice(0, cut > 60 ? cut : max) + '…';
+}
+const desc = clipDesc(description);
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en-KE">
   <head>
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-latin-600.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/figtree-latin-400.woff2" crossorigin />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{full}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={desc} />
     <meta name="robots" content={robots} />
     {site.googleSiteVerification && <meta name="google-site-verification" content={site.googleSiteVerification} />}
+    {import.meta.env.BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={import.meta.env.BING_SITE_VERIFICATION} />}
     {site.gtmId && (
       <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -88,8 +88,7 @@ const websiteLd = {
         `} />
       </>
     )}
-    <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script type="application/ld+json" set:html={JSON.stringify(buildSchemaGraph(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []))} />
     <script is:inline>
       // Content is only hidden-then-revealed when JS runs and motion is allowed; otherwise it is simply visible.
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window && "animate" in Element.prototype) {

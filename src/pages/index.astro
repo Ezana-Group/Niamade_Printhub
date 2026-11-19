@@ -51,7 +51,7 @@ const ld = {
         <span id="open-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse-dot"></span><span id="open-text">Eldoret · quotes on WhatsApp</span>
       </div>
       <p class="eyebrow rise mt-4 block">Custom 3D Printing & Fabrication · Kenya</p>
-      <h1 style="--d:60ms" class="rise mt-2 text-[clamp(2.5rem,5.6vw,4.4rem)]">
+      <h1 style="--d:60ms" class="rise-lcp mt-2 text-[clamp(2.5rem,5.6vw,4.4rem)]">
         Ideas are cheap.
         <span class="block italic text-brand">Making them real <span class="relative inline-block">is the hard part.<svg class="absolute left-0 -bottom-2 w-full h-3 text-coral" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8c20-8 30 6 50-1s30-7 50 0 30 7 50 0 30 7 50 0 30-6 46-1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="animate-draw"/></svg></span></span>
       </h1>
@@ -68,16 +68,16 @@ const ld = {
     </div>
     <div class="lg:col-span-5 relative">
       <div class="w-full grid grid-cols-2 gap-4 md:gap-5 max-w-lg mx-auto lg:max-w-none">
-        <div class="space-y-4 md:space-y-5 pt-10">
+        <div class="hero-art-col-left space-y-4 md:space-y-5 pt-10">
           <div style="--d:150ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="lithophane-photo-lamp" cat="Gifts" /></div>
           <div style="--d:300ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="name-keychain" cat="Gifts" /></div>
         </div>
-        <div class="space-y-4 md:space-y-5">
+        <div class="hero-art-col-right space-y-4 md:space-y-5">
           <div style="--d:220ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="geometric-spiral-vase" cat="Home & decor" /></div>
           <div style="--d:370ms" class="rise w-full rounded-4xl overflow-hidden border-4 border-white shadow-xl -rotate-2 hover:rotate-0 transition-transform duration-300"><ProductArt slug="kenya-topographic-relief" cat="Kenya" /></div>
         </div>
       </div>
-      <div style="--d:520ms" class="rise animate-float absolute -top-3 -left-2 md:-left-5 w-28 h-28 md:w-32 md:h-32 rounded-full bg-butter border-4 border-white shadow-lg grid place-items-center text-center font-display font-semibold leading-tight text-[0.95rem] md:text-base p-3 cursor-default">Made to order<br />in Eldoret</div>
+      <div style="--d:520ms" class="rise motion-safe:animate-float absolute -top-3 -left-2 md:-left-5 w-28 h-28 md:w-32 md:h-32 rounded-full bg-butter border-4 border-white shadow-lg grid place-items-center text-center font-display font-semibold leading-tight text-[0.95rem] md:text-base p-3 cursor-default">Made to order<br />in Eldoret</div>
     </div>
   </section>
 
@@ -86,7 +86,7 @@ const ld = {
     <div class="max-w-2xl"><p class="eyebrow">Shop by occasion</p><h2 class="mt-2 text-4xl md:text-5xl">What are you celebrating?</h2><p class="mt-4 text-mute text-lg">Start with the moment, and we will point you to something that fits.</p></div>
     <div data-reveal-group class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {occasions.map((o) => { const pr = bySlug(o.art); return (
-        <a href={`/shop/?for=${o.id}`} class:list={["press lift group rounded-4xl overflow-hidden flex flex-col", tone[o.tone]]}>
+        <a href={`/shop/for/${o.slug}/`} class:list={["press lift group rounded-4xl overflow-hidden flex flex-col", tone[o.tone]]}>
           <ProductArt slug={pr.slug} cat={pr.cat} class="!aspect-[5/4]" />
           <div class="p-5"><h3 class="font-display text-xl">{o.label}</h3><p class="text-mute mt-1 text-[0.98rem]">{o.blurb}</p></div>
         </a>); })}

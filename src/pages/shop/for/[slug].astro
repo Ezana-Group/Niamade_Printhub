@@ -1,0 +1,174 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import ProductCard from "../../../components/ProductCard.astro";
+import ProductArt from "../../../components/ProductArt.astro";
+import Icon from "../../../components/Icon.astro";
+import { occasions, products, steps, site, wa, waMessages } from "../../../data/site";
+import { guides } from "../../../data/guides";
+import { ids, breadcrumbNode } from "../../../lib/schema";
+
+export function getStaticPaths() {
+  return occasions.map((o) => ({
+    params: { slug: o.slug },
+    props: { occasion: o },
+  }));
+}
+
+interface Props {
+  occasion: (typeof occasions)[number];
+}
+
+const { occasion } = Astro.props;
+const occasionProducts = products.filter((p) => p.tags && p.tags.includes(occasion.id));
+const hasProducts = occasionProducts.length > 0;
+const currentUrl = `${site.url}/shop/for/${occasion.slug}/`;
+
+const otherOccasions = occasions.filter((o) => o.slug !== occasion.slug);
+
+// Schema nodes
+const schemaNodes = [
+  {
+    "@type": "CollectionPage",
+    "@id": `${currentUrl}#collection`,
+    name: occasion.title,
+    description: occasion.desc,
+    url: currentUrl,
+    inLanguage: "en-KE",
+    publisher: {
+      "@id": ids.business,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: occasionProducts.map((p, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${site.url}/shop/${p.slug}/`,
+        name: p.name,
+      })),
+    },
+  },
+  breadcrumbNode([
+    { name: "Home", url: `${site.url}/` },
+    { name: "Shop", url: `${site.url}/shop/` },
+    { name: occasion.label, url: currentUrl },
+  ]),
+];
+
+const robotsDirective = hasProducts
+  ? "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+  : "noindex, follow";
+---
+
+<Layout
+  title={occasion.title}
+  description={occasion.desc}
+  robots={robotsDirective}
+  jsonLd={schemaNodes}
+>
+  <div class="wrap pt-10 md:pt-14 pb-16">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Breadcrumb" class="text-sm text-mute">
+      <a href="/" class="hover:text-brand">Home</a>
+      <span aria-hidden="true" class="mx-1.5">/</span>
+      <a href="/shop/" class="hover:text-brand">Shop</a>
+      <span aria-hidden="true" class="mx-1.5">/</span>
+      <span class="text-ink font-semibold" aria-current="page">{occasion.label}</span>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="mt-6 max-w-3xl">
+      <p class="eyebrow">Shop by Occasion · Made in Eldoret</p>
+      <h1 class="mt-2 text-3xl sm:text-4xl md:text-5xl font-display font-semibold leading-tight text-balance">
+        {occasion.h1}
+      </h1>
+      <p class="mt-4 text-lg text-mute leading-relaxed">
+        {occasion.desc}
+      </p>
+    </header>
+
+    <!-- Product Grid or Empty State -->
+    {hasProducts ? (
+      <section class="mt-12" aria-labelledby="product-list-heading">
+        <h2 id="product-list-heading" class="sr-only">{occasion.h1} Catalog</h2>
+        <div data-reveal-group class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {occasionProducts.map((p) => (
+            <ProductCard p={p} />
+          ))}
+        </div>
+      </section>
+    ) : (
+      <div class="mt-12 rounded-4xl bg-card border border-line p-10 text-center max-w-xl mx-auto">
+        <p class="text-lg font-display font-semibold">Custom orders available for this category</p>
+        <p class="mt-2 text-mute text-sm">We print custom designs to order. WhatsApp our Eldoret workshop with your idea or model.</p>
+        <a href={wa(waMessages.general)} target="_blank" rel="noopener" class="mt-5 btn btn-wa inline-flex">
+          <Icon name="whatsapp" size={18} /> Chat with us
+        </a>
+      </div>
+    )}
+
+    <!-- How Ordering Works -->
+    <section class="mt-20 pt-12 border-t border-line">
+      <div class="max-w-2xl">
+        <p class="eyebrow">Ordering Made Simple</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-display font-semibold">How to Order Custom Prints</h2>
+        <p class="mt-2 text-mute">From your first WhatsApp message to delivery anywhere in Kenya.</p>
+      </div>
+
+      <ol data-reveal-group class="mt-8 grid md:grid-cols-3 gap-6">
+        {steps.map((s) => (
+          <li class="panel p-6 bg-card">
+            <span class="w-10 h-10 rounded-full bg-peach grid place-items-center font-display text-xl font-bold text-brand">{s.n}</span>
+            <h3 class="font-display text-xl mt-4 font-semibold">{s.title}</h3>
+            <p class="text-mute mt-2 text-sm leading-relaxed">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div class="mt-8 flex flex-wrap gap-4 items-center">
+        <a href={wa(`Hi PrintHub, I'm looking for ${occasion.label.toLowerCase()} 3D printed pieces.`)} target="_blank" rel="noopener" class="btn btn-wa">
+          <Icon name="whatsapp" size={18} /> Ask on WhatsApp
+        </a>
+        <a href="/custom/" class="btn btn-soft">
+          Submit Custom Idea / File <Icon name="arrow" size={16} />
+        </a>
+      </div>
+    </section>
+
+    <!-- Helpful Guides Row (C1) -->
+    <section class="mt-16 pt-12 border-t border-line">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div>
+          <p class="eyebrow">Engineering & Advice</p>
+          <h2 class="mt-1 text-2xl md:text-3xl font-display font-semibold">Helpful Guides</h2>
+        </div>
+        <a href="/guides/" class="btn btn-soft !py-2 text-sm">View all guides <Icon name="arrow" size={14} /></a>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-5">
+        {guides.map((g) => (
+          <a href={`/guides/${g.slug}/`} class="press lift panel p-5 bg-card hover:border-brand/40 flex flex-col justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-wider font-semibold text-mute">{g.readTime}</p>
+              <h3 class="font-display text-lg font-semibold mt-1 group-hover:text-brand leading-snug">{g.title}</h3>
+            </div>
+            <span class="mt-3 text-xs font-bold text-brand inline-flex items-center gap-1">
+              Read guide <Icon name="arrow" size={12} />
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Other Occasions Navigation -->
+    <section class="mt-16 pt-12 border-t border-line">
+      <h2 class="text-xl font-display font-semibold mb-6">Explore Other Occasions</h2>
+      <div class="flex flex-wrap gap-2.5">
+        {otherOccasions.map((o) => (
+          <a href={`/shop/for/${o.slug}/`} class="chip hover:border-brand">
+            {o.label}
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

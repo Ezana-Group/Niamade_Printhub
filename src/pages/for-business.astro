@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import ProductCard from "../components/ProductCard.astro";
 import Icon from "../components/Icon.astro";
 import { site, products, wa, waMessages } from "../data/site";
+import { ids, breadcrumbNode } from "../lib/schema";
 const slugs = ["branded-logo-sign", "custom-desk-nameplate", "name-keychain", "cable-desk-organiser", "architectural-scale-model", "rapid-prototype-print"];
 const list = slugs.map((s) => products.find((p) => p.slug === s)!);
 const msg = waMessages.business;
@@ -14,22 +15,27 @@ const biz = [
   { n: "Collect or courier", t: "Collect free in Eldoret by appointment, or we dispatch across Kenya via tracked courier." },
 ];
 
-const ld = {
-  "@context": "https://schema.org",
+const serviceNode = {
   "@type": "Service",
+  "@id": `${site.url}/for-business/#service`,
   name: "Commercial 3D Printing & Dimensional Branding",
   provider: {
-    "@type": "LocalBusiness",
-    name: site.name,
-    legalName: site.businessName,
-    url: site.url
+    "@id": ids.business,
   },
   areaServed: { "@type": "Country", name: "Kenya" },
   description: "Dimensional logo signs, precision desk nameplates, custom promotional hardware and architectural scale models engineered to order in Kenya.",
-  serviceType: "Additive Manufacturing and Dimensional Branding"
+  serviceType: "Additive Manufacturing and Dimensional Branding",
 };
+
+const schemaNodes = [
+  serviceNode,
+  breadcrumbNode([
+    { name: "Home", url: `${site.url}/` },
+    { name: "For Business", url: `${site.url}/for-business/` },
+  ]),
+];
 ---
-<Layout title="For Business" waMsg={msg} jsonLd={ld} description="Dimensional logo signs, precision desk plates, custom giveaways and scale models. Engineered to order in Eldoret and delivered across Kenya.">
+<Layout title="For Business" waMsg={msg} jsonLd={schemaNodes} description="Dimensional logo signs, precision desk plates, custom giveaways and scale models. Engineered to order in Eldoret and delivered across Kenya.">
   <section class="wrap pt-10 md:pt-14">
     <div class="rounded-5xl bg-butter p-8 md:p-14 grid lg:grid-cols-12 gap-10 items-center">
       <div class="lg:col-span-8">
@@ -75,7 +81,7 @@ const ld = {
         <h2 class="mt-2 text-3xl md:text-4xl">Other services &amp; shopping</h2>
       </div>
       <div class="mt-8 grid sm:grid-cols-3 gap-5">
-        <a href="/shop/?for=business" class="press lift group rounded-3xl bg-card p-6 flex flex-col justify-between">
+        <a href="/shop/for/corporate-branding/" class="press lift group rounded-3xl bg-card p-6 flex flex-col justify-between">
           <div>
             <h3 class="font-display text-xl font-semibold">Business Catalog Pieces</h3>
             <p class="mt-2 text-sm text-mute">Signs, desk organisers, and corporate items available to order directly with M-Pesa.</p>

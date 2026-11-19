@@ -7,7 +7,10 @@
     "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
     "start": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 0.0.0.0 --port ${PORT:-4321}",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
-    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 0.0.0.0 --port ${PORT:-4321}"
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 0.0.0.0 --port ${PORT:-4321}",
+    "indexnow": "node scripts/indexnow.mjs",
+    "validate-schema": "node scripts/validate-schema.mjs",
+    "crawl-check": "node scripts/crawl.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.9",

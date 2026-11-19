@@ -1,16 +1,10 @@
 ---
 /**
  * CheckoutModal.astro
- * Client-side Paystack checkout modal for PrintHub Africa.
- * Usage: <CheckoutModal paystackKey="pk_live_..." />
- * Triggered by any element with data-checkout="true" on the page.
- *
- * Paystack handles:
- *   - Card payments (Visa, Mastercard)
- *   - M-Pesa STK Push (Kenya mobile money)
- *
- * No backend required — Paystack popup is fully client-side.
- * Order details are posted to PrintHub's WhatsApp after successful payment.
+ * Apple-grade interactive Checkout Sheet / Dialog for PrintHub Africa.
+ * Mobile (<640px): Interactive bottom sheet with 1:1 finger tracking, rubber-banding,
+ * velocity projection, and interruptible spring physics.
+ * Desktop: Spatial dialog materializing from the trigger button.
  */
 interface Props {
   paystackKey: string;
@@ -24,14 +18,23 @@ const { paystackKey } = Astro.props;
   role="dialog"
   aria-modal="true"
   aria-labelledby="checkout-title"
-  class="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4"
+  data-paystack-key={paystackKey}
+  class="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4 touch-none"
   style="display:none!important"
 >
-  <!-- Backdrop -->
-  <div id="checkout-backdrop" class="absolute inset-0 bg-ink/50 backdrop-blur-sm" aria-hidden="true"></div>
+  <!-- Backdrop / Scrim -->
+  <div id="checkout-backdrop" class="absolute inset-0 bg-ink/50 backdrop-blur-sm transition-opacity" aria-hidden="true"></div>
 
   <!-- Panel -->
-  <div class="relative w-full sm:max-w-lg bg-cream rounded-t-4xl sm:rounded-5xl shadow-2xl overflow-y-auto max-h-[92dvh] sm:max-h-[90vh]">
+  <div
+    id="checkout-panel"
+    class="relative w-full sm:max-w-lg bg-cream rounded-t-4xl sm:rounded-5xl shadow-2xl overflow-y-auto max-h-[92dvh] sm:max-h-[90vh] will-change-transform"
+  >
+    <!-- Grab handle for mobile bottom sheet -->
+    <div id="checkout-drag-handle" class="sm:hidden pt-3 pb-1 flex justify-center cursor-grab active:cursor-grabbing touch-none select-none">
+      <span class="w-12 h-1.5 rounded-full bg-ink/20"></span>
+    </div>
+
     <!-- Header -->
     <div class="sticky top-0 bg-cream/95 backdrop-blur-sm flex items-center justify-between px-6 py-4 border-b border-line z-10">
       <div>
@@ -160,7 +163,9 @@ const { paystackKey } = Astro.props;
   </div>
 </div>
 
-<script define:vars={{ paystackKey }}>
+<script>
+  import { initCheckoutSheet } from "../lib/sheet.js";
+
   // ── State ────────────────────────────────────────────────────────────────────
   let orderCtx = {
     productName: "",
@@ -172,31 +177,28 @@ const { paystackKey } = Astro.props;
   };
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
-  function el(id) { return document.getElementById(id); }
-  function qs(sel) { return document.querySelector(sel); }
-
-  function parseKes(str) {
-    // "KES 1,200" / "1200" / "From KES 800" → 800
-    const m = str.replace(/,/g, "").match(/[\d]+/);
-    return m ? parseInt(m[0], 10) : 0;
-  }
+  function el(id: string) { return document.getElementById(id); }
 
   function getTotal() {
-    const qty = parseInt(el("co-qty")?.value || "1", 10);
+    const qtyInput = el("co-qty") as HTMLInputElement | null;
+    const qty = parseInt(qtyInput?.value || "1", 10);
     return orderCtx.unitPriceKes * Math.max(1, qty);
   }
 
   function updateTotal() {
     const total = getTotal();
-    const qty = parseInt(el("co-qty")?.value || "1", 10);
-    el("co-total").textContent = total > 0
-      ? `KES ${(total).toLocaleString()}`
-      : "—";
-    // Update order summary block
+    const qtyInput = el("co-qty") as HTMLInputElement | null;
+    const qty = parseInt(qtyInput?.value || "1", 10);
+    const totalEl = el("co-total");
+    if (totalEl) {
+      totalEl.textContent = total > 0
+        ? `KES ${(total).toLocaleString()}`
+        : "—";
+    }
     renderDetailBlock(qty);
   }
 
-  function renderDetailBlock(qty) {
+  function renderDetailBlock(qty: number) {
     const ctx = orderCtx;
     const lines = [
       ["Product", ctx.productName],
@@ -204,85 +206,115 @@ const { paystackKey } = Astro.props;
       ctx.colour ? ["Colour", ctx.colour] : null,
       ["Quantity", qty || 1],
       ctx.unitPriceKes ? ["Unit price", `KES ${ctx.unitPriceKes.toLocaleString()}`] : null,
-    ].filter(Boolean);
+    ].filter(Boolean) as [string, string | number][];
 
-    el("order-detail-block").innerHTML = lines
-      .map(([k, v]) => `<div class="flex justify-between gap-4"><span class="text-mute">${k}</span><span class="font-semibold">${v}</span></div>`)
-      .join("");
+    const block = el("order-detail-block");
+    if (block) {
+      block.innerHTML = lines
+        .map(([k, v]) => `<div class="flex justify-between gap-4"><span class="text-mute">${k}</span><span class="font-semibold">${v}</span></div>`)
+        .join("");
+    }
+  }
+
+  const modalEl = el("checkout-modal");
+  const backdropEl = el("checkout-backdrop");
+  const panelEl = el("checkout-panel");
+  const dragHandleEl = el("checkout-drag-handle");
+  const closeBtnEl = el("checkout-close");
+  const paystackKey = modalEl?.getAttribute("data-paystack-key") || "";
+
+  let sheetController: ReturnType<typeof initCheckoutSheet> | null = null;
+  if (modalEl && backdropEl && panelEl) {
+    sheetController = initCheckoutSheet({
+      modalEl,
+      backdropEl,
+      panelEl,
+      dragHandleEl,
+      closeBtnEl,
+      onOpen: () => {
+        const nameInput = el("co-name");
+        setTimeout(() => nameInput?.focus(), 150);
+      },
+    });
   }
 
   // ── Open / close ─────────────────────────────────────────────────────────────
-  function openModal(ctx) {
+  function openModal(ctx: any, triggerEl: HTMLElement | null = null) {
     orderCtx = { ...orderCtx, ...ctx };
-    el("checkout-modal").style.removeProperty("display");
-    el("checkout-product-label").textContent = ctx.productName || "";
-    el("co-qty").value = "1";
-    el("co-error").classList.add("hidden");
-    el("co-custom-row").style.display = ctx.hasCustom ? "block" : "none";
+    const label = el("checkout-product-label");
+    if (label) label.textContent = ctx.productName || "";
+    const qtyInput = el("co-qty") as HTMLInputElement | null;
+    if (qtyInput) qtyInput.value = "1";
+    el("co-error")?.classList.add("hidden");
+    const customRow = el("co-custom-row");
+    if (customRow) customRow.style.display = ctx.hasCustom ? "block" : "none";
     updateTotal();
-    setTimeout(() => el("co-name")?.focus(), 100);
-    document.body.style.overflow = "hidden";
+
+    if (sheetController) {
+      sheetController.open(triggerEl);
+    }
   }
 
   function closeModal() {
-    el("checkout-modal").style.display = "none";
-    document.body.style.overflow = "";
+    if (sheetController) {
+      sheetController.close();
+    }
   }
 
   // ── Paystack popup ────────────────────────────────────────────────────────────
-  function launchPaystack(formData) {
-    const totalKobo = getTotal() * 100; // Paystack uses smallest currency unit (kobo / pesewa)
-    // For KES, Paystack uses KES directly in pesewa-equivalent (1 KES = 100 pesewa in their system)
+  function launchPaystack(formData: FormData) {
+    const totalKobo = getTotal() * 100;
     const ref = "PHB-" + Date.now() + "-" + Math.random().toString(36).substr(2, 5).toUpperCase();
 
-    // Compose metadata for PrintHub's Paystack dashboard
+    const qtyInput = el("co-qty") as HTMLInputElement | null;
+    const customInput = el("co-custom") as HTMLInputElement | null;
     const meta = {
       product: orderCtx.productName,
       slug: orderCtx.productSlug,
       size: orderCtx.size || "N/A",
       colour: orderCtx.colour || "N/A",
-      quantity: el("co-qty").value,
-      custom_note: el("co-custom")?.value || "",
-      delivery: formData.get("delivery") || "Standard Delivery / Eldoret",
-      phone: formData.get("phone"),
+      quantity: qtyInput?.value || "1",
+      custom_note: customInput?.value || "",
+      delivery: (formData.get("delivery") as string) || "Standard Delivery / Eldoret",
+      phone: formData.get("phone") as string,
     };
 
-    const handler = window.PaystackPop.setup({
+    const handler = (window as any).PaystackPop.setup({
       key: paystackKey,
       email: formData.get("email"),
       amount: totalKobo,
       currency: "KES",
       ref,
-      firstname: formData.get("name").split(" ")[0],
-      lastname: formData.get("name").split(" ").slice(1).join(" ") || "",
+      firstname: ((formData.get("name") as string) || "").split(" ")[0],
+      lastname: ((formData.get("name") as string) || "").split(" ").slice(1).join(" ") || "",
       phone: formData.get("phone"),
       metadata: { custom_fields: Object.entries(meta).map(([k, v]) => ({ display_name: k.replace(/_/g, " "), variable_name: k, value: v })) },
       label: `PrintHub Africa – ${orderCtx.productName}`,
 
       onClose: function () {
-        // User cancelled — re-enable button
-        const btn = el("co-submit");
-        btn.disabled = false;
-        btn.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Pay securely with Paystack`;
+        const btn = el("co-submit") as HTMLButtonElement | null;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Pay securely with Paystack`;
+        }
         const errEl = el("co-error");
-        errEl.textContent = "Payment was cancelled. Try again when you're ready.";
-        errEl.classList.remove("hidden");
+        if (errEl) {
+          errEl.textContent = "Payment was cancelled. Try again when you're ready.";
+          errEl.classList.remove("hidden");
+        }
       },
 
-      callback: function (response) {
-        // Payment successful
+      callback: function (response: any) {
         closeModal();
-        // Build WhatsApp message to notify PrintHub
         const waText = encodeURIComponent(
           `🛍️ NEW PAID ORDER — PrintHub Africa\n\nProduct: ${orderCtx.productName}\nSize: ${meta.size}\nColour: ${meta.colour}\nQty: ${meta.quantity}\nDelivery: ${meta.delivery}\nCustom: ${meta.custom_note || "None"}\n\nCustomer: ${formData.get("name")}\nEmail: ${formData.get("email")}\nPhone: ${meta.phone}\n\nAmount: KES ${(totalKobo / 100).toLocaleString()}\nPaystack Ref: ${response.reference}\nStatus: ✅ PAID (M-Pesa / Card)`
         );
         window.open(`https://wa.me/254792732929?text=${waText}`, "_blank");
 
-        // Redirect to confirmation page
         const params = new URLSearchParams({
           product: orderCtx.productName,
           ref: response.reference,
-          name: formData.get("name"),
+          name: (formData.get("name") as string) || "",
           qty: meta.quantity,
           size: meta.size,
           colour: meta.colour,
@@ -295,66 +327,77 @@ const { paystackKey } = Astro.props;
     handler.openIframe();
   }
 
-  // ── Load Paystack JS ──────────────────────────────────────────────────────────
   function loadPaystackScript() {
-    return new Promise((resolve, reject) => {
-      if (window.PaystackPop) { resolve(); return; }
+    return new Promise<void>((resolve, reject) => {
+      if ((window as any).PaystackPop) { resolve(); return; }
       const s = document.createElement("script");
       s.src = "https://js.paystack.co/v1/inline.js";
-      s.onload = resolve;
+      s.onload = () => resolve();
       s.onerror = reject;
       document.head.appendChild(s);
     });
   }
 
   // ── Form submit ───────────────────────────────────────────────────────────────
-  el("checkout-form").addEventListener("submit", async (e) => {
+  el("checkout-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const form = e.target;
+    const form = e.target as HTMLFormElement;
     const data = new FormData(form);
     const errEl = el("co-error");
-    errEl.classList.add("hidden");
+    if (errEl) errEl.classList.add("hidden");
 
-    // Basic validation
-    if (!data.get("name")?.toString().trim()) { errEl.textContent = "Please enter your name."; errEl.classList.remove("hidden"); return; }
-    if (!data.get("email")?.toString().includes("@")) { errEl.textContent = "Please enter a valid email address."; errEl.classList.remove("hidden"); return; }
-    if (!data.get("phone")?.toString().trim()) { errEl.textContent = "Please enter your phone number."; errEl.classList.remove("hidden"); return; }
-    if (getTotal() <= 0) { errEl.textContent = "This product has a price that must be quoted — please use WhatsApp to order."; errEl.classList.remove("hidden"); return; }
+    if (!data.get("name")?.toString().trim()) {
+      if (errEl) { errEl.textContent = "Please enter your name."; errEl.classList.remove("hidden"); }
+      return;
+    }
+    if (!data.get("email")?.toString().includes("@")) {
+      if (errEl) { errEl.textContent = "Please enter a valid email address."; errEl.classList.remove("hidden"); }
+      return;
+    }
+    if (!data.get("phone")?.toString().trim()) {
+      if (errEl) { errEl.textContent = "Please enter your phone number."; errEl.classList.remove("hidden"); }
+      return;
+    }
+    if (getTotal() <= 0) {
+      if (errEl) { errEl.textContent = "This product has a price that must be quoted — please use WhatsApp to order."; errEl.classList.remove("hidden"); }
+      return;
+    }
 
-    const btn = el("co-submit");
+    const btn = el("co-submit") as HTMLButtonElement | null;
 
-    // If Paystack public key is not yet configured, gracefully send the complete order to WhatsApp
     if (!paystackKey || typeof paystackKey !== 'string' || !paystackKey.startsWith("pk_")) {
+      const qtyInput = el("co-qty") as HTMLInputElement | null;
+      const customInput = el("co-custom") as HTMLInputElement | null;
       const waOrderText = encodeURIComponent(
-        `🛍️ NEW DIRECT ORDER — PrintHub Africa\n\nProduct: ${orderCtx.productName}\nSize: ${orderCtx.size || "Standard"}\nColour: ${orderCtx.colour || "Standard"}\nQuantity: ${el("co-qty")?.value || 1}\nDelivery: ${data.get("delivery") || "Standard"}\n${orderCtx.hasCustom ? `Customization: ${el("co-custom")?.value || "None"}\n` : ""}Total: KES ${getTotal().toLocaleString()}\n\nCustomer: ${data.get("name")}\nPhone: ${data.get("phone")}\nEmail: ${data.get("email")}\n\nI would like to complete this order and pay via M-Pesa.`
+        `🛍️ NEW DIRECT ORDER — PrintHub Africa\n\nProduct: ${orderCtx.productName}\nSize: ${orderCtx.size || "Standard"}\nColour: ${orderCtx.colour || "Standard"}\nQuantity: ${qtyInput?.value || 1}\nDelivery: ${data.get("delivery") || "Standard"}\n${orderCtx.hasCustom ? `Customization: ${customInput?.value || "None"}\n` : ""}Total: KES ${getTotal().toLocaleString()}\n\nCustomer: ${data.get("name")}\nPhone: ${data.get("phone")}\nEmail: ${data.get("email")}\n\nI would like to complete this order and pay via M-Pesa.`
       );
       window.open(`https://wa.me/254792732929?text=${waOrderText}`, "_blank");
       closeModal();
       return;
     }
 
-    btn.disabled = true;
-    btn.innerHTML = `<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Loading payment...`;
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Loading payment...`;
+    }
 
     try {
       await loadPaystackScript();
       launchPaystack(data);
     } catch {
-      btn.disabled = false;
-      btn.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Pay securely with Paystack`;
-      errEl.textContent = "Could not load payment system. Please check your connection and try again, or use WhatsApp.";
-      errEl.classList.remove("hidden");
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Pay securely with Paystack`;
+      }
+      if (errEl) {
+        errEl.textContent = "Could not load payment system. Please check your connection and try again, or use WhatsApp.";
+        errEl.classList.remove("hidden");
+      }
     }
   });
 
-  // ── Quantity change ───────────────────────────────────────────────────────────
-  el("co-qty").addEventListener("input", updateTotal);
+  el("co-qty")?.addEventListener("input", updateTotal);
 
-  // ── Close triggers ────────────────────────────────────────────────────────────
-  el("checkout-close").addEventListener("click", closeModal);
-  el("checkout-backdrop").addEventListener("click", closeModal);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-
-  // ── Global API (called by product page) ──────────────────────────────────────
-  window.__phbCheckout = { open: openModal };
+  // Global API
+  (window as any).__phbCheckout = { open: openModal, close: closeModal };
 </script>
