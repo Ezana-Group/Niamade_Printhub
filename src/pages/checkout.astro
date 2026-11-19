@@ -19,58 +19,71 @@ const productsData = products.map((p: any) => ({
 const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
 ---
 <Layout
-  title="Complete Your Order | PrintHub Africa"
+  title="Checkout | PrintHub Africa"
   description="Secure checkout for your PrintHub Africa 3D printed piece. Instant M-Pesa STK Push or card payment, hand-printed in Eldoret."
   robots="noindex, nofollow"
 >
   <div class="wrap pt-8 pb-24 max-w-6xl mx-auto">
     <!-- Breadcrumb & Trust Banner -->
     <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
-      <nav aria-label="Breadcrumb" class="text-sm text-mute flex items-center gap-2">
-        <a href="/" class="hover:text-brand transition-colors">Home</a>
+      <nav aria-label="Breadcrumb" class="text-sm sm:text-base text-mute flex items-center gap-2">
+        <a href="/" class="hover:text-brand transition-colors font-medium">Home</a>
         <span aria-hidden="true" class="text-line">/</span>
-        <a href="/shop/" class="hover:text-brand transition-colors">Shop</a>
+        <a href="/shop/" class="hover:text-brand transition-colors font-medium">Shop</a>
         <span aria-hidden="true" class="text-line">/</span>
-        <span class="text-ink font-semibold">Checkout</span>
+        <span class="text-ink font-bold">Checkout</span>
       </nav>
-      <div class="flex items-center gap-3 text-xs text-mute bg-sand/50 px-3.5 py-1.5 rounded-full border border-line/60">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span>Secure 256-Bit Encrypted Checkout</span>
+      <div class="flex items-center gap-2 text-xs sm:text-sm text-ink/80 bg-sand/60 px-4 py-2 rounded-full border border-line">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+        <span class="font-medium">Secure 256-Bit Encrypted Checkout</span>
       </div>
     </div>
 
     <!-- Header -->
-    <div class="mb-10">
-      <p class="eyebrow">Order & Payment</p>
-      <h1 class="font-display text-3xl sm:text-4xl md:text-5xl mt-1 font-semibold text-ink">
+    <div class="mb-8 sm:mb-10">
+      <p class="eyebrow text-brand font-bold uppercase tracking-wider text-xs sm:text-sm">Quick & Secure Checkout</p>
+      <h1 class="font-display text-3xl sm:text-4xl md:text-5xl mt-1.5 font-bold text-ink">
         Complete your order
       </h1>
-      <p class="text-mute mt-2 text-base max-w-2xl">
-        Enter your delivery details and choose your payment method. We'll begin slicing and calibrating your print as soon as payment is confirmed.
+      <p class="text-mute mt-2.5 text-base sm:text-lg max-w-2xl leading-relaxed">
+        Follow the steps below to enter your delivery address and pay securely via M-Pesa or Card.
       </p>
     </div>
 
     <!-- Main Two-Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
       
-      <!-- LEFT: Checkout Form Steps (7 cols) -->
-      <div class="lg:col-span-7 space-y-8">
+      <!-- LEFT: Accordion Steps (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
         
-        <form id="checkout-page-form" novalidate class="space-y-8">
+        <form id="checkout-page-form" novalidate class="space-y-6">
           
-          <!-- STEP 1: Customer Details -->
-          <div class="panel p-6 sm:p-8 space-y-5 bg-card border border-line rounded-3xl shadow-xs">
-            <div class="flex items-center gap-3 pb-3 border-b border-line/60">
-              <span class="w-8 h-8 rounded-full bg-brand/10 text-brand font-bold text-sm flex items-center justify-center shrink-0">1</span>
-              <div>
-                <h2 class="font-display text-xl font-semibold text-ink">Your Contact Information</h2>
-                <p class="text-xs text-mute">We'll use this to send your order receipt and printing updates.</p>
+          <!-- STEP 1: Contact Information -->
+          <div id="step-card-1" class="step-card panel p-6 sm:p-8 bg-card border-2 border-brand rounded-3xl shadow-sm transition-all">
+            <!-- Header (Always visible) -->
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <span id="badge-step-1" class="w-9 h-9 rounded-full bg-brand text-cream font-bold text-base flex items-center justify-center shrink-0 shadow-xs">
+                  1
+                </span>
+                <div>
+                  <h2 class="font-display text-xl sm:text-2xl font-bold text-ink">Your Contact Information</h2>
+                  <p id="summary-step-1" class="text-sm sm:text-base text-mute mt-0.5 hidden font-medium"></p>
+                </div>
               </div>
+              <button
+                type="button"
+                id="edit-step-1"
+                class="hidden text-sm sm:text-base font-bold text-brand hover:underline px-3 py-1.5 rounded-xl hover:bg-sand/60 transition-colors"
+              >
+                Change
+              </button>
             </div>
 
-            <div class="space-y-4 pt-1">
+            <!-- Body (Collapsible) -->
+            <div id="body-step-1" class="mt-6 pt-5 border-t border-line/70 space-y-5">
               <div>
-                <label for="cust-name" class="block text-sm font-bold text-ink mb-1">
+                <label for="cust-name" class="block text-base font-bold text-ink mb-1.5">
                   Full Name <span class="text-brand">*</span>
                 </label>
                 <input
@@ -79,13 +92,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                   name="name"
                   required
                   placeholder="e.g. Amina Waweru"
-                  class="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                  class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                 />
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label for="cust-email" class="block text-sm font-bold text-ink mb-1">
+                  <label for="cust-email" class="block text-base font-bold text-ink mb-1.5">
                     Email Address <span class="text-brand">*</span>
                   </label>
                   <input
@@ -94,13 +107,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                     name="email"
                     required
                     placeholder="e.g. amina@example.com"
-                    class="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                    class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                   />
-                  <p class="mt-1 text-xs text-mute">Official receipt will be sent here.</p>
+                  <p class="mt-1.5 text-xs sm:text-sm text-mute">Receipt and printing updates will be sent here.</p>
                 </div>
 
                 <div>
-                  <label for="cust-phone" class="block text-sm font-bold text-ink mb-1">
+                  <label for="cust-phone" class="block text-base font-bold text-ink mb-1.5">
                     Phone / M-Pesa Number <span class="text-brand">*</span>
                   </label>
                   <input
@@ -109,268 +122,376 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                     name="phone"
                     required
                     placeholder="e.g. 0712 345 678"
-                    class="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                    class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                   />
-                  <p class="mt-1 text-xs text-mute">Prompt for M-Pesa PIN will pop up here.</p>
+                  <p class="mt-1.5 text-xs sm:text-sm text-mute">Your phone will receive the M-Pesa PIN prompt.</p>
                 </div>
+              </div>
+
+              <!-- Step 1 Button -->
+              <div class="pt-3">
+                <button
+                  type="button"
+                  id="btn-goto-step-2"
+                  class="btn !bg-brand !text-cream hover:!bg-brand/90 font-bold text-base px-6 py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <span>Continue to Delivery Details</span>
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- STEP 2: Delivery & Preferences -->
-          <div class="panel p-6 sm:p-8 space-y-5 bg-card border border-line rounded-3xl shadow-xs">
-            <div class="flex items-center gap-3 pb-3 border-b border-line/60">
-              <span class="w-8 h-8 rounded-full bg-brand/10 text-brand font-bold text-sm flex items-center justify-center shrink-0">2</span>
-              <div>
-                <h2 class="font-display text-xl font-semibold text-ink">Delivery Location & Options</h2>
-                <p class="text-xs text-mute">Courier across Kenya charged at cost, or free collection at our studio.</p>
+          <!-- STEP 2: Delivery & Address -->
+          <div id="step-card-2" class="step-card panel p-6 sm:p-8 bg-card border border-line rounded-3xl shadow-xs transition-all opacity-90">
+            <!-- Header (Always visible) -->
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <span id="badge-step-2" class="w-9 h-9 rounded-full bg-sand text-ink font-bold text-base flex items-center justify-center shrink-0">
+                  2
+                </span>
+                <div>
+                  <h2 class="font-display text-xl sm:text-2xl font-bold text-ink">Delivery Address & Details</h2>
+                  <p id="summary-step-2" class="text-sm sm:text-base text-mute mt-0.5 hidden font-medium"></p>
+                </div>
               </div>
+              <button
+                type="button"
+                id="edit-step-2"
+                class="hidden text-sm sm:text-base font-bold text-brand hover:underline px-3 py-1.5 rounded-xl hover:bg-sand/60 transition-colors"
+              >
+                Change
+              </button>
             </div>
 
-            <div class="space-y-4 pt-1">
+            <!-- Body (Collapsible) -->
+            <div id="body-step-2" class="hidden mt-6 pt-5 border-t border-line/70 space-y-6">
+              
+              <!-- Delivery Type Selector -->
               <div>
-                <label for="cust-delivery" class="block text-sm font-bold text-ink mb-1">
-                  Delivery Destination / Collection <span class="text-brand">*</span>
+                <label class="block text-base font-bold text-ink mb-2.5">
+                  How would you like to receive your item?
                 </label>
-                <input
-                  type="text"
-                  id="cust-delivery"
-                  name="delivery"
-                  required
-                  placeholder="e.g. Nairobi, Mombasa, Kisumu, Nakuru, or Eldoret Studio Pickup"
-                  class="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-                />
-                <div class="flex flex-wrap gap-2 mt-2">
-                  <button type="button" class="quick-loc text-xs px-2.5 py-1 rounded-lg bg-sand hover:bg-sand/80 text-ink/80 transition-colors" data-loc="Free Pickup at Eldoret Studio">
-                    📍 Free Eldoret Pickup
-                  </button>
-                  <button type="button" class="quick-loc text-xs px-2.5 py-1 rounded-lg bg-sand hover:bg-sand/80 text-ink/80 transition-colors" data-loc="Nairobi (Next-Day Courier)">
-                    🚚 Nairobi Delivery
-                  </button>
-                  <button type="button" class="quick-loc text-xs px-2.5 py-1 rounded-lg bg-sand hover:bg-sand/80 text-ink/80 transition-colors" data-loc="Other Kenya Town (Courier)">
-                    📦 Other County / Town
-                  </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <label class="delivery-option-card relative flex items-start gap-3 p-4 rounded-2xl border-2 border-brand bg-brand/5 cursor-pointer transition-all">
+                    <input type="radio" name="delivery_type" value="courier" checked class="mt-1 accent-brand w-4 h-4" />
+                    <div>
+                      <p class="font-bold text-ink text-base">Courier Delivery</p>
+                      <p class="text-xs sm:text-sm text-mute mt-0.5">Delivered to your home, office, or pickup point anywhere in Kenya.</p>
+                    </div>
+                  </label>
+
+                  <label class="delivery-option-card relative flex items-start gap-3 p-4 rounded-2xl border border-line bg-white hover:bg-sand/30 cursor-pointer transition-all">
+                    <input type="radio" name="delivery_type" value="pickup" class="mt-1 accent-brand w-4 h-4" />
+                    <div>
+                      <p class="font-bold text-ink text-base">Free Eldoret Studio Pickup</p>
+                      <p class="text-xs sm:text-sm text-mute mt-0.5">Collect free from PrintHub Africa / Niamade Hub studio in Eldoret.</p>
+                    </div>
+                  </label>
                 </div>
               </div>
 
-              <!-- Custom Text / Note (Dynamic) -->
-              <div id="cust-custom-wrap">
-                <label for="cust-custom" class="block text-sm font-bold text-ink mb-1">
-                  Customisation / Special Note (Optional)
+              <!-- Address Fields (Shown for Courier) -->
+              <div id="courier-fields-wrap" class="space-y-4 pt-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label for="del-town" class="block text-base font-bold text-ink mb-1.5">
+                      Town / City <span class="text-brand">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="del-town"
+                      name="delivery_town"
+                      placeholder="e.g. Nairobi, Mombasa, Eldoret, Kisumu"
+                      class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="del-area" class="block text-base font-bold text-ink mb-1.5">
+                      Estate / Suburb / Area <span class="text-brand">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="del-area"
+                      name="delivery_area"
+                      placeholder="e.g. Westlands, Kilimani, Pioneer, Nyali"
+                      class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="del-address" class="block text-base font-bold text-ink mb-1.5">
+                    Specific Street, Building, or Apartment Details <span class="text-brand">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="del-address"
+                    name="delivery_address"
+                    placeholder="e.g. Mpaka Road, Woodvale Place, 3rd Floor, Suite 4B"
+                    class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
+                  />
+                </div>
+
+                <div>
+                  <label for="del-landmark" class="block text-base font-bold text-ink mb-1.5">
+                    Nearby Landmark / Special Delivery Instructions (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    id="del-landmark"
+                    name="delivery_landmark"
+                    placeholder="e.g. Opposite Shell Petrol Station, call before arrival"
+                    class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
+                  />
+                </div>
+              </div>
+
+              <!-- Pickup info note (Shown for Studio Pickup) -->
+              <div id="pickup-info-wrap" class="hidden p-4 rounded-2xl bg-sand/60 border border-line text-sm text-ink space-y-1">
+                <p class="font-bold text-base text-brand">📍 PrintHub Africa Studio Pickup</p>
+                <p class="text-ink/80 text-sm">Niamade Hub, Eldoret, Uasin Gishu County, Kenya.</p>
+                <p class="text-mute text-xs">Hours: Mon–Fri 8:00 AM – 6:00 PM · Sat 9:00 AM – 3:00 PM</p>
+              </div>
+
+              <!-- Customisation / 3D Print Request Note -->
+              <div class="pt-2">
+                <label for="cust-custom" class="block text-base font-bold text-ink mb-1.5">
+                  Personalisation / Custom Note (Optional)
                 </label>
                 <input
                   type="text"
                   id="cust-custom"
                   name="custom"
-                  placeholder="e.g. Add name 'Kiprono' engraved on base"
-                  class="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                  placeholder="e.g. Engrave name 'Kiprono', or preference for matte finish"
+                  class="w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-mute/70 focus:outline-none focus:ring-2 focus:ring-brand shadow-xs"
                 />
-                <p class="mt-1 text-xs text-mute">Any special printing instructions, colour combinations, or personalised names.</p>
+                <p class="mt-1.5 text-xs sm:text-sm text-mute">Any special printing instructions, text engravings, or colour preferences.</p>
+              </div>
+
+              <!-- Step 2 Button -->
+              <div class="pt-3">
+                <button
+                  type="button"
+                  id="btn-goto-step-3"
+                  class="btn !bg-brand !text-cream hover:!bg-brand/90 font-bold text-base px-6 py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <span>Continue to Payment Method</span>
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
               </div>
             </div>
           </div>
 
           <!-- STEP 3: Payment Method -->
-          <div class="panel p-6 sm:p-8 space-y-5 bg-card border border-line rounded-3xl shadow-xs">
-            <div class="flex items-center gap-3 pb-3 border-b border-line/60">
-              <span class="w-8 h-8 rounded-full bg-brand/10 text-brand font-bold text-sm flex items-center justify-center shrink-0">3</span>
-              <div>
-                <h2 class="font-display text-xl font-semibold text-ink">Choose Payment Method</h2>
-                <p class="text-xs text-mute">Instant online payment or manual M-Pesa transfer.</p>
+          <div id="step-card-3" class="step-card panel p-6 sm:p-8 bg-card border border-line rounded-3xl shadow-xs transition-all opacity-90">
+            <!-- Header (Always visible) -->
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <span id="badge-step-3" class="w-9 h-9 rounded-full bg-sand text-ink font-bold text-base flex items-center justify-center shrink-0">
+                  3
+                </span>
+                <div>
+                  <h2 class="font-display text-xl sm:text-2xl font-bold text-ink">Choose Payment Method</h2>
+                  <p id="summary-step-3" class="text-sm sm:text-base text-mute mt-0.5 hidden font-medium"></p>
+                </div>
               </div>
             </div>
 
-            <!-- Payment Method Tabs / Radio Options -->
-            <div class="space-y-3 pt-1">
+            <!-- Body (Collapsible) -->
+            <div id="body-step-3" class="hidden mt-6 pt-5 border-t border-line/70 space-y-6">
               
-              <!-- Option A: Paystack Instant STK Push & Card (Default) -->
-              <label class="payment-method-card block relative p-4 sm:p-5 rounded-2xl border-2 border-brand bg-brand/5 cursor-pointer transition-all">
-                <div class="flex items-start justify-between gap-3">
-                  <div class="flex items-start gap-3">
-                    <input
-                      type="radio"
-                      name="payment_choice"
-                      value="paystack"
-                      checked
-                      class="mt-1 accent-brand w-4 h-4"
-                    />
-                    <div>
-                      <p class="font-bold text-ink text-sm sm:text-base flex items-center gap-2">
-                        Instant M-Pesa STK Push & Card
-                        <span class="text-[0.65rem] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Fastest</span>
-                      </p>
-                      <p class="text-xs text-mute mt-1 leading-relaxed">
-                        Your phone prompts you to enter your M-Pesa PIN immediately. Also accepts Visa, Mastercard, and Apple Pay.
-                      </p>
-                    </div>
-                  </div>
-                  <div class="shrink-0 flex items-center gap-1.5 opacity-80">
-                    <span class="text-xs font-bold px-2 py-0.5 rounded bg-white border border-line">M-Pesa</span>
-                    <span class="text-xs font-bold px-2 py-0.5 rounded bg-white border border-line">Card</span>
-                  </div>
-                </div>
-              </label>
-
-              <!-- Option B: Manual M-Pesa Till / Paybill (Shown if configured) -->
-              {hasManualMpesa && (
-                <label class="payment-method-card block relative p-4 sm:p-5 rounded-2xl border border-line bg-white hover:bg-sand/30 cursor-pointer transition-all">
+              <!-- Payment Options -->
+              <div class="space-y-4">
+                
+                <!-- Option A: Paystack Instant STK Push & Card (Default) -->
+                <label class="payment-card relative block p-5 rounded-2xl border-2 border-brand bg-brand/5 cursor-pointer transition-all shadow-xs">
                   <div class="flex items-start justify-between gap-3">
-                    <div class="flex items-start gap-3">
+                    <div class="flex items-start gap-3.5">
                       <input
                         type="radio"
                         name="payment_choice"
-                        value="manual"
-                        class="mt-1 accent-brand w-4 h-4"
+                        value="paystack"
+                        checked
+                        class="mt-1.5 accent-brand w-5 h-5"
                       />
                       <div>
-                        <p class="font-bold text-ink text-sm sm:text-base">
-                          Pay Manually via M-Pesa Till / Paybill
+                        <p class="font-bold text-ink text-base sm:text-lg flex items-center gap-2">
+                          Instant M-Pesa STK Push & Card
+                          <span class="text-xs bg-emerald-600 text-white font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Fastest</span>
                         </p>
-                        <p class="text-xs text-mute mt-1 leading-relaxed">
-                          Prefer paying via Buy Goods Till or Paybill? Send the funds directly and share your M-Pesa transaction code.
+                        <p class="text-sm text-ink/75 mt-1 leading-relaxed">
+                          Enter your PIN on your phone to complete payment immediately. Also accepts Visa, Mastercard, and Apple Pay.
                         </p>
                       </div>
                     </div>
                   </div>
-
-                  <!-- Collapsed Manual Details (shown when radio selected) -->
-                  <div id="manual-details-panel" class="hidden mt-4 pt-4 border-t border-line space-y-3">
-                    {site.mpesaTillNumber && (
-                      <div class="bg-sand/60 p-3.5 rounded-xl text-xs space-y-1">
-                        <div class="flex justify-between">
-                          <span class="text-mute font-medium">Buy Goods Till:</span>
-                          <span class="font-mono font-bold text-ink text-sm">{site.mpesaTillNumber}</span>
-                        </div>
-                        <div class="flex justify-between">
-                          <span class="text-mute font-medium">Business Name:</span>
-                          <span class="font-semibold text-ink">{site.mpesaBusinessName || "NIAMADE HUB"}</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {site.mpesaPaybillNumber && (
-                      <div class="bg-sand/60 p-3.5 rounded-xl text-xs space-y-1">
-                        <div class="flex justify-between">
-                          <span class="text-mute font-medium">Paybill Number:</span>
-                          <span class="font-mono font-bold text-ink text-sm">{site.mpesaPaybillNumber}</span>
-                        </div>
-                        {site.mpesaAccountName && (
-                          <div class="flex justify-between">
-                            <span class="text-mute font-medium">Account Name:</span>
-                            <span class="font-semibold text-ink">{site.mpesaAccountName}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    <p class="text-xs text-mute leading-relaxed">
-                      After sending payment, clicking "Complete Order" will open WhatsApp with your order details pre-filled. Simply paste your M-Pesa confirmation SMS.
-                    </p>
-                  </div>
                 </label>
-              )}
+
+                <!-- Option B: Manual M-Pesa Till / Paybill (If configured in Sanity) -->
+                {hasManualMpesa && (
+                  <label class="payment-card relative block p-5 rounded-2xl border border-line bg-white hover:bg-sand/30 cursor-pointer transition-all shadow-xs">
+                    <div class="flex items-start justify-between gap-3">
+                      <div class="flex items-start gap-3.5">
+                        <input
+                          type="radio"
+                          name="payment_choice"
+                          value="manual"
+                          class="mt-1.5 accent-brand w-5 h-5"
+                        />
+                        <div>
+                          <p class="font-bold text-ink text-base sm:text-lg">
+                            Pay Manually via M-Pesa Till / Paybill
+                          </p>
+                          <p class="text-sm text-ink/75 mt-1 leading-relaxed">
+                            Send payment directly from your M-Pesa menu and confirm with our team on WhatsApp.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Collapsed Manual Details -->
+                    <div id="manual-details-box" class="hidden mt-4 pt-4 border-t border-line space-y-3">
+                      {site.mpesaTillNumber && (
+                        <div class="bg-sand/70 p-4 rounded-xl text-sm space-y-1.5">
+                          <div class="flex justify-between items-center">
+                            <span class="text-mute font-medium">Buy Goods Till:</span>
+                            <span class="font-mono font-bold text-ink text-lg">{site.mpesaTillNumber}</span>
+                          </div>
+                          <div class="flex justify-between items-center">
+                            <span class="text-mute font-medium">Business Name:</span>
+                            <span class="font-semibold text-ink">{site.mpesaBusinessName || "NIAMADE HUB"}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {site.mpesaPaybillNumber && (
+                        <div class="bg-sand/70 p-4 rounded-xl text-sm space-y-1.5">
+                          <div class="flex justify-between items-center">
+                            <span class="text-mute font-medium">Paybill Number:</span>
+                            <span class="font-mono font-bold text-ink text-lg">{site.mpesaPaybillNumber}</span>
+                          </div>
+                          {site.mpesaAccountName && (
+                            <div class="flex justify-between items-center">
+                              <span class="text-mute font-medium">Account Name:</span>
+                              <span class="font-semibold text-ink">{site.mpesaAccountName}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      <p class="text-xs sm:text-sm text-mute leading-relaxed">
+                        After sending, click the button below to open WhatsApp with your order details pre-filled and paste your M-Pesa confirmation SMS.
+                      </p>
+                    </div>
+                  </label>
+                )}
+              </div>
+
+              <!-- Error Alert -->
+              <div id="checkout-error" class="hidden p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold"></div>
+
+              <!-- Final Submit Button -->
+              <div class="pt-4">
+                <button
+                  type="submit"
+                  id="checkout-submit-btn"
+                  class="btn w-full !bg-brand !text-cream hover:!bg-brand/90 font-bold text-lg sm:text-xl py-4 sm:py-5 rounded-2xl flex items-center justify-center gap-3 shadow-md hover:shadow-lg transition-all"
+                >
+                  <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                  <span id="submit-btn-text">Pay with M-Pesa / Card</span>
+                </button>
+                <p class="text-center text-xs sm:text-sm text-mute mt-3.5 flex items-center justify-center gap-1.5">
+                  <span>🔒 Handled securely by Paystack. PrintHub never stores your M-Pesa PIN or card details.</span>
+                </p>
+              </div>
+
             </div>
           </div>
 
-          <!-- Error Alert Banner -->
-          <div id="checkout-error" class="hidden p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium"></div>
-
-          <!-- Big Submit Button -->
-          <div class="pt-2">
-            <button
-              type="submit"
-              id="checkout-submit-btn"
-              class="btn w-full !bg-brand !text-cream hover:!bg-brand/90 font-bold text-lg py-4 rounded-2xl flex items-center justify-center gap-3 shadow-md hover:shadow-lg transition-all"
-            >
-              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-              </svg>
-              <span id="submit-btn-text">Pay with M-Pesa / Card</span>
-            </button>
-            <p class="text-center text-xs text-mute mt-3 flex items-center justify-center gap-1.5">
-              <span>🔒 Payments handled securely by Paystack. PrintHub never stores card or PIN credentials.</span>
-            </p>
-          </div>
         </form>
       </div>
 
       <!-- RIGHT: Sticky Order Summary Sidebar (5 cols) -->
       <div class="lg:col-span-5">
-        <aside class="panel p-6 sm:p-7 bg-sand/40 border border-line rounded-3xl sticky top-24 space-y-6">
-          <h2 class="font-display text-xl font-semibold text-ink pb-3 border-b border-line/60">
+        <aside class="panel p-6 sm:p-8 bg-sand/40 border border-line rounded-3xl sticky top-24 space-y-6">
+          <h2 class="font-display text-2xl font-bold text-ink pb-3 border-b border-line/70">
             Order Summary
           </h2>
 
           <!-- Selected Product Card -->
           <div class="flex items-start gap-4">
-            <div id="summary-img-wrap" class="w-20 h-20 rounded-2xl bg-card border border-line overflow-hidden shrink-0 grid place-items-center">
+            <div id="summary-img-wrap" class="w-24 h-24 rounded-2xl bg-card border border-line overflow-hidden shrink-0 grid place-items-center shadow-xs">
               <img id="summary-img" src="" alt="Product" class="w-full h-full object-cover hidden" />
-              <div id="summary-img-fallback" class="text-2xl text-brand font-bold">📦</div>
+              <div id="summary-img-fallback" class="text-3xl text-brand font-bold">📦</div>
             </div>
             <div class="flex-1 min-w-0">
-              <h3 id="summary-title" class="font-display text-lg font-semibold text-ink leading-snug truncate">
+              <h3 id="summary-title" class="font-display text-lg sm:text-xl font-bold text-ink leading-snug truncate">
                 Select a product
               </h3>
-              <p id="summary-variant-line" class="text-xs text-mute mt-1 truncate">
+              <p id="summary-variant-line" class="text-sm text-mute mt-1 truncate font-medium">
                 Standard specifications
               </p>
               <div class="flex items-center gap-3 mt-3">
-                <span class="text-xs text-mute">Qty:</span>
+                <span class="text-sm font-medium text-mute">Quantity:</span>
                 <div class="inline-flex items-center rounded-xl border border-line bg-white shadow-xs">
-                  <button type="button" id="qty-minus" class="w-7 h-7 flex items-center justify-center text-ink hover:bg-sand rounded-l-xl transition-colors font-bold text-sm">−</button>
-                  <span id="qty-val" class="w-8 text-center text-sm font-bold text-ink">1</span>
-                  <button type="button" id="qty-plus" class="w-7 h-7 flex items-center justify-center text-ink hover:bg-sand rounded-r-xl transition-colors font-bold text-sm">+</button>
+                  <button type="button" id="qty-minus" class="w-8 h-8 flex items-center justify-center text-ink hover:bg-sand rounded-l-xl transition-colors font-bold text-base">−</button>
+                  <span id="qty-val" class="w-9 text-center text-base font-bold text-ink">1</span>
+                  <button type="button" id="qty-plus" class="w-8 h-8 flex items-center justify-center text-ink hover:bg-sand rounded-r-xl transition-colors font-bold text-base">+</button>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Price Breakdown Table -->
-          <div class="space-y-3 pt-3 border-t border-line/60 text-sm">
+          <div class="space-y-3.5 pt-4 border-t border-line/70 text-base">
             <div class="flex justify-between items-center text-ink/80">
-              <span>Unit Price</span>
-              <span id="summary-unit-price" class="font-semibold text-ink">KES 0</span>
+              <span class="font-medium">Unit Price</span>
+              <span id="summary-unit-price" class="font-bold text-ink text-base">KES 0</span>
             </div>
             <div class="flex justify-between items-center text-ink/80">
-              <span>Delivery</span>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                At cost / Eldoret Pickup Free
+              <span class="font-medium">Delivery Fee</span>
+              <span id="summary-delivery-note" class="text-xs sm:text-sm font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
+                At cost / Free Pickup
               </span>
             </div>
-            <div class="pt-3 border-t border-line flex justify-between items-baseline">
-              <span class="font-bold text-base text-ink">Total to Pay</span>
-              <span id="summary-total" class="font-display text-3xl font-bold text-brand">
+            <div class="pt-4 border-t border-line flex justify-between items-baseline">
+              <span class="font-bold text-lg text-ink">Total to Pay</span>
+              <span id="summary-total" class="font-display text-3xl sm:text-4xl font-bold text-brand">
                 KES 0
               </span>
             </div>
           </div>
 
           <!-- Trust & Service Guarantees -->
-          <div class="pt-4 border-t border-line/60 space-y-3 text-xs text-ink/80">
-            <div class="flex items-center gap-2.5">
-              <span class="text-brand shrink-0">✓</span>
+          <div class="pt-4 border-t border-line/70 space-y-3 text-sm text-ink/85">
+            <div class="flex items-center gap-3">
+              <span class="w-5 h-5 rounded-full bg-brand/10 text-brand font-bold text-xs flex items-center justify-center shrink-0">✓</span>
               <span><strong>Quality inspected:</strong> Calibrated & tested in Eldoret studio</span>
             </div>
-            <div class="flex items-center gap-2.5">
-              <span class="text-brand shrink-0">✓</span>
+            <div class="flex items-center gap-3">
+              <span class="w-5 h-5 rounded-full bg-brand/10 text-brand font-bold text-xs flex items-center justify-center shrink-0">✓</span>
               <span><strong>Direct maker updates:</strong> Real-time progress via WhatsApp</span>
             </div>
-            <div class="flex items-center gap-2.5">
-              <span class="text-brand shrink-0">✓</span>
-              <span><strong>Fast dispatch:</strong> Printed and boxed within 24–48 hours</span>
+            <div class="flex items-center gap-3">
+              <span class="w-5 h-5 rounded-full bg-brand/10 text-brand font-bold text-xs flex items-center justify-center shrink-0">✓</span>
+              <span><strong>Fast turnaround:</strong> Printed and boxed within 24–48 hours</span>
             </div>
           </div>
 
           <!-- Need Help? -->
-          <div class="pt-2 text-center">
+          <div class="pt-2 text-center border-t border-line/60">
             <a
               id="summary-wa-help"
               href={wa("Hi PrintHub, I have a question about placing an order on checkout.")}
               target="_blank"
               rel="noopener"
-              class="inline-flex items-center gap-2 text-xs text-mute hover:text-brand transition-colors"
+              class="inline-flex items-center gap-2 text-sm text-mute hover:text-brand transition-colors font-medium"
             >
-              <Icon name="whatsapp" size={14} />
+              <Icon name="whatsapp" size={16} />
               <span>Need help? Chat with an engineer on WhatsApp</span>
             </a>
           </div>
@@ -407,14 +528,10 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
     });
   }
 
-  // ── Client State ───────────────────────────────────────────────────────────────
+  // ── Client Configuration ───────────────────────────────────────────────────────
   const cfg = document.getElementById("checkout-config");
   const paystackKey = cfg?.dataset.paystackKey || "";
   const whatsappNum = cfg?.dataset.whatsapp || "254792732929";
-  const mpesaTill = cfg?.dataset.till || "";
-  const mpesaPaybill = cfg?.dataset.paybill || "";
-  const mpesaAccount = cfg?.dataset.account || "";
-  const mpesaBusiness = cfg?.dataset.business || "NIAMADE HUB";
   
   let productsList: any[] = [];
   try {
@@ -433,7 +550,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
   const paramCustom = params.get("custom") || "";
   let currentQty = Math.max(1, parseInt(params.get("qty") || "1", 10));
 
-  // Find product from repository or fallback to params
+  // Match Product
   const matchedProduct = productsList.find((p) => p.slug === targetSlug);
   const productName = matchedProduct?.name || paramProduct || (targetSlug ? targetSlug.replace(/-/g, " ") : "3D Print Custom Order");
   const unitPrice = matchedProduct?.priceNum || paramPrice || 1000;
@@ -455,7 +572,29 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
   const submitBtn = document.getElementById("checkout-submit-btn") as HTMLButtonElement | null;
   const submitBtnText = document.getElementById("submit-btn-text");
 
-  // Populate Order Summary
+  // Step Cards
+  const card1 = document.getElementById("step-card-1");
+  const card2 = document.getElementById("step-card-2");
+  const card3 = document.getElementById("step-card-3");
+
+  const body1 = document.getElementById("body-step-1");
+  const body2 = document.getElementById("body-step-2");
+  const body3 = document.getElementById("body-step-3");
+
+  const badge1 = document.getElementById("badge-step-1");
+  const badge2 = document.getElementById("badge-step-2");
+  const badge3 = document.getElementById("badge-step-3");
+
+  const summary1 = document.getElementById("summary-step-1");
+  const summary2 = document.getElementById("summary-step-2");
+
+  const edit1 = document.getElementById("edit-step-1");
+  const edit2 = document.getElementById("edit-step-2");
+
+  const btnGoto2 = document.getElementById("btn-goto-step-2");
+  const btnGoto3 = document.getElementById("btn-goto-step-3");
+
+  // Hydrate Initial Summary
   if (elTitle) elTitle.textContent = productName;
   if (elVariant) {
     const parts = [paramSize ? `Size: ${paramSize}` : "", paramColour ? `Colour: ${paramColour}` : ""].filter(Boolean);
@@ -476,7 +615,6 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
     if (elUnitPrice) elUnitPrice.textContent = `KES ${unitPrice.toLocaleString()}`;
     if (elTotal) elTotal.textContent = `KES ${total.toLocaleString()}`;
 
-    // Update submit button text based on payment selection
     const methodChoice = (document.querySelector('input[name="payment_choice"]:checked') as HTMLInputElement)?.value;
     if (submitBtnText) {
       if (methodChoice === "manual") {
@@ -488,103 +626,262 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
   }
 
   btnQtyMinus?.addEventListener("click", () => {
-    if (currentQty > 1) {
-      currentQty--;
-      updateTotal();
-    }
+    if (currentQty > 1) { currentQty--; updateTotal(); }
   });
-
   btnQtyPlus?.addEventListener("click", () => {
-    if (currentQty < 50) {
-      currentQty++;
-      updateTotal();
-    }
+    if (currentQty < 50) { currentQty++; updateTotal(); }
   });
 
-  // Quick delivery pills
-  document.querySelectorAll<HTMLButtonElement>(".quick-loc").forEach((b) => {
-    b.addEventListener("click", () => {
-      const input = document.getElementById("cust-delivery") as HTMLInputElement | null;
-      if (input && b.dataset.loc) {
-        input.value = b.dataset.loc;
+  // ── Delivery Option Switching (Courier vs Studio Pickup) ──────────────────────
+  const delRadios = document.querySelectorAll<HTMLInputElement>('input[name="delivery_type"]');
+  const courierWrap = document.getElementById("courier-fields-wrap");
+  const pickupWrap = document.getElementById("pickup-info-wrap");
+
+  delRadios.forEach((r) => {
+    r.addEventListener("change", () => {
+      document.querySelectorAll(".delivery-option-card").forEach((c) => {
+        c.classList.remove("border-2", "border-brand", "bg-brand/5");
+        c.classList.add("border", "border-line", "bg-white");
+      });
+      const parent = r.closest(".delivery-option-card");
+      if (parent) {
+        parent.classList.remove("border", "border-line", "bg-white");
+        parent.classList.add("border-2", "border-brand", "bg-brand/5");
+      }
+
+      if (r.value === "pickup") {
+        courierWrap?.classList.add("hidden");
+        pickupWrap?.classList.remove("hidden");
+      } else {
+        courierWrap?.classList.remove("hidden");
+        pickupWrap?.classList.add("hidden");
       }
     });
   });
 
-  // Payment radio change handler
-  const radios = document.querySelectorAll<HTMLInputElement>('input[name="payment_choice"]');
-  const manualPanel = document.getElementById("manual-details-panel");
-  radios.forEach((r) => {
+  // ── Step 1 -> Step 2 (Amazon-style accordion collapse) ───────────────────────
+  btnGoto2?.addEventListener("click", () => {
+    const name = (document.getElementById("cust-name") as HTMLInputElement)?.value.trim();
+    const email = (document.getElementById("cust-email") as HTMLInputElement)?.value.trim();
+    const phone = (document.getElementById("cust-phone") as HTMLInputElement)?.value.trim();
+
+    if (!name) {
+      alert("Please enter your Full Name.");
+      document.getElementById("cust-name")?.focus();
+      return;
+    }
+    if (!email || !email.includes("@")) {
+      alert("Please enter a valid Email Address.");
+      document.getElementById("cust-email")?.focus();
+      return;
+    }
+    if (!phone || phone.length < 8) {
+      alert("Please enter your Phone / M-Pesa Number.");
+      document.getElementById("cust-phone")?.focus();
+      return;
+    }
+
+    // Collapse Step 1
+    body1?.classList.add("hidden");
+    if (summary1) {
+      summary1.textContent = `${name} · ${phone} · ${email}`;
+      summary1.classList.remove("hidden");
+    }
+    if (badge1) {
+      badge1.innerHTML = "✓";
+      badge1.classList.remove("bg-brand");
+      badge1.classList.add("bg-emerald-600");
+    }
+    edit1?.classList.remove("hidden");
+    card1?.classList.remove("border-2", "border-brand");
+    card1?.classList.add("border", "border-line");
+
+    // Open Step 2
+    body2?.classList.remove("hidden");
+    card2?.classList.remove("border-line", "opacity-90");
+    card2?.classList.add("border-2", "border-brand");
+    if (badge2) {
+      badge2.classList.remove("bg-sand", "text-ink");
+      badge2.classList.add("bg-brand", "text-cream");
+    }
+
+    // Scroll to Step 2
+    card2?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // Edit Step 1
+  edit1?.addEventListener("click", () => {
+    body1?.classList.remove("hidden");
+    summary1?.classList.add("hidden");
+    edit1?.classList.add("hidden");
+    card1?.classList.add("border-2", "border-brand");
+    card1?.classList.remove("border-line");
+    if (badge1) {
+      badge1.textContent = "1";
+      badge1.classList.add("bg-brand");
+      badge1.classList.remove("bg-emerald-600");
+    }
+    card1?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // ── Step 2 -> Step 3 (Amazon-style accordion collapse) ───────────────────────
+  btnGoto3?.addEventListener("click", () => {
+    const delType = (document.querySelector('input[name="delivery_type"]:checked') as HTMLInputElement)?.value;
+    let delSummaryText = "";
+
+    if (delType === "pickup") {
+      delSummaryText = "Free Studio Pickup (Eldoret)";
+    } else {
+      const town = (document.getElementById("del-town") as HTMLInputElement)?.value.trim();
+      const area = (document.getElementById("del-area") as HTMLInputElement)?.value.trim();
+      const address = (document.getElementById("del-address") as HTMLInputElement)?.value.trim();
+
+      if (!town) {
+        alert("Please enter your Delivery Town / City.");
+        document.getElementById("del-town")?.focus();
+        return;
+      }
+      if (!area) {
+        alert("Please enter your Estate or Area.");
+        document.getElementById("del-area")?.focus();
+        return;
+      }
+      if (!address) {
+        alert("Please enter your specific Street, Building, or Apartment.");
+        document.getElementById("del-address")?.focus();
+        return;
+      }
+      delSummaryText = `${town}, ${area} (${address})`;
+    }
+
+    const customText = (document.getElementById("cust-custom") as HTMLInputElement)?.value.trim();
+    if (customText) {
+      delSummaryText += ` · Note: "${customText}"`;
+    }
+
+    // Collapse Step 2
+    body2?.classList.add("hidden");
+    if (summary2) {
+      summary2.textContent = delSummaryText;
+      summary2.classList.remove("hidden");
+    }
+    if (badge2) {
+      badge2.innerHTML = "✓";
+      badge2.classList.remove("bg-brand");
+      badge2.classList.add("bg-emerald-600");
+    }
+    edit2?.classList.remove("hidden");
+    card2?.classList.remove("border-2", "border-brand");
+    card2?.classList.add("border", "border-line");
+
+    // Open Step 3
+    body3?.classList.remove("hidden");
+    card3?.classList.remove("border-line", "opacity-90");
+    card3?.classList.add("border-2", "border-brand");
+    if (badge3) {
+      badge3.classList.remove("bg-sand", "text-ink");
+      badge3.classList.add("bg-brand", "text-cream");
+    }
+
+    // Scroll to Step 3
+    card3?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // Edit Step 2
+  edit2?.addEventListener("click", () => {
+    body2?.classList.remove("hidden");
+    summary2?.classList.add("hidden");
+    edit2?.classList.add("hidden");
+    card2?.classList.add("border-2", "border-brand");
+    card2?.classList.remove("border-line");
+    if (badge2) {
+      badge2.textContent = "2";
+      badge2.classList.add("bg-brand");
+      badge2.classList.remove("bg-emerald-600");
+    }
+    card2?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // ── Payment Choice Toggles ───────────────────────────────────────────────────
+  const payRadios = document.querySelectorAll<HTMLInputElement>('input[name="payment_choice"]');
+  const manualBox = document.getElementById("manual-details-box");
+
+  payRadios.forEach((r) => {
     r.addEventListener("change", () => {
-      // Highlight selected radio card
-      document.querySelectorAll(".payment-method-card").forEach((card) => {
-        card.classList.remove("border-2", "border-brand", "bg-brand/5");
-        card.classList.add("border", "border-line", "bg-white");
+      document.querySelectorAll(".payment-card").forEach((c) => {
+        c.classList.remove("border-2", "border-brand", "bg-brand/5");
+        c.classList.add("border", "border-line", "bg-white");
       });
-      const parentLabel = r.closest(".payment-method-card");
-      if (parentLabel) {
-        parentLabel.classList.remove("border", "border-line", "bg-white");
-        parentLabel.classList.add("border-2", "border-brand", "bg-brand/5");
+      const parent = r.closest(".payment-card");
+      if (parent) {
+        parent.classList.remove("border", "border-line", "bg-white");
+        parent.classList.add("border-2", "border-brand", "bg-brand/5");
       }
 
       if (r.value === "manual") {
-        manualPanel?.classList.remove("hidden");
+        manualBox?.classList.remove("hidden");
       } else {
-        manualPanel?.classList.add("hidden");
+        manualBox?.classList.add("hidden");
       }
       updateTotal();
     });
   });
 
-  // Form submission & payment processing
+  // ── Form Submit & Final Payment ───────────────────────────────────────────────
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (errorBox) { errorBox.classList.add("hidden"); errorBox.textContent = ""; }
 
-    const data = new FormData(form);
-    const name = (data.get("name") as string || "").trim();
-    const email = (data.get("email") as string || "").trim();
-    const phone = (data.get("phone") as string || "").trim();
-    const delivery = (data.get("delivery") as string || "").trim();
-    const custom = (data.get("custom") as string || "").trim();
-    const choice = (data.get("payment_choice") as string || "paystack");
+    const name = (document.getElementById("cust-name") as HTMLInputElement)?.value.trim();
+    const email = (document.getElementById("cust-email") as HTMLInputElement)?.value.trim();
+    const phone = (document.getElementById("cust-phone") as HTMLInputElement)?.value.trim();
 
-    if (!name) {
-      showError("Please enter your full name.");
-      return;
-    }
-    if (!email || !email.includes("@")) {
-      showError("Please enter a valid email address for your order receipt.");
-      return;
-    }
-    if (!phone || phone.length < 8) {
-      showError("Please enter a valid phone number for M-Pesa STK Push.");
-      return;
-    }
-    if (!delivery) {
-      showError("Please enter your delivery town or choose Eldoret studio pickup.");
+    if (!name || !email || !phone) {
+      edit1?.click();
+      showError("Please complete your Contact Information first.");
       return;
     }
 
+    const delType = (document.querySelector('input[name="delivery_type"]:checked') as HTMLInputElement)?.value;
+    let fullDeliveryString = "";
+
+    if (delType === "pickup") {
+      fullDeliveryString = "Free Eldoret Studio Pickup";
+    } else {
+      const town = (document.getElementById("del-town") as HTMLInputElement)?.value.trim();
+      const area = (document.getElementById("del-area") as HTMLInputElement)?.value.trim();
+      const address = (document.getElementById("del-address") as HTMLInputElement)?.value.trim();
+      const landmark = (document.getElementById("del-landmark") as HTMLInputElement)?.value.trim();
+
+      if (!town || !area || !address) {
+        edit2?.click();
+        showError("Please complete your delivery address details.");
+        return;
+      }
+      fullDeliveryString = `${town}, ${area}, ${address}${landmark ? ` (Landmark: ${landmark})` : ""}`;
+    }
+
+    const custom = (document.getElementById("cust-custom") as HTMLInputElement)?.value.trim();
+    const choice = (document.querySelector('input[name="payment_choice"]:checked') as HTMLInputElement)?.value || "paystack";
     const totalKes = unitPrice * currentQty;
     const orderRef = "PH-ORD-" + Date.now().toString().slice(-5) + "-" + Math.random().toString(36).substr(2, 4).toUpperCase();
 
-    // ── Flow 1: Manual M-Pesa Till / Paybill ─────────────────────────────────────
+    // Flow A: Manual M-Pesa Till / Paybill
     if (choice === "manual") {
       const waText = encodeURIComponent(
-        `🛍️ NEW ORDER (MANUAL M-PESA) — PrintHub Africa\n\n` +
+        `🛍️ NEW ORDER (M-PESA TILL / PAYBILL) — PrintHub Africa\n\n` +
         `Ref: ${orderRef}\n` +
         `Product: ${productName}\n` +
         `Size: ${paramSize || "Standard"}\n` +
         `Colour: ${paramColour || "Standard"}\n` +
         `Quantity: ${currentQty}\n` +
-        `Delivery: ${delivery}\n` +
+        `Delivery: ${fullDeliveryString}\n` +
         (custom ? `Custom: ${custom}\n` : "") +
         `Total: KES ${totalKes.toLocaleString()}\n\n` +
         `Customer: ${name}\n` +
         `Email: ${email}\n` +
         `Phone: ${phone}\n\n` +
-        `I have sent / am sending the payment via M-Pesa. Here is my transaction code:\n[PASTE M-PESA SMS CODE HERE]`
+        `I am confirming this order. Here is my M-Pesa confirmation code:\n[PASTE M-PESA SMS CODE HERE]`
       );
       window.open(`https://wa.me/${whatsappNum}?text=${waText}`, "_blank");
       
@@ -595,18 +892,17 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         qty: String(currentQty),
         size: paramSize,
         colour: paramColour,
-        delivery,
+        delivery: fullDeliveryString,
         amount: String(totalKes),
       });
       window.location.href = `/order-confirmed/?${confParams.toString()}`;
       return;
     }
 
-    // ── Flow 2: Online Paystack Checkout (M-Pesa STK Push / Card) ───────────────
+    // Flow B: Paystack Instant STK Push & Card
     if (!paystackKey || !paystackKey.startsWith("pk_")) {
-      // Fallback to WhatsApp if Paystack key is missing
       const waFallback = encodeURIComponent(
-        `🛍️ NEW DIRECT ORDER — PrintHub Africa\n\nProduct: ${productName}\nQuantity: ${currentQty}\nTotal: KES ${totalKes.toLocaleString()}\nCustomer: ${name} (${phone})\nDelivery: ${delivery}`
+        `🛍️ DIRECT ORDER — PrintHub Africa\n\nProduct: ${productName}\nQty: ${currentQty}\nTotal: KES ${totalKes.toLocaleString()}\nCustomer: ${name} (${phone})\nDelivery: ${fullDeliveryString}`
       );
       window.open(`https://wa.me/${whatsappNum}?text=${waFallback}`, "_blank");
       return;
@@ -615,7 +911,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
-        <svg class="animate-spin w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin w-6 h-6 text-white" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
         </svg>
@@ -637,12 +933,12 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         colour: paramColour,
         quantity: String(currentQty),
         custom_note: custom,
-        delivery,
+        delivery: fullDeliveryString,
         custom_fields: [
           { display_name: "Order Ref", variable_name: "orderRef", value: orderRef },
           { display_name: "Product", variable_name: "product", value: productName },
           { display_name: "Quantity", variable_name: "quantity", value: String(currentQty) },
-          { display_name: "Delivery", variable_name: "delivery", value: delivery },
+          { display_name: "Delivery", variable_name: "delivery", value: fullDeliveryString },
           { display_name: "Phone", variable_name: "phone", value: phone },
         ],
       };
@@ -668,7 +964,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         },
 
         callback: (response: any) => {
-          // Send instant WhatsApp notification to PrintHub team
+          // WhatsApp direct maker notification
           const waNotify = encodeURIComponent(
             `🛍️ PAID ORDER RECEIVED — PrintHub Africa\n\n` +
             `Ref: ${orderRef}\n` +
@@ -676,7 +972,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
             `Size: ${paramSize || "Standard"}\n` +
             `Colour: ${paramColour || "Standard"}\n` +
             `Qty: ${currentQty}\n` +
-            `Delivery: ${delivery}\n` +
+            `Delivery: ${fullDeliveryString}\n` +
             (custom ? `Custom: ${custom}\n` : "") +
             `Customer: ${name}\n` +
             `Email: ${email}\n` +
@@ -687,7 +983,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
           );
           window.open(`https://wa.me/${whatsappNum}?text=${waNotify}`, "_blank");
 
-          // Redirect browser to order confirmation page
+          // Route to confirmation screen
           const confParams = new URLSearchParams({
             product: productName,
             ref: orderRef,
@@ -696,7 +992,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
             qty: String(currentQty),
             size: paramSize,
             colour: paramColour,
-            delivery,
+            delivery: fullDeliveryString,
             amount: String(totalKes),
           });
           window.location.href = `/order-confirmed/?${confParams.toString()}`;
@@ -709,7 +1005,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
         submitBtn.disabled = false;
         updateTotal();
       }
-      showError("Could not initiate payment gateway. Please check your internet connection or use WhatsApp.");
+      showError("Could not initiate payment gateway. Please check your connection or use WhatsApp.");
     }
   });
 
