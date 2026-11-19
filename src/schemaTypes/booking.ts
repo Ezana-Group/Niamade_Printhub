@@ -204,8 +204,8 @@ export const bookingType = defineType({
       const emoji = statusEmoji[status as string] || '📅'
       const refTag = ref ? `[${ref}] ` : ''
       return {
-        title: `${emoji} ${title || 'Unnamed Customer'} — ${service || 'General'}`,
-        subtitle: `${refTag}${date || 'No date'} at ${time || 'TBD'} • ${(status || 'pending').toUpperCase()}`,
+        title: `${title || 'Unnamed Customer'} — ${service || 'General'}`,
+        subtitle: `${emoji} ${refTag}${date || 'No date'} at ${time || 'TBD'} • ${(status || 'pending').toUpperCase()}`,
       }
     },
   },

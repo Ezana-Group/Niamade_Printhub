@@ -8,9 +8,11 @@ import { materialType } from './material'
 import { serviceType } from './service'
 import { occasionType } from './occasion'
 import { bookingType } from './booking'
+import { contactInquiryType } from './contactInquiry'
 
 export const schemaTypes = [
   bookingType,
+  contactInquiryType,
   productType,
   categoryType,
   occasionType,

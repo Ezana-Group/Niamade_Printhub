@@ -59,6 +59,8 @@ export interface SanitySettings {
   phone?: string;
   whatsapp?: string;
   email?: string;
+  notificationEmail?: string;
+  resendApiKey?: string;
   city?: string;
   hours?: string[];
   whatsappMessages?: SanityWhatsAppMessages;
@@ -283,6 +285,8 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     phone,
     whatsapp,
     email,
+    notificationEmail,
+    resendApiKey,
     city,
     hours,
     whatsappMessages,

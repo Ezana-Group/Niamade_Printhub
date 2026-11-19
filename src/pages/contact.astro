@@ -115,6 +115,22 @@ const ld = {
     const text = `Hi PrintHub, I'm ${d.get("name")}.\nI need: ${d.get("svc")}\nMaterial: ${d.get("mat")}\nQuantity: ${d.get("qty")}\n${d.get("msg")}`;
     const wa = waBase + "?text=" + encodeURIComponent(text);
     const mail = "mailto:" + email + "?subject=" + encodeURIComponent("Quote request: " + d.get("svc")) + "&body=" + encodeURIComponent(text);
+
+    // Save to Sanity & dispatch email notification in background
+    try {
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: d.get("name"),
+          service: d.get("svc"),
+          material: d.get("mat"),
+          quantity: d.get("qty"),
+          message: d.get("msg"),
+        }),
+      }).catch((err) => console.warn("Contact API background sync:", err));
+    } catch (_) {}
+
     // Open WhatsApp, and always leave visible fallbacks: pop-up blockers and in-app browsers can swallow window.open.
     const w = window.open(wa, "_blank"); if (w) w.opener = null;
     status.hidden = false;

@@ -26,8 +26,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('⏳ Pending Confirmation')
-                .icon(() => '⏳')
+                .title('Pending Confirmation')
                 .child(
                   S.documentList()
                     .title('Pending Confirmation')
@@ -37,8 +36,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('✅ Confirmed & Scheduled')
-                .icon(() => '✅')
+                .title('Confirmed & Scheduled')
                 .child(
                   S.documentList()
                     .title('Confirmed Bookings')
@@ -48,8 +46,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('🏁 Completed Consultations')
-                .icon(() => '🏁')
+                .title('Completed Consultations')
                 .child(
                   S.documentList()
                     .title('Completed Consultations')
@@ -59,8 +56,7 @@ export const structure: StructureResolver = (S) =>
                 ),
 
               S.listItem()
-                .title('❌ Cancelled')
-                .icon(() => '❌')
+                .title('Cancelled')
                 .child(
                   S.documentList()
                     .title('Cancelled Bookings')
@@ -69,6 +65,16 @@ export const structure: StructureResolver = (S) =>
                     .defaultOrdering([{ field: 'appointmentDate', direction: 'desc' }])
                 ),
             ])
+        ),
+
+      // ─── 💬 CONTACT & QUOTE REQUESTS ──────────────────────────────
+      S.listItem()
+        .title('Contact & Quote Inquiries')
+        .icon(() => '💬')
+        .child(
+          S.documentTypeList('contactInquiry')
+            .title('Contact & Quote Inquiries')
+            .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
         ),
 
       S.divider(),

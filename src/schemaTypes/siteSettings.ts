@@ -60,10 +60,26 @@ export const siteSettingsType = defineType({
     }),
     defineField({
       name: 'email',
-      title: 'Contact Email',
+      title: 'Public Contact Email',
       type: 'string',
       group: 'contact',
-      description: 'e.g. hello@printhub.africa',
+      description: 'e.g. printhubafrica3@gmail.com or hello@printhub.africa — shown to visitors on the website',
+      initialValue: 'printhubafrica3@gmail.com',
+    }),
+    defineField({
+      name: 'notificationEmail',
+      title: 'Admin Notification Email',
+      type: 'string',
+      group: 'contact',
+      description: 'The email address where all new customer bookings, consultations, and contact quote inquiries are delivered. You can change this anytime right here in Sanity!',
+      initialValue: 'printhubafrica3@gmail.com',
+    }),
+    defineField({
+      name: 'resendApiKey',
+      title: 'Email Dispatcher API Key (Resend.com)',
+      type: 'string',
+      group: 'contact',
+      description: 'Optional: Paste your free API key from https://resend.com (starts with re_...). When filled in, every booking and contact message triggers an instant email to your inbox automatically.',
     }),
     defineField({
       name: 'city',

@@ -7,6 +7,8 @@ interface Env {
   SANITY_DATASET?: string;
   EASYAPPOINTMENTS_URL?: string;
   EASYAPPOINTMENTS_API_TOKEN?: string;
+  NOTIFICATION_EMAIL?: string;
+  RESEND_API_KEY?: string;
 }
 
 export const onRequestOptions: PagesFunction<Env> = async () => {
@@ -139,6 +141,50 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       if (!sanityRes.ok) {
         const errText = await sanityRes.text();
         console.error("Sanity booking save error:", errText);
+      }
+    }
+
+    // 2. Dispatch Email Alert to Admin (printhubafrica3@gmail.com)
+    const notificationEmail =
+      context.env.NOTIFICATION_EMAIL || "printhubafrica3@gmail.com";
+    const resendKey = context.env.RESEND_API_KEY || "";
+
+    if (resendKey) {
+      try {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "PrintHub Bookings <onboarding@resend.dev>",
+            to: [notificationEmail],
+            subject: `📅 New Booking [${bookingRef}]: ${customerName} (${service})`,
+            html: `
+              <div style="font-family: sans-serif; max-width: 600px; line-height: 1.6; color: #2B1D16;">
+                <h2 style="color: #A6360A; margin-bottom: 4px;">New Booking Request Received</h2>
+                <p style="color: #6E5C50; margin-top: 0;">Ref: <strong>${bookingRef}</strong> • Source: <strong>${source}</strong></p>
+                <div style="background: #FFF8EE; border: 1px solid #EAD9C5; border-radius: 12px; padding: 18px; margin: 20px 0;">
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold; width: 35%;">Customer:</td><td>${customerName}</td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Phone / WhatsApp:</td><td><a href="https://wa.me/${customerPhone.replace(/[^0-9]/g, "")}">${customerPhone || "Not provided"}</a></td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td>${customerEmail || "Not provided"}</td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Service:</td><td>${service}</td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Date & Time:</td><td><strong>${appointmentDate}</strong> at <strong>${appointmentTime}</strong></td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Meeting Type:</td><td>${meetingType === "in_person" ? "In-Person (Eldoret Studio)" : meetingType === "call" ? "Phone Call" : "WhatsApp Chat"}</td></tr>
+                    <tr><td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Project Notes:</td><td style="padding: 8px 0;">${projectDetails || "None provided"}</td></tr>
+                  </table>
+                </div>
+                <p style="margin-top: 24px;">
+                  <a href="https://printhub.africa/admin" style="display: inline-block; padding: 12px 24px; background-color: #A6360A; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold;">Manage in Sanity Studio →</a>
+                </p>
+              </div>
+            `,
+          }),
+        });
+      } catch (err) {
+        console.error("Resend booking email dispatch error:", err);
       }
     }
 

@@ -44,7 +44,8 @@ export const site = {
   city: _sanitySettings?.city || _settingsData.city,
   phone: _sanitySettings?.phone || _settingsData.phone,
   whatsapp: _sanitySettings?.whatsapp || _settingsData.whatsapp,
-  email: _sanitySettings?.email || _settingsData.email,
+  email: _sanitySettings?.email || "printhubafrica3@gmail.com",
+  notificationEmail: _sanitySettings?.notificationEmail || _sanitySettings?.email || "printhubafrica3@gmail.com",
   parent: "Niamade Hub",
   hours: _sanitySettings?.hours || _settingsData.hours,
   // Same hours in machine-readable form (0 = Sunday). Drives the live "Open now" badge and search-engine data.
