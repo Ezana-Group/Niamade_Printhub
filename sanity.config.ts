@@ -3,6 +3,7 @@ import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { schemaTypes } from './src/schemaTypes'
 import { structure } from './src/structure'
+import { PrintShippingLabelAction, PrintReceiptAction } from './src/actions/orderActions'
 
 export default defineConfig({
   name: 'default',
@@ -16,5 +17,14 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  document: {
+    actions: (prev, context) => {
+      if (context.schemaType === 'order') {
+        return [...prev, PrintShippingLabelAction, PrintReceiptAction]
+      }
+      return prev
+    },
   },
 })

@@ -1,0 +1,461 @@
+---
+// Official Commercial Receipt & Packing Slip for PrintHub Africa
+import { site } from "../../data/site";
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Customer Receipt & Invoice | PrintHub Africa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f4ede4;
+      color: #1a100b;
+      padding: 32px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    
+    /* Top floating action bar (hidden during print) */
+    .action-bar {
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+    }
+    .btn-print {
+      flex: 1;
+      background: #A6360A;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(166, 54, 10, 0.25);
+    }
+    .btn-print:hover { background: #872b07; }
+    .btn-close {
+      background: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-close:hover { background: #eee; }
+
+    /* Receipt Paper Sheet (Standard A4 / Letter) */
+    .receipt-sheet {
+      width: 100%;
+      max-width: 680px;
+      background: #fff;
+      border: 1px solid #e2d7cb;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #A6360A;
+      padding-bottom: 24px;
+      margin-bottom: 28px;
+    }
+    .brand-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #A6360A;
+      letter-spacing: -0.5px;
+    }
+    .brand-legal {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a3b32;
+      margin-top: 2px;
+    }
+    .brand-contact {
+      font-size: 12px;
+      color: #6e5c50;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .receipt-badge-wrap {
+      text-align: right;
+    }
+    .receipt-title {
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #1a100b;
+    }
+    .receipt-ref {
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #6e5c50;
+      margin-top: 4px;
+    }
+    .paid-stamp {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 12px;
+      background: #e6f4ea;
+      color: #137333;
+      border: 1.5px solid #137333;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Meta Info Grid */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #f0e6dc;
+    }
+    .meta-block-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8c7365;
+      margin-bottom: 6px;
+    }
+    .meta-content {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #2b1d16;
+    }
+    .meta-content strong {
+      font-size: 15px;
+      color: #111;
+    }
+
+    /* Table */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 28px;
+    }
+    .items-table th {
+      background: #faf4ed;
+      color: #4a3b32;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1.5px solid #e0d0c0;
+    }
+    .items-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid #f0e6dc;
+      font-size: 14px;
+      vertical-align: top;
+    }
+    .item-name {
+      font-weight: 700;
+      color: #1a100b;
+      font-size: 15px;
+    }
+    .item-specs-sub {
+      font-size: 12px;
+      color: #6e5c50;
+      margin-top: 3px;
+    }
+
+    /* Totals Box */
+    .totals-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 32px;
+    }
+    .totals-table {
+      width: 280px;
+    }
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 14px;
+      color: #4a3b32;
+    }
+    .totals-row.total-grand {
+      border-top: 2px solid #A6360A;
+      margin-top: 8px;
+      padding-top: 10px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #A6360A;
+    }
+
+    /* Payment & Notes */
+    .footer-note {
+      background: #faf4ed;
+      border-radius: 12px;
+      padding: 18px;
+      font-size: 12.5px;
+      color: #554238;
+      line-height: 1.6;
+    }
+    .footer-sign {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 12px;
+      color: #8c7365;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+        margin: 0;
+      }
+      .action-bar {
+        display: none !important;
+      }
+      .receipt-sheet {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+        width: 100%;
+      }
+      @page {
+        margin: 1.5cm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Action Bar -->
+  <div class="action-bar">
+    <button class="btn-print" onclick="window.print()">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zM9 9h6m-6 4h6m-7-8h8a2 2 0 012 2v2H7V7a2 2 0 012-2z"/></svg>
+      Print Receipt / Download PDF
+    </button>
+    <button class="btn-close" onclick="window.close()">Close</button>
+  </div>
+
+  <!-- Receipt Paper -->
+  <div class="receipt-sheet" id="receipt-container">
+    
+    <!-- 1. Header -->
+    <div class="header">
+      <div>
+        <h1 class="brand-title">PrintHub Africa</h1>
+        <p class="brand-legal">Niamade Hub (Registered Business Identity)</p>
+        <p class="brand-contact">
+          Eldoret Studio, Uasin Gishu County, Kenya<br />
+          Web: printhub.africa · Email: booking@printhub.africa<br />
+          Phone / WhatsApp: +254 792 732 929
+        </p>
+      </div>
+      <div class="receipt-badge-wrap">
+        <h2 class="receipt-title">RECEIPT</h2>
+        <div class="receipt-ref" id="rcpt-ref">PH-ORD-00000</div>
+        <div class="paid-stamp" id="rcpt-stamp">✓ PAID IN FULL</div>
+      </div>
+    </div>
+
+    <!-- 2. Customer & Date Meta Grid -->
+    <div class="meta-grid">
+      <div>
+        <div class="meta-block-title">BILLED & DELIVERED TO:</div>
+        <div class="meta-content">
+          <strong id="rcpt-name">Customer Name</strong><br />
+          <span id="rcpt-phone">+254 700 000 000</span><br />
+          <span id="rcpt-email">customer@example.com</span><br />
+          <span id="rcpt-address" style="margin-top: 4px; display: inline-block;">Delivery Address</span>
+        </div>
+      </div>
+      <div>
+        <div class="meta-block-title">PAYMENT & ORDER DETAILS:</div>
+        <div class="meta-content">
+          <strong>Date:</strong> <span id="rcpt-date">—</span><br />
+          <strong>Payment Gateway:</strong> Paystack (M-Pesa / Card)<br />
+          <strong>Transaction Ref:</strong> <span id="rcpt-paystack-ref" style="font-family: monospace;">—</span><br />
+          <strong>Status:</strong> <span style="color: #137333; font-weight: 700;">Confirmed & Paid</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Items Table -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width: 55%;">Item & Specifications</th>
+          <th style="text-align: center; width: 15%;">Qty</th>
+          <th style="text-align: right; width: 15%;">Unit Price</th>
+          <th style="text-align: right; width: 15%;">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name" id="rcpt-item-name">3D Printed Piece</div>
+            <div class="item-specs-sub" id="rcpt-item-specs">Specifications: Standard</div>
+            <div class="item-specs-sub" id="rcpt-item-custom" style="display: none; color: #A6360A; font-weight: 600;"></div>
+          </td>
+          <td style="text-align: center; font-weight: 700;" id="rcpt-item-qty">1</td>
+          <td style="text-align: right;" id="rcpt-item-unit">KES 0</td>
+          <td style="text-align: right; font-weight: 700;" id="rcpt-item-subtotal">KES 0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 4. Subtotal & Totals -->
+    <div class="totals-wrap">
+      <div class="totals-table">
+        <div class="totals-row">
+          <span>Items Subtotal:</span>
+          <span id="rcpt-subtotal" style="font-weight: 600;">KES 0</span>
+        </div>
+        <div class="totals-row">
+          <span>Delivery / Shipping:</span>
+          <span id="rcpt-delivery-fee" style="font-weight: 600;">KES 0</span>
+        </div>
+        <div class="totals-row total-grand">
+          <span>Total Paid:</span>
+          <span id="rcpt-grand-total">KES 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Policies & Warranty Notes -->
+    <div class="footer-note">
+      <p style="font-weight: 700; margin-bottom: 4px; color: #A6360A;">PrintHub Africa Quality Guarantee</p>
+      <p>
+        Every custom 3D printed piece is individually sliced, calibrated, and inspected for dimensional precision at our Eldoret studio before dispatch. 
+        Questions or need re-prints? Contact us directly via WhatsApp at <strong>+254 792 732 929</strong> or email <strong>booking@printhub.africa</strong> with your order reference.
+      </p>
+    </div>
+
+    <div class="footer-sign">
+      <p>Thank you for choosing PrintHub Africa · Empowering additive manufacturing across Kenya 🇰🇪</p>
+    </div>
+
+  </div>
+
+  <script>
+    const p = new URLSearchParams(window.location.search);
+    const ref = p.get("ref") || "";
+    const id = p.get("id") || "";
+
+    // Set current date formatted
+    document.getElementById("rcpt-date")!.textContent = new Date().toLocaleDateString("en-KE", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+    // Prefill from URL params if present
+    if (p.get("name")) document.getElementById("rcpt-name")!.textContent = p.get("name")!;
+    if (p.get("phone")) document.getElementById("rcpt-phone")!.textContent = p.get("phone")!;
+    if (p.get("email")) document.getElementById("rcpt-email")!.textContent = p.get("email")!;
+    if (p.get("delivery")) document.getElementById("rcpt-address")!.textContent = p.get("delivery")!;
+    if (p.get("product")) document.getElementById("rcpt-item-name")!.textContent = p.get("product")!;
+    if (p.get("ref")) document.getElementById("rcpt-ref")!.textContent = p.get("ref")!;
+    if (p.get("paystackRef")) document.getElementById("rcpt-paystack-ref")!.textContent = p.get("paystackRef")!;
+    
+    if (p.get("amount")) {
+      const tot = Number(p.get("amount"));
+      document.getElementById("rcpt-grand-total")!.textContent = `KES ${tot.toLocaleString()}`;
+      document.getElementById("rcpt-subtotal")!.textContent = `KES ${tot.toLocaleString()}`;
+    }
+
+    // Load rich document from Sanity
+    async function loadOrderFromSanity() {
+      if (!ref && !id) return;
+      try {
+        const query = encodeURIComponent(`*[_type == "order" && (orderRef == "${ref}" || _id == "${id}" || _id == "order-${id}")][0]`);
+        const res = await fetch(`https://m7x6icn3.api.sanity.io/v2023-08-01/data/query/production?query=${query}`);
+        if (!res.ok) return;
+        const { result } = await res.json();
+        if (!result) return;
+
+        if (result.orderRef) document.getElementById("rcpt-ref")!.textContent = result.orderRef;
+        if (result.paystackRef) document.getElementById("rcpt-paystack-ref")!.textContent = result.paystackRef;
+        if (result.customerName) document.getElementById("rcpt-name")!.textContent = result.customerName;
+        if (result.customerPhone) document.getElementById("rcpt-phone")!.textContent = result.customerPhone;
+        if (result.customerEmail) document.getElementById("rcpt-email")!.textContent = result.customerEmail;
+        if (result.delivery) document.getElementById("rcpt-address")!.textContent = result.delivery;
+
+        if (result.paidAt || result.createdAt) {
+          const d = new Date(result.paidAt || result.createdAt);
+          document.getElementById("rcpt-date")!.textContent = d.toLocaleDateString("en-KE", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+        }
+
+        if (result.productName) document.getElementById("rcpt-item-name")!.textContent = result.productName;
+        const qty = result.quantity || 1;
+        document.getElementById("rcpt-item-qty")!.textContent = String(qty);
+
+        const specs = [
+          result.size ? `Size: ${result.size}` : "",
+          result.colour ? `Colour: ${result.colour}` : "",
+        ].filter(Boolean).join(" · ");
+        if (specs) document.getElementById("rcpt-item-specs")!.textContent = `Specs: ${specs}`;
+
+        if (result.customNote) {
+          const c = document.getElementById("rcpt-item-custom")!;
+          c.textContent = `Customisation: "${result.customNote}"`;
+          c.style.display = "block";
+        }
+
+        const totalPaid = result.amountKes || 0;
+        const fee = result.deliveryFeeKes || 0;
+        const subtotal = result.subtotalKes || (totalPaid - fee);
+        const unit = Math.round(subtotal / qty);
+
+        document.getElementById("rcpt-item-unit")!.textContent = `KES ${unit.toLocaleString()}`;
+        document.getElementById("rcpt-item-subtotal")!.textContent = `KES ${subtotal.toLocaleString()}`;
+        document.getElementById("rcpt-subtotal")!.textContent = `KES ${subtotal.toLocaleString()}`;
+        document.getElementById("rcpt-delivery-fee")!.textContent = fee === 0 ? "FREE" : `KES ${fee.toLocaleString()}`;
+        document.getElementById("rcpt-grand-total")!.textContent = `KES ${totalPaid.toLocaleString()}`;
+      } catch (err) {
+        console.error("Sanity load error:", err);
+      }
+    }
+
+    loadOrderFromSanity();
+  </script>
+</body>
+</html>
