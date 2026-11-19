@@ -4,6 +4,75 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title('PrintHub Africa')
     .items([
+      // ─── 📅 CUSTOMER BOOKINGS & APPOINTMENTS ───────────────────────
+      S.listItem()
+        .title('Customer Bookings & Appointments')
+        .icon(() => '📅')
+        .child(
+          S.list()
+            .title('Customer Bookings')
+            .items([
+              S.listItem()
+                .title('All Bookings')
+                .icon(() => '📋')
+                .schemaType('booking')
+                .child(
+                  S.documentTypeList('booking')
+                    .title('All Customer Bookings')
+                    .defaultOrdering([
+                      { field: 'appointmentDate', direction: 'desc' },
+                      { field: 'createdAt', direction: 'desc' },
+                    ])
+                ),
+
+              S.listItem()
+                .title('⏳ Pending Confirmation')
+                .icon(() => '⏳')
+                .child(
+                  S.documentList()
+                    .title('Pending Confirmation')
+                    .schemaType('booking')
+                    .filter('_type == "booking" && status == "pending"')
+                    .defaultOrdering([{ field: 'appointmentDate', direction: 'asc' }])
+                ),
+
+              S.listItem()
+                .title('✅ Confirmed & Scheduled')
+                .icon(() => '✅')
+                .child(
+                  S.documentList()
+                    .title('Confirmed Bookings')
+                    .schemaType('booking')
+                    .filter('_type == "booking" && status == "confirmed"')
+                    .defaultOrdering([{ field: 'appointmentDate', direction: 'asc' }])
+                ),
+
+              S.listItem()
+                .title('🏁 Completed Consultations')
+                .icon(() => '🏁')
+                .child(
+                  S.documentList()
+                    .title('Completed Consultations')
+                    .schemaType('booking')
+                    .filter('_type == "booking" && status == "completed"')
+                    .defaultOrdering([{ field: 'appointmentDate', direction: 'desc' }])
+                ),
+
+              S.listItem()
+                .title('❌ Cancelled')
+                .icon(() => '❌')
+                .child(
+                  S.documentList()
+                    .title('Cancelled Bookings')
+                    .schemaType('booking')
+                    .filter('_type == "booking" && status == "cancelled"')
+                    .defaultOrdering([{ field: 'appointmentDate', direction: 'desc' }])
+                ),
+            ])
+        ),
+
+      S.divider(),
+
       // ─── 🛍️ SHOP & CATALOG ─────────────────────────────────────
       S.listItem()
         .title('Shop & Catalog')

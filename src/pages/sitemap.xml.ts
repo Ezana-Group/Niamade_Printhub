@@ -11,6 +11,7 @@ const staticPages = [
   "/help/",
   "/about/",
   "/contact/",
+  "/bookings/",
   "/terms/",
   "/privacy/",
   "/guides/",

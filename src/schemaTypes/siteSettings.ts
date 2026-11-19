@@ -10,6 +10,7 @@ export const siteSettingsType = defineType({
   groups: [
     { name: 'identity',   title: '🏢 Business Info',    default: true },
     { name: 'contact',    title: '📞 Contact & Hours'  },
+    { name: 'bookings',   title: '📅 Bookings & Easy!Appointments' },
     { name: 'brand',      title: '🎨 Logos & Brand'    },
     { name: 'socials',    title: '📣 Social Media'      },
     { name: 'messages',   title: '💬 WhatsApp Messages' },
@@ -78,6 +79,30 @@ export const siteSettingsType = defineType({
       group: 'contact',
       of: [{ type: 'string' }],
       description: 'e.g. "Mon–Fri: 8am – 6pm", "Sat: 9am – 4pm", "Sun: Closed"',
+    }),
+
+    // ─── 📅 BOOKINGS & EASY!APPOINTMENTS ──────────────────────────
+    defineField({
+      name: 'easyAppointmentsUrl',
+      title: 'Easy!Appointments Installation URL',
+      type: 'url',
+      group: 'bookings',
+      description: 'URL where your Easy!Appointments PHP instance is hosted (e.g. https://booking.printhub.africa or https://appointments.printhub.africa). If set, this enables direct synchronization and iframe embed options.',
+    }),
+    defineField({
+      name: 'enableEasyAppointmentsEmbed',
+      title: 'Show Embedded Easy!Appointments Scheduler',
+      type: 'boolean',
+      group: 'bookings',
+      initialValue: false,
+      description: 'When ON: customers on /bookings can view and use the embedded Easy!Appointments iframe directly. When OFF: customers use the fast, native PrintHub booking form.',
+    }),
+    defineField({
+      name: 'bookingNotice',
+      title: 'Booking Banner / Notice',
+      type: 'string',
+      group: 'bookings',
+      description: 'Optional note shown at the top of the /bookings page (e.g. "Appointments in Eldoret require at least 2 hours notice. Virtual consultations are confirmed on WhatsApp.")',
     }),
 
     // ─── 🎨 LOGOS & BRAND ASSETS ──────────────────────────────────

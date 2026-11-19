@@ -7,8 +7,10 @@ import { pageContentType } from './pageContent'
 import { materialType } from './material'
 import { serviceType } from './service'
 import { occasionType } from './occasion'
+import { bookingType } from './booking'
 
 export const schemaTypes = [
+  bookingType,
   productType,
   categoryType,
   occasionType,

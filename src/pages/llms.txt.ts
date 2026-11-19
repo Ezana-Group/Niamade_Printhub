@@ -42,6 +42,7 @@ PrintHub Africa (a Niamade Hub company) is a made-to-order 3D printing studio in
 - Help / FAQ: ${site.url}/help/
 - About: ${site.url}/about/
 - Contact: ${site.url}/contact/
+- Bookings & Consultations: ${site.url}/bookings/
 - Guides: ${site.url}/guides/
 
 ## Shop by Occasion

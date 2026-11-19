@@ -29,7 +29,11 @@ const ld = {
     <p class="eyebrow rise">Custom 3D Printing & CAD Design · Kenya</p>
     <h1 style="--d:60ms" class="rise mt-2 text-5xl md:text-6xl max-w-3xl">{heroHeading}</h1>
     <p style="--d:120ms" class="rise mt-4 text-xl text-mute max-w-2xl">{heroSubtext}</p>
-    <div style="--d:180ms" class="rise mt-8 flex flex-wrap gap-3"><a href="#print" class="btn btn-soft">I have a 3D file</a><a href="#design" class="btn btn-soft">I only have an idea</a></div>
+    <div style="--d:180ms" class="rise mt-8 flex flex-wrap gap-3">
+      <a href="#print" class="btn btn-soft">I have a 3D file</a>
+      <a href="#design" class="btn btn-soft">I only have an idea</a>
+      <a href="/bookings/" class="btn btn-primary"><Icon name="calendar" size={18} />Book Consultation</a>
+    </div>
   </section>
 
   <section id="print" class="wrap mt-16">
@@ -52,7 +56,10 @@ const ld = {
         {designServices.map((s) => <div class="press lift rounded-3xl bg-card p-6"><h3 class="font-display text-xl">{s.title}</h3><p class="text-mute mt-1.5">{s.text}</p></div>)}
       </div>
       <p class="mt-8 rounded-3xl bg-white/70 px-6 py-4 max-w-2xl"><span class="font-bold">Transparent billing: </span>design work is quoted and approved first. Once your 3D model is finalised and approved, we quote the physical printing. No surprise invoices.</p>
-      <a href={wa(waMessages.customIdea)} target="_blank" rel="noopener" class="btn btn-wa mt-8"><Icon name="whatsapp" size={20} />Tell us your idea</a>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={wa(waMessages.customIdea)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Tell us your idea</a>
+        <a href="/bookings/" class="btn btn-soft !bg-white/80 hover:!bg-white"><Icon name="calendar" size={18} />Book Design Session</a>
+      </div>
     </div>
   </section>
 

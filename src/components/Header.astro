@@ -15,15 +15,44 @@ const nav = [
 const on = (h: string) => path === h || path.startsWith(h);
 ---
 <header class="sticky top-0 z-50 px-3 md:px-6 pt-3">
-  <div class="mx-auto max-w-6xl flex items-center justify-between gap-3 rounded-full hdr-glass bg-cream/90 backdrop-blur-xl border border-line shadow-[0_6px_24px_-14px_rgba(43,29,22,.35)] pl-4 pr-2 py-2">
+  <div class="mx-auto max-w-[1380px] w-full flex items-center justify-between gap-2.5 md:gap-4 rounded-full hdr-glass bg-cream/90 backdrop-blur-xl border border-line shadow-[0_6px_24px_-14px_rgba(43,29,22,.35)] pl-4 pr-2.5 py-2">
     <a href="/" aria-label="PrintHub Africa, home" class="flex items-center shrink-0">
-      <img src="/logo-horizontal.png" alt="PrintHub Africa" width="825" height="256" class="h-10 md:h-11 w-auto" />
+      <img src="/logo-horizontal.png" alt="PrintHub Africa" width="825" height="256" class="h-9 md:h-10 w-auto" />
     </a>
-    <nav aria-label="Main" class="hidden lg:flex items-center gap-1 text-[0.97rem] font-semibold">
-      {nav.map((n) => <a href={n.href} aria-current={on(n.href) ? "page" : undefined} class:list={["px-4 py-2 rounded-full transition-colors duration-150 hover:bg-sand", on(n.href) && "bg-sand"]}>{n.label}</a>)}
+    <nav aria-label="Main" class="hidden lg:flex items-center gap-0.5 xl:gap-1 text-[0.93rem] font-semibold">
+      {nav.map((n) => (
+        <a
+          href={n.href}
+          aria-current={on(n.href) ? "page" : undefined}
+          class:list={[
+            "px-3 xl:px-3.5 py-2 rounded-full whitespace-nowrap transition-colors duration-150 hover:bg-sand",
+            on(n.href) && "bg-sand"
+          ]}
+        >
+          {n.label}
+        </a>
+      ))}
     </nav>
-    <div class="flex items-center gap-2">
-      <a href={wa(headerWaMsg)} target="_blank" rel="noopener" class="btn btn-wa !py-3 hidden sm:inline-flex"><Icon name="whatsapp" size={18} />Chat on WhatsApp</a>
+    <div class="flex items-center gap-2 shrink-0">
+      <a
+        href="/bookings/"
+        class:list={[
+          "btn btn-soft !py-2.5 !px-3.5 text-[0.88rem] lg:text-[0.91rem] whitespace-nowrap hidden md:inline-flex items-center gap-2 hover:border-brand hover:text-brand shadow-2xs",
+          path.startsWith("/bookings") && "!border-brand !text-brand bg-peach/40"
+        ]}
+      >
+        <Icon name="calendar" size={16} class="text-brand shrink-0" />
+        <span>Book Consultation</span>
+      </a>
+      <a
+        href={wa(headerWaMsg)}
+        target="_blank"
+        rel="noopener"
+        class="btn btn-wa !py-2.5 !px-3.5 xl:!px-4 text-[0.88rem] lg:text-[0.91rem] whitespace-nowrap hidden sm:inline-flex items-center gap-1.5"
+      >
+        <Icon name="whatsapp" size={17} class="shrink-0" />
+        <span><span class="hidden 2xl:inline">Chat on </span>WhatsApp</span>
+      </a>
       <button id="mt" type="button" aria-expanded="false" aria-controls="mm" aria-label="Open menu" class="lg:hidden w-11 h-11 rounded-full bg-sand grid place-items-center active:scale-95 transition-transform duration-150">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path class="ico-top" d="M4 8h16"/><path class="ico-bot" d="M4 16h16"/></svg>
       </button>
@@ -33,7 +62,8 @@ const on = (h: string) => path === h || path.startsWith(h);
     <nav aria-label="Mobile">
       {nav.map((n) => <a href={n.href} class="block py-3.5 border-b border-line font-display text-2xl font-semibold">{n.label}</a>)}
     </nav>
-    <a href={wa(headerWaMsg)} target="_blank" rel="noopener" class="btn btn-wa w-full mt-5"><Icon name="whatsapp" size={18} />Chat on WhatsApp</a>
+    <a href="/bookings/" class="btn btn-primary w-full mt-5"><Icon name="calendar" size={18} />Book Consultation</a>
+    <a href={wa(headerWaMsg)} target="_blank" rel="noopener" class="btn btn-wa w-full mt-2.5"><Icon name="whatsapp" size={18} />Chat on WhatsApp</a>
     <p class="text-center text-xs text-mute/80 mt-4 border-t border-line pt-3">PrintHub Africa · A Niamade Hub Company</p>
     <p class="text-center text-sm text-mute mt-1.5">Mon–Fri 8:00 – 18:00 · Sat 9:00 – 15:00</p>
   </div>

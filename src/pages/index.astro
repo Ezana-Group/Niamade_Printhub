@@ -74,6 +74,7 @@ const ld = {
       <p style="--d:130ms" class="rise mt-7 text-xl text-mute max-w-xl">{heroSubtext}</p>
       <div style="--d:200ms" class="rise mt-9 flex flex-wrap gap-3">
         <a href="/shop/" class="btn btn-primary">Explore What We Do <Icon name="arrow" size={18} /></a>
+        <a href="/bookings/" class="btn btn-soft"><Icon name="calendar" size={18} />Book Consultation</a>
         <a href={wa(waMessages.general)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Have Something in Mind?</a>
       </div>
       <ul style="--d:270ms" class="rise mt-9 flex flex-wrap gap-x-7 gap-y-3 text-[0.97rem] font-semibold text-mute">
@@ -237,6 +238,7 @@ const ld = {
       <h2 class="text-4xl md:text-6xl text-cream">{ctaHeading}</h2>
       <p class="mt-4 text-cream/75 text-lg max-w-xl mx-auto">{ctaBody}</p>
       <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/bookings/" class="btn bg-white text-ink hover:bg-cream"><Icon name="calendar" size={18} />Book Consultation</a>
         <a href={wa(waMessages.general)} target="_blank" rel="noopener" class="btn btn-wa"><Icon name="whatsapp" size={20} />Chat on WhatsApp</a>
         <a href={`tel:${site.phone.replace(/\s/g, "")}`} class="btn bg-white/10 text-cream hover:bg-white/20"><Icon name="phone" size={18} />{site.phone}</a>
       </div>

@@ -66,6 +66,10 @@ export const site = {
   // Payments & Checkout
   paystackPublicKey: _sanitySettings?.paystackPublicKey || process.env.PUBLIC_PAYSTACK_KEY || import.meta.env?.PUBLIC_PAYSTACK_KEY || "",
   enableCheckout: _sanitySettings?.enableCheckout ?? true,
+  // Bookings & Easy!Appointments
+  easyAppointmentsUrl: _sanitySettings?.easyAppointmentsUrl || process.env.PUBLIC_EASYAPPOINTMENTS_URL || import.meta.env?.PUBLIC_EASYAPPOINTMENTS_URL || "",
+  enableEasyAppointmentsEmbed: _sanitySettings?.enableEasyAppointmentsEmbed ?? false,
+  bookingNotice: _sanitySettings?.bookingNotice || "",
 };
 
 export const wa = (msg = "Hi PrintHub, I'd like to ask about a 3D print.") => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;

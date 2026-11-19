@@ -65,6 +65,9 @@ export interface SanitySettings {
   socials?: SanitySocials;
   paystackPublicKey?: string;
   enableCheckout?: boolean;
+  easyAppointmentsUrl?: string;
+  enableEasyAppointmentsEmbed?: boolean;
+  bookingNotice?: string;
 }
 
 export interface SanityLegalPage {
@@ -285,7 +288,10 @@ export async function fetchSettingsFromSanity(): Promise<SanitySettings | null> 
     whatsappMessages,
     socials,
     paystackPublicKey,
-    enableCheckout
+    enableCheckout,
+    easyAppointmentsUrl,
+    enableEasyAppointmentsEmbed,
+    bookingNotice
   }`);
 
   const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
@@ -474,3 +480,116 @@ export async function fetchOccasionsFromSanity(): Promise<SanityOccasion[] | nul
     return null;
   }
 }
+
+export interface SanityBooking {
+  _id?: string;
+  _type?: "booking";
+  bookingRef: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail?: string;
+  service: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  meetingType: string;
+  duration?: number;
+  projectDetails?: string;
+  status: "pending" | "confirmed" | "completed" | "cancelled";
+  adminNotes?: string;
+  easyAppointmentsId?: string;
+  source?: string;
+  createdAt?: string;
+}
+
+export async function createBookingInSanity(
+  bookingData: Partial<SanityBooking>
+): Promise<{ success: boolean; id?: string; bookingRef?: string; error?: string }> {
+  const token = SANITY_API_TOKEN;
+  if (!token) {
+    return { success: false, error: "Missing SANITY_API_TOKEN in environment" };
+  }
+
+  const bookingRef =
+    bookingData.bookingRef ||
+    `PH-BK-${Math.floor(10000 + Math.random() * 90000)}`;
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/mutate/${SANITY_DATASET}`;
+  const doc = {
+    _type: "booking",
+    bookingRef,
+    customerName: bookingData.customerName || "Customer",
+    customerPhone: bookingData.customerPhone || "",
+    customerEmail: bookingData.customerEmail || "",
+    service: bookingData.service || "3D Print Feasibility & Slicing Check",
+    appointmentDate:
+      bookingData.appointmentDate || new Date().toISOString().split("T")[0],
+    appointmentTime: bookingData.appointmentTime || "10:00 AM",
+    meetingType: bookingData.meetingType || "whatsapp",
+    duration: bookingData.duration || 30,
+    projectDetails: bookingData.projectDetails || "",
+    status: bookingData.status || "pending",
+    adminNotes: bookingData.adminNotes || "",
+    easyAppointmentsId: bookingData.easyAppointmentsId || "",
+    source: bookingData.source || "website",
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        mutations: [{ create: doc }],
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      return { success: false, error: err };
+    }
+    const data = await res.json();
+    return { success: true, id: data.results?.[0]?.id, bookingRef };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function fetchBookingsFromSanity(
+  limit: number = 50
+): Promise<SanityBooking[] | null> {
+  const query = encodeURIComponent(`*[_type == "booking"] | order(appointmentDate desc, createdAt desc)[0...${limit}]{
+    _id,
+    bookingRef,
+    customerName,
+    customerPhone,
+    customerEmail,
+    service,
+    appointmentDate,
+    appointmentTime,
+    meetingType,
+    duration,
+    projectDetails,
+    status,
+    adminNotes,
+    easyAppointmentsId,
+    source,
+    createdAt
+  }`);
+
+  const endpoint = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${SANITY_DATASET}?query=${query}`;
+
+  try {
+    const res = await fetch(endpoint, {
+      headers: { Accept: "application/json", ...authHeaders },
+    });
+    if (!res.ok) return null;
+    const { result } = await res.json();
+    return Array.isArray(result) ? result : null;
+  } catch (err) {
+    return null;
+  }
+}
+

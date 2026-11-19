@@ -1,0 +1,629 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+import { site, wa, waMessages } from "../data/site";
+import { fetchPageContentFromSanity } from "../lib/sanity";
+
+const sanityBookings = await fetchPageContentFromSanity("bookings");
+const heroHeading = sanityBookings?.heroHeading || "Talk to someone who actually runs the printers.";
+const heroSubtext = sanityBookings?.heroSubtext || "Got a messy CAD file? A broken plastic part from 2004? Or just an idea sketched on a receipt? Book 20 minutes with our additive team in Eldoret. We'll tell you if it's printable, what filament won't snap under load, and what it actually costs.";
+
+const services = [
+  {
+    id: "feasibility",
+    title: "Is this printable, or did I download garbage?",
+    badge: "File Ready",
+    duration: "20 min",
+    desc: "Hand over your STL, STEP, OBJ or 3MF file. We drop it into the slicer, inspect overhangs, calculate infill geometry, advise on PLA vs PETG vs TPU, and quote an exact KES price. Zero sugarcoating.",
+    icon: "cube",
+  },
+  {
+    id: "cad-design",
+    title: "I broke a part and the manufacturer is dead.",
+    badge: "Broken Part / Idea",
+    duration: "45 min",
+    desc: "Got a cracked gear, a discontinued automotive clip, or an adapter that doesn't exist? Bring the broken carcass (or calipers measurements). We reverse-engineer the geometry with mechanical tolerances.",
+    icon: "sparkles",
+  },
+  {
+    id: "napkin-sketch",
+    title: "Napkin sketch to watertight 3D model.",
+    badge: "Concept Stage",
+    duration: "45 min",
+    desc: "You have an idea in your head and zero CAD experience. That's fine. We turn crude sketches and wild descriptions into clean parametric 3D models ready for real-world additive manufacturing.",
+    icon: "sparkles",
+  },
+  {
+    id: "prototype",
+    title: "Functional Prototypes & Batch Manufacturing",
+    badge: "Commercial / Tech",
+    duration: "30 min",
+    desc: "Need 50 custom desk nameplates, 200 dimensional branded signs, or functional engineering iterations before mass tooling? We talk batch pricing, thermal tolerances, and delivery schedules.",
+    icon: "arrow",
+  },
+  {
+    id: "studio-visit",
+    title: "Touch the plastic (In-Person Studio Visit)",
+    badge: "Eldoret Studio",
+    duration: "30 min",
+    desc: "Walk into our Eldoret studio. Bend real TPU. Test PETG tensile strength with your own hands. Inspect layer lines up close. We discuss your project face-to-face over coffee.",
+    icon: "pin",
+  },
+];
+
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "PrintHub Africa Appointment Booking",
+  serviceType: "3D Printing & Design Consultation",
+  description: "Book an in-person or virtual consultation for 3D printing, CAD modeling, and custom manufacturing in Eldoret, Kenya.",
+  provider: {
+    "@type": "LocalBusiness",
+    name: site.name,
+    legalName: site.businessName,
+    url: site.url,
+    telephone: site.phone,
+    email: site.email,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Eldoret",
+      addressRegion: "Uasin Gishu County",
+      addressCountry: "KE",
+    },
+  },
+  potentialAction: {
+    "@type": "ScheduleAction",
+    target: `${site.url}/bookings/`,
+  },
+};
+---
+
+<Layout
+  title="Book a Consultation"
+  jsonLd={ld}
+  description="Talk to PrintHub Africa's 3D printing engineers in Eldoret or over WhatsApp. Free slicing feasibility check, material guidance, and honest project quotes."
+>
+  <!-- HERO SECTION -->
+  <section class="wrap pt-10 md:pt-16">
+    <div class="flex items-center gap-2.5">
+      <span class="eyebrow rise">STOP GUESSING. START PRINTING.</span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-wa/10 text-wa">
+        <span class="w-2 h-2 rounded-full bg-wa animate-pulse"></span> Free Consultations
+      </span>
+    </div>
+
+    <h1 style="--d:60ms" class="rise mt-3 text-4xl sm:text-5xl md:text-6xl max-w-4xl font-display leading-[1.12]">
+      {heroHeading}
+    </h1>
+    <p style="--d:120ms" class="rise mt-5 text-lg md:text-xl text-ink/80 max-w-3xl leading-relaxed">
+      {heroSubtext}
+    </p>
+
+    {site.bookingNotice && (
+      <div style="--d:180ms" class="rise mt-6 p-5 rounded-3xl bg-peach/50 border border-peach text-base text-ink max-w-3xl flex items-start gap-3.5">
+        <Icon name="clock" size={22} class="text-brand shrink-0 mt-0.5" />
+        <p class="font-medium">{site.bookingNotice}</p>
+      </div>
+    )}
+  </section>
+
+  <!-- MAIN BOOKING EXPERIENCE -->
+  <section class="wrap mt-12 md:mt-16">
+    <div class="grid lg:grid-cols-12 gap-8 md:gap-10 items-start">
+      <!-- LEFT COLUMN: CONSULTATION OPTIONS & STUDIO DETAILS -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- CONSULTATION OPTIONS (NOW WITH READABLE, LARGE TYPOGRAPHY) -->
+        <div class="panel p-6 md:p-8 space-y-5">
+          <div class="flex items-center justify-between border-b border-line pb-4">
+            <h2 class="font-display text-2xl md:text-3xl font-semibold">Consultation options</h2>
+            <span class="sticker text-xs font-bold">100% Free</span>
+          </div>
+
+          <div class="space-y-4">
+            {services.map((s) => (
+              <div class="p-5 rounded-3xl bg-sand/60 border border-line/80 hover:border-brand/40 transition-colors space-y-2">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display font-semibold text-ink text-lg leading-snug">
+                    {s.title}
+                  </h3>
+                  <span class="shrink-0 px-2.5 py-1 rounded-full bg-card border border-line text-xs font-bold text-ink/80 whitespace-nowrap">
+                    {s.duration}
+                  </span>
+                </div>
+                <p class="text-[0.95rem] md:text-base text-ink/75 leading-relaxed">
+                  {s.desc}
+                </p>
+                <div class="pt-1">
+                  <span class="inline-block text-xs font-bold text-brand uppercase tracking-wider">
+                    {s.badge}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- STUDIO LOCATION & REAL HOURS (CLEANED UP) -->
+        <div class="panel p-6 md:p-8 space-y-5">
+          <div class="flex gap-4 items-start">
+            <div class="w-12 h-12 rounded-2xl bg-peach/60 grid place-items-center shrink-0 text-brand">
+              <Icon name="pin" size={26} />
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-semibold">PrintHub Studio</h3>
+              <p class="text-base text-ink font-medium mt-1">{site.city}</p>
+              <p class="text-sm text-mute mt-1.5 leading-relaxed">
+                Collection &amp; studio consultations by appointment. Central Eldoret with safe parking and sample prints on display.
+              </p>
+            </div>
+          </div>
+
+          <div class="border-t border-line pt-4 flex gap-4 items-start">
+            <div class="w-12 h-12 rounded-2xl bg-peach/60 grid place-items-center shrink-0 text-brand">
+              <Icon name="clock" size={26} />
+            </div>
+            <div>
+              <p class="font-display text-xl font-semibold">Operating Hours</p>
+              <div class="text-ink/80 text-sm md:text-base space-y-1 mt-1 font-medium">
+                {site.hours.map((h: string) => <p>{h}</p>)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAST WHATSAPP ALTERNATIVE (DBRAND TONE) -->
+        <div class="rounded-4xl bg-wa text-white p-7 space-y-4">
+          <div class="flex items-center gap-3">
+            <Icon name="whatsapp" size={30} />
+            <h3 class="font-display text-2xl font-semibold">Too impatient for calendars?</h3>
+          </div>
+          <p class="text-white/90 text-base leading-relaxed">
+            Drop your CAD files, sketches, or frantic voice notes straight into our WhatsApp thread. An engineer replies during workshop hours.
+          </p>
+          <a
+            href={wa("Hi PrintHub, I have a 3D printing project and want to bypass the calendar.")}
+            target="_blank"
+            rel="noopener"
+            class="press lift inline-flex items-center justify-center gap-2.5 w-full py-4 px-6 rounded-full bg-white text-ink font-bold text-base hover:bg-cream transition-colors shadow-sm"
+          >
+            <Icon name="whatsapp" size={20} class="text-wa" />
+            <span>Chat on WhatsApp Right Now</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: THE INTERACTIVE BOOKING FORM -->
+      <div class="lg:col-span-7">
+        <!-- MODE SELECTOR (IF EASY!APPOINTMENTS URL IS CONFIGURED) -->
+        {site.easyAppointmentsUrl && (
+          <div class="flex items-center gap-2 mb-4 bg-sand p-1.5 rounded-full max-w-md">
+            <button
+              id="tab-btn-form"
+              type="button"
+              class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all bg-card shadow-xs text-ink"
+            >
+              Direct Booking Form
+            </button>
+            <button
+              id="tab-btn-ea"
+              type="button"
+              class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all text-mute hover:text-ink"
+            >
+              Easy!Appointments Calendar
+            </button>
+          </div>
+        )}
+
+        <!-- FORM CONTAINER -->
+        <div id="booking-form-view" class="panel p-7 md:p-10">
+          <form id="booking-form" class="space-y-7" novalidate>
+            <div>
+              <p class="eyebrow text-xs">Step 1 of 1</p>
+              <h2 class="font-display text-3xl md:text-4xl font-semibold mt-1">Lock in your consultation</h2>
+              <p class="text-base text-mute mt-2 leading-relaxed">
+                No salespeople. No corporate jargon. Just 1-on-1 time with the people who actually calibrate the slicer.
+              </p>
+            </div>
+
+            <!-- STEP 1: SERVICE TYPE -->
+            <div>
+              <label class="lbl text-base md:text-lg font-bold" for="b-service">
+                1. What are we dealing with?
+              </label>
+              <select id="b-service" name="service" class="field text-base font-medium py-3.5" required>
+                <option value="3D Print Feasibility & Slicing Check">3D Print Feasibility (I have an STL/STEP file)</option>
+                <option value="Custom CAD Design & Modeling Session">Custom CAD Modeling (I have an idea or broken part)</option>
+                <option value="Engineering Prototype & Parts Review">Engineering Prototypes &amp; Mechanical Fit Check</option>
+                <option value="In-Person Studio Visit (Eldoret)">In-Person Studio Visit &amp; Polymer Testing (Eldoret)</option>
+                <option value="Corporate / Bulk Print Consultation">Corporate Branding &amp; Batch Production</option>
+                <option value="General 3D Printing Inquiry">Something else / Not sure yet</option>
+              </select>
+            </div>
+
+            <!-- STEP 2: MEETING MODE -->
+            <div>
+              <label class="lbl text-base md:text-lg font-bold">
+                2. How do you want to talk?
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <label class="press lift flex items-center gap-3 p-4 rounded-2xl border-2 border-line bg-card cursor-pointer hover:border-brand transition-colors">
+                  <input type="radio" name="meetingType" value="whatsapp" checked class="text-brand accent-brand w-4 h-4" />
+                  <span class="text-base font-semibold">WhatsApp Call</span>
+                </label>
+                <label class="press lift flex items-center gap-3 p-4 rounded-2xl border-2 border-line bg-card cursor-pointer hover:border-brand transition-colors">
+                  <input type="radio" name="meetingType" value="in_person" class="text-brand accent-brand w-4 h-4" />
+                  <span class="text-base font-semibold">Studio Visit</span>
+                </label>
+                <label class="press lift flex items-center gap-3 p-4 rounded-2xl border-2 border-line bg-card cursor-pointer hover:border-brand transition-colors">
+                  <input type="radio" name="meetingType" value="google_meet" class="text-brand accent-brand w-4 h-4" />
+                  <span class="text-base font-semibold">Google Meet</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- STEP 3: DATE & TIME -->
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="lbl text-base md:text-lg font-bold" for="b-date">
+                  3. When works for you?
+                </label>
+                <input
+                  type="date"
+                  id="b-date"
+                  name="appointmentDate"
+                  class="field text-base py-3.5"
+                  required
+                />
+              </div>
+              <div>
+                <label class="lbl text-base md:text-lg font-bold" for="b-time">
+                  Time Slot (EAT / Nairobi)
+                </label>
+                <select id="b-time" name="appointmentTime" class="field text-base font-medium py-3.5" required>
+                  <option value="09:00 AM">09:00 AM — Morning</option>
+                  <option value="10:30 AM" selected>10:30 AM — Mid-morning</option>
+                  <option value="11:30 AM">11:30 AM — Late morning</option>
+                  <option value="02:00 PM">02:00 PM — Early afternoon</option>
+                  <option value="03:30 PM">03:30 PM — Afternoon</option>
+                  <option value="04:30 PM">04:30 PM — Late afternoon</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- STEP 4: CUSTOMER DETAILS -->
+            <div class="border-t border-line pt-6 space-y-4">
+              <label class="lbl text-base md:text-lg font-bold">
+                4. Where do we reach you?
+              </label>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="text-sm font-bold text-ink block mb-1.5" for="b-name">Your Full Name *</label>
+                  <input
+                    id="b-name"
+                    name="customerName"
+                    class="field text-base py-3.5"
+                    placeholder="e.g. Brian Kiprono"
+                    autocomplete="name"
+                    required
+                  />
+                  <p id="err-name" class="err text-sm mt-1 text-coral font-medium" hidden>Please tell us what to call you.</p>
+                </div>
+                <div>
+                  <label class="text-sm font-bold text-ink block mb-1.5" for="b-phone">WhatsApp / Phone *</label>
+                  <input
+                    id="b-phone"
+                    name="customerPhone"
+                    type="tel"
+                    class="field text-base py-3.5"
+                    placeholder="e.g. 0792 732 929"
+                    autocomplete="tel"
+                    required
+                  />
+                  <p id="err-phone" class="err text-sm mt-1 text-coral font-medium" hidden>We need a phone number to confirm your slot.</p>
+                </div>
+              </div>
+
+              <div>
+                <label class="text-sm font-bold text-ink block mb-1.5" for="b-email">Email Address (Optional)</label>
+                <input
+                  id="b-email"
+                  name="customerEmail"
+                  type="email"
+                  class="field text-base py-3.5"
+                  placeholder="e.g. brian@example.com (calendar invite will be sent here)"
+                  autocomplete="email"
+                />
+              </div>
+
+              <div>
+                <label class="text-sm font-bold text-ink block mb-1.5" for="b-notes">
+                  Spill the details (What are you trying to build?)
+                </label>
+                <textarea
+                  id="b-notes"
+                  name="projectDetails"
+                  rows="3"
+                  class="field text-base p-4"
+                  placeholder="Rough dimensions, what the piece does, whether it needs heat/UV resistance, or what happens if it snaps."
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- SUBMIT BUTTON -->
+            <div class="pt-2">
+              <button
+                id="b-submit-btn"
+                type="submit"
+                class="btn btn-primary w-full text-lg py-4 font-bold shadow-md"
+              >
+                <Icon name="calendar" size={22} />
+                <span>Lock in Free Consultation →</span>
+              </button>
+              <p class="text-center text-sm text-mute mt-3.5 leading-relaxed">
+                Zero fees. Zero obligations. If your CAD file is completely unprintable, we won't judge — we'll just help you fix it.
+              </p>
+            </div>
+          </form>
+
+          <!-- CONFIRMATION / SUCCESS STATE -->
+          <div id="booking-success" class="hidden text-center py-8 space-y-6">
+            <div class="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 grid place-items-center mx-auto text-4xl font-bold">
+              ✓
+            </div>
+            <div>
+              <span class="sticker text-sm font-bold">Slot Reserved</span>
+              <h3 class="font-display text-3xl md:text-4xl font-bold mt-2">You're on the board.</h3>
+              <p class="text-ink/80 max-w-md mx-auto mt-2 text-base md:text-lg leading-relaxed">
+                Your consultation has been locked into the workshop schedule. We've notified the team.
+              </p>
+            </div>
+
+            <div class="max-w-md mx-auto p-6 rounded-3xl bg-sand border border-line text-left space-y-3 text-base">
+              <div class="flex justify-between items-center border-b border-line pb-2.5">
+                <span class="text-mute font-medium">Reference Code:</span>
+                <span id="succ-ref" class="font-mono font-bold text-brand text-lg">PH-BK-XXXX</span>
+              </div>
+              <div class="flex justify-between items-start gap-4">
+                <span class="text-mute font-medium">Service:</span>
+                <span id="succ-service" class="font-semibold text-ink text-right">3D Print Feasibility</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-mute font-medium">Date &amp; Time:</span>
+                <span id="succ-datetime" class="font-semibold text-ink">Date &amp; Time</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-mute font-medium">Meeting Mode:</span>
+                <span id="succ-mode" class="font-semibold text-ink capitalize">WhatsApp Call</span>
+              </div>
+            </div>
+
+            <div class="max-w-md mx-auto space-y-3 pt-2">
+              <a
+                id="succ-wa-link"
+                href={wa()}
+                target="_blank"
+                rel="noopener"
+                class="btn btn-wa w-full py-4 text-base font-bold shadow-md"
+              >
+                <Icon name="whatsapp" size={22} />
+                <span>Open Instant WhatsApp Confirmation</span>
+              </a>
+              <button
+                id="succ-cal-btn"
+                type="button"
+                class="btn btn-soft w-full py-3.5 text-base font-semibold"
+              >
+                <Icon name="calendar" size={19} /> Add to Google Calendar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- EASY!APPOINTMENTS IFRAME VIEW (IF CONFIGURED) -->
+        {site.easyAppointmentsUrl && (
+          <div id="booking-ea-view" class="hidden panel p-4 md:p-6 overflow-hidden">
+            <div class="mb-4 flex items-center justify-between gap-2 border-b border-line pb-3">
+              <div>
+                <h3 class="font-display text-xl font-semibold">Easy!Appointments Online Scheduler</h3>
+                <p class="text-sm text-mute">Powered by Easy!Appointments scheduling engine</p>
+              </div>
+              <a
+                href={site.easyAppointmentsUrl}
+                target="_blank"
+                rel="noopener"
+                class="text-sm font-bold text-brand hover:underline"
+              >
+                Open in new tab ↗
+              </a>
+            </div>
+            <iframe
+              id="ea-iframe"
+              src={site.easyAppointmentsUrl}
+              class="w-full min-h-[640px] border-0 rounded-2xl bg-white"
+              title="Easy!Appointments Scheduler"
+              loading="lazy"
+            ></iframe>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING FAQS (DBRAND TONE) -->
+  <section class="wrap mt-24 max-w-4xl">
+    <div class="text-center">
+      <p class="eyebrow">NO BULLSHIT</p>
+      <h2 class="mt-2 text-3xl md:text-5xl font-display font-semibold">Frequently asked questions</h2>
+    </div>
+
+    <div class="mt-10 space-y-4">
+      <details class="group panel p-7 rounded-4xl" open>
+        <summary class="flex items-center justify-between gap-4 cursor-pointer font-display text-xl md:text-2xl font-semibold">
+          Is this consultation actually free, or will you invoice me for breathing your air?
+          <span class="plus text-2xl text-brand shrink-0">+</span>
+        </summary>
+        <p class="mt-4 text-ink/80 text-base md:text-lg leading-relaxed">
+          Initial slicing feasibility checks, polymer advice, and quote estimates are 100% free. If your project needs 10 hours of custom CAD engineering modeling from scratch, we quote that upfront in KES before touching a single vertex. No surprise invoices.
+        </p>
+      </details>
+
+      <details class="group panel p-7 rounded-4xl">
+        <summary class="flex items-center justify-between gap-4 cursor-pointer font-display text-xl md:text-2xl font-semibold">
+          What if my 3D file is a complete mess?
+          <span class="plus text-2xl text-brand shrink-0">+</span>
+        </summary>
+        <p class="mt-4 text-ink/80 text-base md:text-lg leading-relaxed">
+          Most files downloaded off random websites are non-manifold disasters with inverted normal faces and microscopic wall thicknesses. That is literally why we exist. Bring what you have; we will inspect the slicing toolpath and tell you how to fix it.
+        </p>
+      </details>
+
+      <details class="group panel p-7 rounded-4xl">
+        <summary class="flex items-center justify-between gap-4 cursor-pointer font-display text-xl md:text-2xl font-semibold">
+          Can I just walk into the Eldoret studio unannounced?
+          <span class="plus text-2xl text-brand shrink-0">+</span>
+        </summary>
+        <p class="mt-4 text-ink/80 text-base md:text-lg leading-relaxed">
+          You can, but printers run hot and engineers might be elbow-deep in calibration or tearing apart an extruder. Booking 30 seconds ahead guarantees an engineer sits down with you, pulls up your file on the monitor, and gives you full undivided attention.
+        </p>
+      </details>
+
+      <details class="group panel p-7 rounded-4xl">
+        <summary class="flex items-center justify-between gap-4 cursor-pointer font-display text-xl md:text-2xl font-semibold">
+          What happens if I need to cancel or reschedule?
+          <span class="plus text-2xl text-brand shrink-0">+</span>
+        </summary>
+        <p class="mt-4 text-ink/80 text-base md:text-lg leading-relaxed">
+          Just drop us a quick text on WhatsApp (+254 792 732 929) with your booking reference. We don't charge cancellation fees, and we don't hold grudges.
+        </p>
+      </details>
+    </div>
+  </section>
+</Layout>
+
+<script define:vars={{ whatsappPhone: site.whatsapp, siteUrl: site.url }}>
+  // Set minimum date to today
+  const dateInput = document.getElementById("b-date");
+  if (dateInput) {
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+    const tmrw = new Date();
+    tmrw.setDate(tmrw.getDate() + 1);
+    dateInput.value = tmrw.toISOString().split("T")[0];
+  }
+
+  // Toggle between native form and Easy!Appointments iframe (if present)
+  const tabBtnForm = document.getElementById("tab-btn-form");
+  const tabBtnEa = document.getElementById("tab-btn-ea");
+  const formView = document.getElementById("booking-form-view");
+  const eaView = document.getElementById("booking-ea-view");
+
+  if (tabBtnForm && tabBtnEa && formView && eaView) {
+    tabBtnForm.addEventListener("click", () => {
+      formView.classList.remove("hidden");
+      eaView.classList.add("hidden");
+      tabBtnForm.className = "flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all bg-card shadow-xs text-ink";
+      tabBtnEa.className = "flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all text-mute hover:text-ink";
+    });
+
+    tabBtnEa.addEventListener("click", () => {
+      formView.classList.add("hidden");
+      eaView.classList.remove("hidden");
+      tabBtnEa.className = "flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all bg-card shadow-xs text-ink";
+      tabBtnForm.className = "flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all text-mute hover:text-ink";
+    });
+  }
+
+  // Form submission handler
+  const form = document.getElementById("booking-form");
+  const submitBtn = document.getElementById("b-submit-btn");
+  const successView = document.getElementById("booking-success");
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById("b-name");
+      const phoneInput = document.getElementById("b-phone");
+      const errName = document.getElementById("err-name");
+      const errPhone = document.getElementById("err-phone");
+
+      let valid = true;
+      if (!nameInput.value.trim()) {
+        errName.hidden = false;
+        valid = false;
+      } else {
+        errName.hidden = true;
+      }
+
+      if (!phoneInput.value.trim()) {
+        errPhone.hidden = false;
+        valid = false;
+      } else {
+        errPhone.hidden = true;
+      }
+
+      if (!valid) return;
+
+      const fd = new FormData(form);
+      const data = {
+        customerName: fd.get("customerName"),
+        customerPhone: fd.get("customerPhone"),
+        customerEmail: fd.get("customerEmail"),
+        service: fd.get("service"),
+        meetingType: fd.get("meetingType"),
+        appointmentDate: fd.get("appointmentDate"),
+        appointmentTime: fd.get("appointmentTime"),
+        projectDetails: fd.get("projectDetails"),
+        bookingRef: `PH-BK-${Math.floor(10000 + Math.random() * 90000)}`,
+        source: "website",
+      };
+
+      const origText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="inline-block animate-spin mr-2">⏳</span> Reserving consultation...`;
+
+      try {
+        const res = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        const result = await res.json().catch(() => ({}));
+        const finalRef = result.bookingRef || data.bookingRef;
+
+        form.classList.add("hidden");
+        successView.classList.remove("hidden");
+
+        document.getElementById("succ-ref").textContent = finalRef;
+        document.getElementById("succ-service").textContent = String(data.service);
+        document.getElementById("succ-datetime").textContent = `${data.appointmentDate} at ${data.appointmentTime}`;
+        document.getElementById("succ-mode").textContent = String(data.meetingType).replace("_", " ");
+
+        const waMsg = `Hi PrintHub, I just locked in a consultation on your website!\n\nBooking Ref: ${finalRef}\nService: ${data.service}\nDate: ${data.appointmentDate} at ${data.appointmentTime}\nMode: ${data.meetingType}\nName: ${data.customerName}\nPhone: ${data.customerPhone}\n\nProject Notes: ${data.projectDetails || "None"}`;
+        const waUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(waMsg)}`;
+        document.getElementById("succ-wa-link").href = waUrl;
+
+        const gcalBtn = document.getElementById("succ-cal-btn");
+        gcalBtn.addEventListener("click", () => {
+          const title = encodeURIComponent(`PrintHub Africa Consultation: ${data.service} (${finalRef})`);
+          const details = encodeURIComponent(`PrintHub Africa 3D Printing & Design Consultation.\nReference: ${finalRef}\nMode: ${data.meetingType}\nWhatsApp: +${whatsappPhone}`);
+          const location = encodeURIComponent(data.meetingType === "in_person" ? "PrintHub Africa Studio, Eldoret, Kenya" : "WhatsApp / Virtual Call");
+          const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
+          window.open(gcalUrl, "_blank");
+        });
+      } catch (err) {
+        console.warn("API offline or static mode, generating WhatsApp fallback", err);
+        form.classList.add("hidden");
+        successView.classList.remove("hidden");
+        document.getElementById("succ-ref").textContent = data.bookingRef;
+        document.getElementById("succ-service").textContent = String(data.service);
+        document.getElementById("succ-datetime").textContent = `${data.appointmentDate} at ${data.appointmentTime}`;
+        document.getElementById("succ-mode").textContent = String(data.meetingType).replace("_", " ");
+
+        const waMsg = `Hi PrintHub, I'd like to confirm my consultation booking!\n\nBooking Ref: ${data.bookingRef}\nService: ${data.service}\nDate: ${data.appointmentDate} at ${data.appointmentTime}\nMode: ${data.meetingType}\nName: ${data.customerName}\nPhone: ${data.customerPhone}\n\nNotes: ${data.projectDetails || "None"}`;
+        document.getElementById("succ-wa-link").href = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(waMsg)}`;
+      }
+    });
+  }
+</script>
