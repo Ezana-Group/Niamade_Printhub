@@ -117,12 +117,12 @@ export interface SanityPageContent {
 const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || import.meta.env?.SANITY_PROJECT_ID || "m7x6icn3";
 const SANITY_DATASET = process.env.SANITY_DATASET || import.meta.env?.SANITY_DATASET || "production";
 const SANITY_API_VERSION = "2023-08-01";
-// IMPORTANT: Set SANITY_API_TOKEN as an environment variable (Cloudflare Pages secret).
-// The old token has been removed — rotate it in your Sanity project immediately.
+// SANITY_API_TOKEN must be supplied via environment variable (Cloudflare Pages secret).
+// Never hardcode tokens in the codebase.
 const SANITY_API_TOKEN =
   process.env.SANITY_API_TOKEN ||
   import.meta.env?.SANITY_API_TOKEN ||
-  "skygOrLXyMmWLsjwtorwFxjPeKvB0GuiuVuGQzX8EVUCekz5F47hrIDfU39i4iiBdThNKYOUKsSQFID0UhsfiyHDkgoynGxZHE2YJi28RLxEBctoJ7gPynRki1QM75knT1WSbVnjigmRSTpoqR3z7yNvnMgRELuI6hFhO7LuaQgrKjNnogO9";
+  "";
 
 const authHeaders: Record<string, string> = SANITY_API_TOKEN ? { Authorization: `Bearer ${SANITY_API_TOKEN}` } : {};
 

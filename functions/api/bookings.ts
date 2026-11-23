@@ -8,21 +8,59 @@ interface Env {
   EASYAPPOINTMENTS_URL?: string;
   EASYAPPOINTMENTS_API_TOKEN?: string;
   NOTIFICATION_EMAIL?: string;
+  BOOKING_NOTIFICATION_EMAIL?: string;
+  BOOKING_FROM_EMAIL?: string;
   RESEND_API_KEY?: string;
 }
 
-export async function onRequestOptions() {
+function escapeHtml(str: unknown): string {
+  if (str == null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function getCorsHeaders(request: Request) {
+  const origin = request.headers.get("Origin") || "";
+  const allowedOrigins = [
+    "https://printhub.africa",
+    "https://www.printhub.africa",
+    "http://localhost:4321",
+    "http://localhost:3000",
+    "http://127.0.0.1:4321",
+  ];
+  const isAllowed = allowedOrigins.includes(origin) ||
+    origin.endsWith(".pages.dev") ||
+    origin.endsWith(".printhub.africa");
+
+  const allowOrigin = isAllowed ? origin : "https://printhub.africa";
+
+  return {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
+    "Vary": "Origin",
+  };
+}
+
+export async function onRequestOptions(context: { request: Request }) {
+  const headers = getCorsHeaders(context.request);
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      ...headers,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
     },
   });
 }
 
-export async function onRequestGet() {
+export async function onRequestGet(context: { request: Request }) {
+  const headers = getCorsHeaders(context.request);
   return new Response(
     JSON.stringify({
       status: "online",
@@ -30,19 +68,13 @@ export async function onRequestGet() {
       timestamp: new Date().toISOString(),
     }),
     {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
+      headers,
     }
   );
 }
 
 export async function onRequestPost(context: any) {
-  const corsHeaders = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  };
+  const corsHeaders = getCorsHeaders(context.request);
 
   try {
     const rawBody = await context.request.json().catch(() => ({}));
@@ -50,10 +82,17 @@ export async function onRequestPost(context: any) {
 
     const projectId = context.env.SANITY_PROJECT_ID || "m7x6icn3";
     const dataset = context.env.SANITY_DATASET || "production";
-    const token = context.env.SANITY_API_TOKEN || "skygOrLXyMmWLsjwtorwFxjPeKvB0GuiuVuGQzX8EVUCekz5F47hrIDfU39i4iiBdThNKYOUKsSQFID0UhsfiyHDkgoynGxZHE2YJi28RLxEBctoJ7gPynRki1QM75knT1WSbVnjigmRSTpoqR3z7yNvnMgRELuI6hFhO7LuaQgrKjNnogO9";
+    const token = context.env.SANITY_API_TOKEN;
+
+    if (!token) {
+      console.error("Missing SANITY_API_TOKEN environment variable in /api/bookings");
+      return new Response(
+        JSON.stringify({ success: false, error: "Server configuration error: SANITY_API_TOKEN is missing" }),
+        { status: 500, headers: corsHeaders }
+      );
+    }
 
     // Detect if this is an Easy!Appointments Webhook payload
-    // Easy!Appointments sends { event: 'appointment.save', data: { appointment: {...}, customer: {...}, service: {...} } }
     let customerName = data.customerName || data.name || "";
     let customerPhone = data.customerPhone || data.phone || data.whatsapp || "";
     let customerEmail = data.customerEmail || data.email || "";
@@ -87,6 +126,12 @@ export async function onRequestPost(context: any) {
       projectDetails = appt.notes || projectDetails;
     }
 
+    customerName = String(customerName).trim();
+    customerPhone = String(customerPhone).trim();
+    customerEmail = String(customerEmail).trim();
+    service = String(service).trim();
+    projectDetails = String(projectDetails).trim();
+
     if (!customerName) {
       return new Response(
         JSON.stringify({ success: false, error: "Customer name is required" }),
@@ -108,15 +153,15 @@ export async function onRequestPost(context: any) {
     const bookingDoc = {
       _type: "booking",
       bookingRef,
-      customerName: customerName.trim(),
-      customerPhone: customerPhone.trim(),
-      customerEmail: customerEmail.trim(),
-      service: service.trim(),
+      customerName,
+      customerPhone,
+      customerEmail,
+      service,
       appointmentDate: appointmentDate || new Date().toISOString().split("T")[0],
       appointmentTime: appointmentTime || "10:00 AM",
       meetingType,
       duration: Number(data.duration) || 30,
-      projectDetails: projectDetails.trim(),
+      projectDetails,
       status: "pending",
       adminNotes: "",
       easyAppointmentsId: String(easyAppointmentsId),
@@ -124,27 +169,29 @@ export async function onRequestPost(context: any) {
       createdAt: new Date().toISOString(),
     };
 
-    // Save to Sanity via Mutation API
-    if (token) {
-      const sanityEndpoint = `https://${projectId}.api.sanity.io/v2023-08-01/data/mutate/${dataset}`;
-      const sanityRes = await fetch(sanityEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          mutations: [{ create: bookingDoc }],
-        }),
-      });
+    // 1. Save to Sanity via Mutation API
+    const sanityEndpoint = `https://${projectId}.api.sanity.io/v2023-08-01/data/mutate/${dataset}`;
+    const sanityRes = await fetch(sanityEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        mutations: [{ create: bookingDoc }],
+      }),
+    });
 
-      if (!sanityRes.ok) {
-        const errText = await sanityRes.text();
-        console.error("Sanity booking save error:", errText);
-      }
+    if (!sanityRes.ok) {
+      const errText = await sanityRes.text();
+      console.error("Sanity booking save error:", errText);
+      return new Response(
+        JSON.stringify({ success: false, error: "Failed to record booking in database" }),
+        { status: 502, headers: corsHeaders }
+      );
     }
 
-    // 2. Dispatch Email Alert to Admin (booking@printhub.africa)
+    // 2. Dispatch Email Alert to Admin
     const notificationEmail =
       context.env.BOOKING_NOTIFICATION_EMAIL ||
       context.env.NOTIFICATION_EMAIL ||
@@ -153,6 +200,18 @@ export async function onRequestPost(context: any) {
 
     if (resendKey) {
       try {
+        const safeName = escapeHtml(customerName);
+        const safePhone = escapeHtml(customerPhone);
+        const safeEmail = escapeHtml(customerEmail);
+        const safeService = escapeHtml(service);
+        const safeDate = escapeHtml(appointmentDate);
+        const safeTime = escapeHtml(appointmentTime);
+        const safeMeetingType = meetingType === "in_person" ? "In-Person (Eldoret Studio)" : meetingType === "call" ? "Phone Call" : "WhatsApp Chat";
+        const safeDetails = escapeHtml(projectDetails);
+        const safeRef = escapeHtml(bookingRef);
+        const safeSource = escapeHtml(source);
+        const rawPhoneDigits = customerPhone.replace(/[^0-9]/g, "");
+
         await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
@@ -162,20 +221,20 @@ export async function onRequestPost(context: any) {
           body: JSON.stringify({
             from: context.env.BOOKING_FROM_EMAIL || "PrintHub Bookings <onboarding@resend.dev>",
             to: [notificationEmail],
-            subject: `📅 New Booking [${bookingRef}]: ${customerName} (${service})`,
+            subject: `📅 New Booking [${safeRef}]: ${safeName} (${safeService})`,
             html: `
               <div style="font-family: sans-serif; max-width: 600px; line-height: 1.6; color: #2B1D16;">
                 <h2 style="color: #A6360A; margin-bottom: 4px;">New Booking Request Received</h2>
-                <p style="color: #6E5C50; margin-top: 0;">Ref: <strong>${bookingRef}</strong> • Source: <strong>${source}</strong></p>
+                <p style="color: #6E5C50; margin-top: 0;">Ref: <strong>${safeRef}</strong> • Source: <strong>${safeSource}</strong></p>
                 <div style="background: #FFF8EE; border: 1px solid #EAD9C5; border-radius: 12px; padding: 18px; margin: 20px 0;">
                   <table style="width: 100%; border-collapse: collapse;">
-                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold; width: 35%;">Customer:</td><td>${customerName}</td></tr>
-                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Phone / WhatsApp:</td><td><a href="https://wa.me/${customerPhone.replace(/[^0-9]/g, "")}">${customerPhone || "Not provided"}</a></td></tr>
-                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td>${customerEmail || "Not provided"}</td></tr>
-                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Service:</td><td>${service}</td></tr>
-                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Date & Time:</td><td><strong>${appointmentDate}</strong> at <strong>${appointmentTime}</strong></td></tr>
-                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Meeting Type:</td><td>${meetingType === "in_person" ? "In-Person (Eldoret Studio)" : meetingType === "call" ? "Phone Call" : "WhatsApp Chat"}</td></tr>
-                    <tr><td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Project Notes:</td><td style="padding: 8px 0;">${projectDetails || "None provided"}</td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold; width: 35%;">Customer:</td><td>${safeName}</td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Phone / WhatsApp:</td><td><a href="https://wa.me/${rawPhoneDigits}">${safePhone || "Not provided"}</a></td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td>${safeEmail || "Not provided"}</td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Service:</td><td>${safeService}</td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Date & Time:</td><td><strong>${safeDate}</strong> at <strong>${safeTime}</strong></td></tr>
+                    <tr style="border-bottom: 1px solid #EAD9C5;"><td style="padding: 8px 0; font-weight: bold;">Meeting Type:</td><td>${safeMeetingType}</td></tr>
+                    <tr><td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Project Notes:</td><td style="padding: 8px 0;">${safeDetails || "None provided"}</td></tr>
                   </table>
                 </div>
                 <p style="margin-top: 24px;">
@@ -214,4 +273,4 @@ export async function onRequestPost(context: any) {
       { status: 500, headers: corsHeaders }
     );
   }
-};
+}
