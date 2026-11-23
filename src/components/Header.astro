@@ -6,6 +6,7 @@ const headerWaMsg = waMsg || waMessages.general;
 const path = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : Astro.url.pathname + "/";
 const nav = [
   { href: "/shop/", label: "Shop" },
+  { href: "/quoteforge/", label: "QuoteForge", badge: "App" },
   { href: "/for-business/", label: "For business" },
   { href: "/custom/", label: "Custom orders" },
   { href: "/about/", label: "About" },
@@ -25,11 +26,16 @@ const on = (h: string) => path === h || path.startsWith(h);
           href={n.href}
           aria-current={on(n.href) ? "page" : undefined}
           class:list={[
-            "px-3 xl:px-3.5 py-2 rounded-full whitespace-nowrap transition-colors duration-150 hover:bg-sand",
+            "px-2.5 xl:px-3 py-1.5 rounded-full whitespace-nowrap transition-colors duration-150 hover:bg-sand flex items-center gap-1.5",
             on(n.href) && "bg-sand"
           ]}
         >
-          {n.label}
+          <span>{n.label}</span>
+          {n.badge && (
+            <span class="text-[0.68rem] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-brand/10 text-brand border border-brand/20">
+              {n.badge}
+            </span>
+          )}
         </a>
       ))}
     </nav>
