@@ -553,9 +553,30 @@ const ld = {
         <p class="eyebrow">Cloud Edition</p>
         <h3 id="modal-title" class="font-display text-2xl font-bold mt-1">Join QuoteForge Cloud Waitlist</h3>
         <p class="text-mute text-sm mt-1">Enter your details to receive an early access onboarding invite for your workshop.</p>
+
+        <!-- Dynamic Selected Plan Badge -->
+        <div class="mt-3 flex items-center gap-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold">
+            <span>Target Plan:</span>
+            <span id="wl-plan-badge">Cloud Workshop ($49/mo)</span>
+            <button type="button" id="wl-plan-toggle" class="underline text-brand/80 hover:text-brand font-medium ml-1">Change</button>
+          </div>
+        </div>
+
+        <!-- Collapsible Plan Switcher -->
+        <div id="wl-plan-picker" class="hidden mt-2.5 p-2 bg-sand/50 rounded-2xl border border-line">
+          <div class="grid grid-cols-3 gap-1.5 text-xs font-semibold">
+            <button type="button" data-plan-select="Cloud Solo ($19/mo)" class="wl-plan-btn py-1.5 px-2 rounded-xl text-center border border-transparent bg-white/60 hover:bg-white text-ink transition-all">Solo ($19)</button>
+            <button type="button" data-plan-select="Cloud Workshop ($49/mo)" class="wl-plan-btn py-1.5 px-2 rounded-xl text-center border border-brand bg-white text-brand font-bold transition-all">Workshop ($49)</button>
+            <button type="button" data-plan-select="Enterprise ($149/mo)" class="wl-plan-btn py-1.5 px-2 rounded-xl text-center border border-transparent bg-white/60 hover:bg-white text-ink transition-all">Enterprise ($149)</button>
+          </div>
+        </div>
       </div>
 
       <form id="waitlist-form" class="space-y-4">
+        <input type="hidden" id="wl-plan-input" name="plan" value="Cloud Workshop ($49/mo)" />
+        <input type="hidden" id="wl-fleet-input" name="printers" value="4 to 10 printers" />
+
         <div>
           <label for="wl-name" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1">Your Name</label>
           <input type="text" id="wl-name" name="name" required placeholder="e.g. Alex Kimani" class="w-full px-4 py-2.5 rounded-xl border border-line bg-white text-ink text-sm focus:outline-none focus:border-brand" />
@@ -571,24 +592,23 @@ const ld = {
           <input type="text" id="wl-company" name="company" required placeholder="e.g. Apex 3D Labs" class="w-full px-4 py-2.5 rounded-xl border border-line bg-white text-ink text-sm focus:outline-none focus:border-brand" />
         </div>
 
+        <!-- 1-Click Interactive Fleet Size Pills -->
         <div>
-          <label for="wl-plan" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1">Interested Plan</label>
-          <select id="wl-plan" name="plan" class="w-full px-4 py-2.5 rounded-xl border border-line bg-white text-ink text-sm focus:outline-none focus:border-brand">
-            <option value="Cloud Workshop">Cloud Workshop ($49/mo) — Most Popular</option>
-            <option value="Cloud Solo">Cloud Solo ($19/mo)</option>
-            <option value="Enterprise">Enterprise / Bureau ($149/mo)</option>
-            <option value="Custom">Custom Deployment</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="wl-printers" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1">How many 3D printers do you run?</label>
-          <select id="wl-printers" name="printers" class="w-full px-4 py-2.5 rounded-xl border border-line bg-white text-ink text-sm focus:outline-none focus:border-brand">
-            <option value="1-3">1 to 3 printers</option>
-            <option value="4-10" selected>4 to 10 printers</option>
-            <option value="11-25">11 to 25 printers</option>
-            <option value="25+">25+ printers (Commercial Farm)</option>
-          </select>
+          <label class="block text-xs font-bold uppercase tracking-wider text-mute mb-1.5">How many 3D printers do you run?</label>
+          <div class="grid grid-cols-4 gap-2">
+            <button type="button" data-fleet="1 to 3 printers" class="fleet-chip py-2 px-1 text-center rounded-xl border border-line bg-white hover:border-brand text-xs font-semibold text-ink transition-all">
+              1–3
+            </button>
+            <button type="button" data-fleet="4 to 10 printers" class="fleet-chip py-2 px-1 text-center rounded-xl border-2 border-brand bg-brand/5 text-brand text-xs font-bold transition-all">
+              4–10
+            </button>
+            <button type="button" data-fleet="11 to 25 printers" class="fleet-chip py-2 px-1 text-center rounded-xl border border-line bg-white hover:border-brand text-xs font-semibold text-ink transition-all">
+              11–25
+            </button>
+            <button type="button" data-fleet="25+ printers (Commercial Farm)" class="fleet-chip py-2 px-1 text-center rounded-xl border border-line bg-white hover:border-brand text-xs font-semibold text-ink transition-all">
+              25+ Farm
+            </button>
+          </div>
         </div>
 
         <button type="submit" id="wl-submit" class="btn btn-primary w-full !py-3 font-semibold mt-2">
@@ -659,19 +679,76 @@ const ld = {
         return;
       }
 
-      // 3. Early Access Modal Triggers
+      // 3. Early Access Modal Triggers & Plan Selection
       const openModalBtn = e.target.closest('[data-open-waitlist], #open-waitlist-btn, #card-waitlist-btn');
       if (openModalBtn) {
         e.preventDefault();
-        const plan = openModalBtn.getAttribute('data-plan') || 'Cloud Workshop';
-        const planSelect = document.getElementById('wl-plan');
-        if (planSelect) planSelect.value = plan;
+        let plan = openModalBtn.getAttribute('data-plan') || 'Cloud Workshop';
+        if (plan === 'Cloud Solo' || plan === 'Solo') plan = 'Cloud Solo ($19/mo)';
+        else if (plan === 'Cloud Workshop' || plan === 'Workshop') plan = 'Cloud Workshop ($49/mo)';
+        else if (plan === 'Enterprise') plan = 'Enterprise ($149/mo)';
+
+        const badge = document.getElementById('wl-plan-badge');
+        const input = document.getElementById('wl-plan-input');
+        if (badge) badge.textContent = plan;
+        if (input) input.value = plan;
+
+        document.querySelectorAll('.wl-plan-btn').forEach((btn) => {
+          if (btn.getAttribute('data-plan-select') === plan) {
+            btn.className = 'wl-plan-btn py-1.5 px-2 rounded-xl text-center border border-brand bg-white text-brand font-bold transition-all';
+          } else {
+            btn.className = 'wl-plan-btn py-1.5 px-2 rounded-xl text-center border border-transparent bg-white/60 hover:bg-white text-ink transition-all';
+          }
+        });
 
         const modal = document.getElementById('waitlist-modal');
         if (modal) {
           modal.classList.remove('hidden');
           modal.classList.add('flex');
         }
+        return;
+      }
+
+      // 3b. Plan Toggle and Picker inside Modal
+      const planToggle = e.target.closest('#wl-plan-toggle');
+      if (planToggle) {
+        e.preventDefault();
+        const picker = document.getElementById('wl-plan-picker');
+        if (picker) picker.classList.toggle('hidden');
+        return;
+      }
+
+      const planBtn = e.target.closest('.wl-plan-btn');
+      if (planBtn) {
+        e.preventDefault();
+        const selectedPlan = planBtn.getAttribute('data-plan-select');
+        const badge = document.getElementById('wl-plan-badge');
+        const input = document.getElementById('wl-plan-input');
+        if (badge) badge.textContent = selectedPlan;
+        if (input) input.value = selectedPlan;
+
+        document.querySelectorAll('.wl-plan-btn').forEach((btn) => {
+          btn.className = 'wl-plan-btn py-1.5 px-2 rounded-xl text-center border border-transparent bg-white/60 hover:bg-white text-ink transition-all';
+        });
+        planBtn.className = 'wl-plan-btn py-1.5 px-2 rounded-xl text-center border border-brand bg-white text-brand font-bold transition-all';
+
+        const picker = document.getElementById('wl-plan-picker');
+        if (picker) picker.classList.add('hidden');
+        return;
+      }
+
+      // 3c. Fleet Size Pill Selection
+      const fleetChip = e.target.closest('.fleet-chip');
+      if (fleetChip) {
+        e.preventDefault();
+        const fleetVal = fleetChip.getAttribute('data-fleet');
+        const fleetInput = document.getElementById('wl-fleet-input');
+        if (fleetInput) fleetInput.value = fleetVal;
+
+        document.querySelectorAll('.fleet-chip').forEach((chip) => {
+          chip.className = 'fleet-chip py-2 px-1 text-center rounded-xl border border-line bg-white hover:border-brand text-xs font-semibold text-ink transition-all';
+        });
+        fleetChip.className = 'fleet-chip py-2 px-1 text-center rounded-xl border-2 border-brand bg-brand/5 text-brand text-xs font-bold transition-all';
         return;
       }
 
