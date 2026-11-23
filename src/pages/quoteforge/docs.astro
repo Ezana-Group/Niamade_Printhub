@@ -1,0 +1,446 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Icon from "../../components/Icon.astro";
+import { site } from "../../data/site";
+
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: "QuoteForge Documentation: Self-Hosting & Cloud Operations Guide",
+  description: "Comprehensive installation, Docker deployment, reverse proxy setup, backup automation, and REST API documentation for QuoteForge 3D quotation engine.",
+  publisher: {
+    "@type": "Organization",
+    name: "PrintHub Africa",
+    url: site.url
+  }
+};
+---
+
+<Layout
+  title="QuoteForge Documentation — Self-Hosting & Cloud Guide | PrintHub Africa"
+  description="Step-by-step setup guide for QuoteForge: Docker Run, Docker Compose, Node.js deployment, Caddy/Nginx SSL reverse proxy, automated SQLite backups, and REST API reference."
+  jsonLd={ld}
+>
+  <!-- Documentation Header -->
+  <section class="wrap pt-10 md:pt-16 pb-8 border-b border-line">
+    <div class="flex items-center gap-2 text-xs text-mute mb-3">
+      <a href="/" class="hover:text-brand">Home</a>
+      <span>/</span>
+      <a href="/quoteforge/" class="hover:text-brand">QuoteForge</a>
+      <span>/</span>
+      <span class="text-ink font-semibold">Documentation</span>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <p class="eyebrow">QuoteForge v1.0.0 Manual</p>
+        <h1 class="font-display text-3xl sm:text-5xl font-bold mt-1 text-ink">
+          Documentation & Deployment Guides
+        </h1>
+        <p class="text-mute text-base sm:text-lg mt-2 max-w-2xl">
+          Everything you need to deploy, configure, secure, and scale QuoteForge on local bare metal, Docker, or connected cloud infrastructure.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/quoteforge/" class="btn btn-soft text-sm flex items-center gap-2">
+          <span>← Back to QuoteForge</span>
+        </a>
+        <a href="https://github.com/niamade/quoteforge" target="_blank" rel="noopener" class="btn btn-primary text-sm flex items-center gap-2">
+          <Icon name="github" size={16} />
+          <span>GitHub Repository</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Chips -->
+    <div class="flex flex-wrap gap-2 pt-6">
+      <a href="#quickstart" class="chip">Quickstart (60s)</a>
+      <a href="#docker" class="chip">Docker & Compose</a>
+      <a href="#node" class="chip">Native Node.js</a>
+      <a href="#proxy" class="chip">Reverse Proxy & SSL</a>
+      <a href="#backups" class="chip">Data Backups</a>
+      <a href="#security" class="chip">Accounts & RBAC</a>
+      <a href="#cloud-bridge" class="chip">Cloud Farm Bridge</a>
+      <a href="#api" class="chip">REST API Reference</a>
+    </div>
+  </section>
+
+  <!-- Main Documentation Content -->
+  <div class="wrap py-12">
+    <div class="grid lg:grid-cols-12 gap-10">
+      <!-- Left Sticky Table of Contents -->
+      <aside class="hidden lg:block lg:col-span-3">
+        <div class="sticky top-28 space-y-6 text-sm">
+          <div>
+            <p class="text-xs uppercase font-bold text-mute tracking-wider mb-2">Getting Started</p>
+            <ul class="space-y-1.5 border-l-2 border-line pl-3 text-ink/80 font-medium">
+              <li><a href="#quickstart" class="hover:text-brand transition-colors">60-Second Docker Run</a></li>
+              <li><a href="#requirements" class="hover:text-brand transition-colors">System Requirements</a></li>
+              <li><a href="#philosophy" class="hover:text-brand transition-colors">Architecture & Principles</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase font-bold text-mute tracking-wider mb-2">Self-Hosting</p>
+            <ul class="space-y-1.5 border-l-2 border-line pl-3 text-ink/80 font-medium">
+              <li><a href="#docker" class="hover:text-brand transition-colors">Docker Compose Setup</a></li>
+              <li><a href="#node" class="hover:text-brand transition-colors">Native Node.js Install</a></li>
+              <li><a href="#proxy" class="hover:text-brand transition-colors">Reverse Proxy (Caddy/Nginx)</a></li>
+              <li><a href="#backups" class="hover:text-brand transition-colors">SQLite Storage & Backups</a></li>
+              <li><a href="#security" class="hover:text-brand transition-colors">Multi-User Auth & RBAC</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase font-bold text-mute tracking-wider mb-2">Cloud Edition</p>
+            <ul class="space-y-1.5 border-l-2 border-line pl-3 text-ink/80 font-medium">
+              <li><a href="#cloud-architecture" class="hover:text-brand transition-colors">Multi-Tenant Isolation</a></li>
+              <li><a href="#cloud-bridge" class="hover:text-brand transition-colors">Farm Telemetry Bridge</a></li>
+              <li><a href="#cloud-storage" class="hover:text-brand transition-colors">Cloudflare R2 CAD Storage</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase font-bold text-mute tracking-wider mb-2">Developers</p>
+            <ul class="space-y-1.5 border-l-2 border-line pl-3 text-ink/80 font-medium">
+              <li><a href="#api" class="hover:text-brand transition-colors">REST API Endpoints</a></li>
+              <li><a href="#auth-headers" class="hover:text-brand transition-colors">Token Authentication</a></li>
+              <li><a href="#webhooks" class="hover:text-brand transition-colors">Webhook Dispatch</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Doc Articles -->
+      <main class="lg:col-span-9 space-y-16">
+        <!-- Section: Quickstart -->
+        <section id="quickstart" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">1</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">60-Second Docker Quickstart</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            QuoteForge is pre-built as a lightweight container (~45MB) with zero external production dependencies. To launch it on your workshop PC, Mac, or home server:
+          </p>
+
+          <div class="mt-4 rounded-2xl bg-[#14161a] border border-white/10 p-5 text-cream font-mono text-xs sm:text-sm overflow-x-auto relative group">
+            <button type="button" class="doc-copy-btn absolute top-3 right-3 px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-xs font-sans text-cream transition-all">Copy</button>
+            <pre class="select-all"><code>docker run -d \
+  --name quoteforge \
+  -p 8080:8080 \
+  -v quoteforge_data:/root/.quoteforge \
+  --restart unless-stopped \
+  ghcr.io/niamade/quoteforge:v1.0.0</code></pre>
+          </div>
+          <p class="text-xs text-mute mt-2">
+            Once started, open <a href="http://localhost:8080" target="_blank" rel="noopener" class="text-brand font-semibold underline">http://localhost:8080</a> in your browser. Complete the first-run owner setup wizard to create your master credentials.
+          </p>
+        </section>
+
+        <!-- Section: Requirements -->
+        <section id="requirements" class="scroll-mt-28">
+          <h2 class="font-display text-2xl sm:text-3xl font-bold">System Requirements</h2>
+          <div class="grid sm:grid-cols-3 gap-4 mt-4">
+            <div class="panel p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink">Hardware</p>
+              <ul class="text-xs text-mute space-y-1 mt-2">
+                <li>• CPU: 1 Core (x86_64 or ARM64 / Apple Silicon)</li>
+                <li>• RAM: 256MB minimum (512MB recommended)</li>
+                <li>• Disk: 100MB for application + CAD files</li>
+              </ul>
+            </div>
+            <div class="panel p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink">Supported OS</p>
+              <ul class="text-xs text-mute space-y-1 mt-2">
+                <li>• Ubuntu 20.04+ / Debian 11+</li>
+                <li>• macOS 12 Monterey or newer</li>
+                <li>• Windows 10/11 (via Docker or Node)</li>
+                <li>• Raspberry Pi 4 / 5 (Raspberry Pi OS 64-bit)</li>
+              </ul>
+            </div>
+            <div class="panel p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink">Software Runtime</p>
+              <ul class="text-xs text-mute space-y-1 mt-2">
+                <li>• Docker 20.10+ (Recommended) OR</li>
+                <li>• Node.js v18.0.0+ (Native Standard Library)</li>
+                <li>• Modern browser (Chrome, Firefox, Safari, Edge)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Docker Compose -->
+        <section id="docker" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">2</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">Production Docker Compose</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            For workshop servers running unattended, create a <code>docker-compose.yml</code> file in your preferred directory:
+          </p>
+
+          <div class="mt-4 rounded-2xl bg-[#14161a] border border-white/10 p-5 text-cream font-mono text-xs sm:text-sm overflow-x-auto relative group">
+            <button type="button" class="doc-copy-btn absolute top-3 right-3 px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-xs font-sans text-cream transition-all">Copy</button>
+            <pre class="select-all"><code>services:
+  quoteforge:
+    image: ghcr.io/niamade/quoteforge:v1.0.0
+    container_name: quoteforge
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/root/.quoteforge
+    environment:
+      - PORT=8080
+      - HOST=0.0.0.0
+      - DATA_DIR=/root/.quoteforge
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3</code></pre>
+          </div>
+          <p class="text-xs text-mute mt-2">
+            Run <code>docker compose up -d</code> to launch in background mode. All quotation data and user accounts persist safely in <code>./data</code>.
+          </p>
+        </section>
+
+        <!-- Section: Native Node -->
+        <section id="node" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">3</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">Native Node.js Installation</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            If you prefer running directly on your operating system without Docker:
+          </p>
+
+          <div class="mt-4 rounded-2xl bg-[#14161a] border border-white/10 p-5 text-cream font-mono text-xs sm:text-sm overflow-x-auto relative group">
+            <button type="button" class="doc-copy-btn absolute top-3 right-3 px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-xs font-sans text-cream transition-all">Copy</button>
+            <pre class="select-all"><code># 1. Clone repository
+git clone https://github.com/niamade/quoteforge.git
+cd quoteforge
+
+# 2. Run with standard Node.js (v18 or higher)
+npm start
+
+# QuoteForge starts on http://127.0.0.1:8080 with zero third-party dependencies!</code></pre>
+          </div>
+        </section>
+
+        <!-- Section: Reverse Proxy & SSL -->
+        <section id="proxy" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">4</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">Reverse Proxy & Automatic HTTPS (SSL)</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            When accessing QuoteForge over the internet or across your workshop Wi-Fi, always put an HTTPS reverse proxy in front of it. Here are production configurations for Caddy and Nginx:
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-4 mt-4">
+            <!-- Caddy Config -->
+            <div class="panel p-5 rounded-2xl border border-line">
+              <div class="flex items-center justify-between mb-2">
+                <p class="font-bold text-ink">Caddyfile (Recommended)</p>
+                <span class="text-[0.65rem] font-bold px-2 py-0.5 rounded bg-brand/10 text-brand">Auto Let's Encrypt</span>
+              </div>
+              <pre class="bg-[#14161a] p-3.5 rounded-xl text-cream font-mono text-xs overflow-x-auto select-all"><code>quote.myworkshop.com &#123;
+    reverse_proxy localhost:8080
+&#125;</code></pre>
+              <p class="text-xs text-mute mt-2">Caddy automatically provisions and renews TLS/SSL certificates.</p>
+            </div>
+
+            <!-- Nginx Config -->
+            <div class="panel p-5 rounded-2xl border border-line">
+              <div class="flex items-center justify-between mb-2">
+                <p class="font-bold text-ink">Nginx Server Block</p>
+                <span class="text-[0.65rem] font-bold px-2 py-0.5 rounded bg-sand text-ink">Standard Nginx</span>
+              </div>
+              <pre class="bg-[#14161a] p-3.5 rounded-xl text-cream font-mono text-xs overflow-x-auto select-all"><code>server &#123;
+    server_name quote.myworkshop.com;
+    listen 80;
+
+    location / &#123;
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto https;
+    &#125;
+&#125;</code></pre>
+              <p class="text-xs text-mute mt-2">Run <code>certbot --nginx</code> to attach Let's Encrypt certificates.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Backups & Portability -->
+        <section id="backups" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">5</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">Automated Data Backups & Migration</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            QuoteForge stores all configuration, materials, printers, and historical quote data in standard human-readable JSON files inside <code>~/.quoteforge/</code> (or your Docker volume).
+          </p>
+
+          <div class="space-y-4 mt-4">
+            <div class="panel p-5 rounded-2xl border border-line">
+              <p class="font-bold text-ink mb-1">Automated Daily Backup via Cron</p>
+              <p class="text-xs text-mute mb-2">Add this to your workshop server crontab (<code>crontab -e</code>) to create timestamped backups daily at 2:00 AM:</p>
+              <pre class="bg-[#14161a] p-3.5 rounded-xl text-cream font-mono text-xs overflow-x-auto select-all"><code>0 2 * * * cp ~/.quoteforge/app-data.json ~/backups/quoteforge-$(date +\%F).json</code></pre>
+            </div>
+
+            <div class="panel p-5 rounded-2xl border border-line">
+              <p class="font-bold text-ink mb-1">One-Click UI Export & Import</p>
+              <p class="text-xs text-mute">
+                In QuoteForge, navigate to <strong>Settings → Data & Backup</strong>. Click <strong>Export All Data (JSON)</strong> to download a single file snapshot. You can import this snapshot on any other QuoteForge instance or migrate directly to QuoteForge Cloud.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Multi-User Security & RBAC -->
+        <section id="security" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">6</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">Multi-User Accounts & Access Control</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            QuoteForge includes built-in multi-user security with scrypt password hashing, session tokens, rate limiting, and role-based permissions:
+          </p>
+
+          <div class="grid sm:grid-cols-2 gap-4 mt-4">
+            <div class="panel p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[0.7rem] bg-brand text-white font-bold">Owner</span>
+                <span>Administrator Role</span>
+              </p>
+              <ul class="text-xs text-mute space-y-1.5 mt-2.5">
+                <li>• Full access to financial metrics & margins</li>
+                <li>• Create, disable, and reset team member accounts</li>
+                <li>• Perform system data backups and imports</li>
+                <li>• Configure printer telemetry credentials</li>
+              </ul>
+            </div>
+
+            <div class="panel p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[0.7rem] bg-sand text-ink font-bold">Staff</span>
+                <span>Estimator & Operator Role</span>
+              </p>
+              <ul class="text-xs text-mute space-y-1.5 mt-2.5">
+                <li>• Generate quotes & print ladders</li>
+                <li>• View job queue and mark prints completed</li>
+                <li>• Read inventory and material stock levels</li>
+                <li>• Hidden from financial overheads & admin tools</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Cloud Farm Bridge -->
+        <section id="cloud-bridge" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">7</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">QuoteForge Cloud & Hardware Farm Bridge</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            QuoteForge Cloud pairs with your local workshop printers through the lightweight <code>quoteforge-bridge</code> daemon. This creates an outbound-only encrypted tunnel without opening any firewall ports or configuring public router port-forwarding:
+          </p>
+
+          <div class="mt-4 rounded-2xl bg-[#14161a] border border-white/10 p-5 text-cream font-mono text-xs sm:text-sm overflow-x-auto relative group">
+            <button type="button" class="doc-copy-btn absolute top-3 right-3 px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-xs font-sans text-cream transition-all">Copy</button>
+            <pre class="select-all"><code># Run on a local workshop machine on the same LAN as your 3D printers
+npx @quoteforge/bridge --token=qf_bridge_your_tenant_token</code></pre>
+          </div>
+          <p class="text-xs text-mute mt-2">
+            The bridge continuously streams nozzle temperatures, bed status, layer height progress, and camera feeds securely to your QuoteForge Cloud dashboard.
+          </p>
+        </section>
+
+        <!-- Section: REST API Reference -->
+        <section id="api" class="scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-brand text-white text-sm font-bold flex items-center justify-center">8</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">REST API Reference</h2>
+          </div>
+          <p class="text-mute mt-3 leading-relaxed">
+            Integrate QuoteForge directly into your ERP, e-commerce storefront, or custom workflows:
+          </p>
+
+          <div class="space-y-3 mt-4 text-xs font-mono">
+            <div class="panel p-3.5 rounded-xl border border-line flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 font-bold">POST</span>
+                <span class="text-ink font-semibold">/api/quotes/calculate</span>
+              </div>
+              <span class="text-mute font-sans">Calculate real margin ladder from filament grams & slicer time</span>
+            </div>
+
+            <div class="panel p-3.5 rounded-xl border border-line flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 font-bold">GET</span>
+                <span class="text-ink font-semibold">/api/jobs</span>
+              </div>
+              <span class="text-mute font-sans">List quote history, filter by customer, status, or date range</span>
+            </div>
+
+            <div class="panel p-3.5 rounded-xl border border-line flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 font-bold">GET</span>
+                <span class="text-ink font-semibold">/api/printers</span>
+              </div>
+              <span class="text-mute font-sans">Read live farm printer statuses, temperatures, and current job</span>
+            </div>
+
+            <div class="panel p-3.5 rounded-xl border border-line flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 font-bold">POST</span>
+                <span class="text-ink font-semibold">/api/slicer/estimate</span>
+              </div>
+              <span class="text-mute font-sans">Upload raw STL/3MF to receive exact sliced grams & print duration</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA Box -->
+        <div class="rounded-3xl bg-peach p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 border border-line">
+          <div>
+            <h3 class="font-display text-2xl font-bold text-ink">Need a tailored cloud setup or custom slicer profiles?</h3>
+            <p class="text-mute text-sm mt-1">Our engineering team helps print bureaus, university labs, and production workshops integrate QuoteForge.</p>
+          </div>
+          <a href="/contact/" class="btn btn-primary shrink-0">Talk with an Engineer</a>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  document.addEventListener('click', async (e) => {
+    const copyBtn = e.target.closest('.doc-copy-btn');
+    if (!copyBtn) return;
+    const pre = copyBtn.closest('div')?.querySelector('pre');
+    if (!pre) return;
+    const text = pre.innerText.trim();
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      copyBtn.textContent = 'Copied! ✓';
+      setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+    } catch (_) {
+      copyBtn.textContent = 'Failed';
+      setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+    }
+  });
+</script>

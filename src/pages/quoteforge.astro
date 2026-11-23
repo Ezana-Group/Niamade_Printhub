@@ -41,7 +41,7 @@ const ld = {
     </h1>
 
     <p class="mt-5 text-lg sm:text-xl text-mute max-w-2xl mx-auto leading-relaxed">
-      No more guesswork spreadsheets. QuoteForge calculates real machine time, material density, electricity, and custom margins. Built for 3D print workshops, hubs, and makers.
+      No more guesswork spreadsheets. QuoteForge calculates real machine time, material density, electricity, and custom margins. Built for 3D print workshops, hubs, and makers worldwide.
     </p>
 
     <!-- CTAs -->
@@ -50,10 +50,14 @@ const ld = {
         <Icon name="terminal" size={18} />
         <span>Deploy Self-Hosted (Free)</span>
       </a>
-      <button type="button" id="open-waitlist-btn" class="btn btn-soft !py-3.5 !px-6 text-base font-semibold border-brand/40 text-brand hover:border-brand hover:bg-peach/30 transition-all flex items-center gap-2">
+      <button type="button" data-open-waitlist data-plan="Cloud Workshop" class="btn btn-soft !py-3.5 !px-6 text-base font-semibold border-brand/40 text-brand hover:border-brand hover:bg-peach/30 transition-all flex items-center gap-2">
         <Icon name="cloud" size={18} />
         <span>Try Cloud Early Access</span>
       </button>
+      <a href="/quoteforge/docs/" class="btn btn-ghost !py-3.5 !px-5 text-base font-medium text-mute hover:text-ink flex items-center gap-1.5">
+        <span>Documentation</span>
+        <span>→</span>
+      </a>
     </div>
 
     <!-- Quick highlights -->
@@ -103,7 +107,7 @@ const ld = {
 
           <!-- Command Switcher Tabs -->
           <div class="flex items-center gap-1 bg-black/40 p-1 rounded-xl text-xs font-sans">
-            <button type="button" class="term-tab px-3 py-1 rounded-lg transition-all font-semibold active-tab" data-target="cmd-docker">
+            <button type="button" class="term-tab px-3 py-1 rounded-lg transition-all font-semibold active-tab bg-white/15 text-white" data-target="cmd-docker">
               Docker Run
             </button>
             <button type="button" class="term-tab px-3 py-1 rounded-lg transition-all text-cream/60 hover:text-cream" data-target="cmd-compose">
@@ -169,11 +173,17 @@ const ld = {
       </div>
 
       <div class="mt-4 flex flex-wrap items-center justify-between text-xs text-mute px-2 gap-2">
-        <p>Looking for a standalone zip folder? Download the pre-packaged zip archive for Mac and Windows.</p>
-        <a href="https://github.com/niamade/quoteforge/releases" target="_blank" rel="noopener" class="font-semibold text-brand hover:underline inline-flex items-center gap-1">
-          <span>GitHub Releases (v1.0.0)</span>
-          <span>→</span>
-        </a>
+        <p>Need reverse proxy, SSL, and backup guides? Check our complete manual.</p>
+        <div class="flex items-center gap-4">
+          <a href="/quoteforge/docs/" class="font-semibold text-brand hover:underline inline-flex items-center gap-1">
+            <span>Documentation Manual</span>
+            <span>→</span>
+          </a>
+          <a href="https://github.com/niamade/quoteforge/releases" target="_blank" rel="noopener" class="font-semibold text-mute hover:text-ink inline-flex items-center gap-1">
+            <span>GitHub Releases (v1.0.0)</span>
+            <span>→</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -192,17 +202,17 @@ const ld = {
         <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center font-bold">1</div>
         <h3 class="font-display text-2xl sm:text-3xl font-bold">Arithmetic Margin Ladder</h3>
         <p class="text-mute leading-relaxed">
-          Every quote computes raw filament grams, machine time amortisation, custom facility metrics (electricity, floor space, operator prep), and minimum order pricing thresholds.
+          Every quote computes raw filament grams, machine time amortisation, custom facility metrics (electricity, floor space, operator prep), and minimum order pricing thresholds in USD ($) or your chosen local currency.
         </p>
         <ul class="space-y-2 text-sm text-ink/80 pt-2 font-medium">
           <li class="flex items-center gap-2">✓ Automatic bulk quantity discounts</li>
-          <li class="flex items-center gap-2">✓ Configurable tax labels (VAT, GST, Sales Tax)</li>
+          <li class="flex items-center gap-2">✓ Configurable tax labels (Sales Tax, VAT, GST)</li>
           <li class="flex items-center gap-2">✓ Multi-part build plate breakdown</li>
         </ul>
       </div>
       <div class="lg:col-span-7">
         <div class="panel rounded-3xl overflow-hidden p-2 sm:p-3 border border-line shadow-xl bg-sand/30">
-          <img src="/images/quoteforge/quote.png" alt="QuoteForge calculation ladder" width="1200" height="750" class="rounded-2xl w-full h-auto" loading="lazy" />
+          <img src="/images/quoteforge/quote.png" alt="QuoteForge calculation ladder in USD" width="1400" height="900" class="rounded-2xl w-full h-auto" loading="lazy" />
         </div>
       </div>
     </div>
@@ -211,30 +221,30 @@ const ld = {
     <div class="grid lg:grid-cols-12 gap-8 items-center mb-16">
       <div class="lg:col-span-7 order-2 lg:order-1">
         <div class="panel rounded-3xl overflow-hidden p-2 sm:p-3 border border-line shadow-xl bg-sand/30">
-          <img src="/images/quoteforge/jobs.png" alt="QuoteForge job tracking table" width="1200" height="750" class="rounded-2xl w-full h-auto" loading="lazy" />
+          <img src="/images/quoteforge/jobs.png" alt="QuoteForge job tracking table in USD" width="1400" height="900" class="rounded-2xl w-full h-auto" loading="lazy" />
         </div>
       </div>
       <div class="lg:col-span-5 order-1 lg:order-2 space-y-4">
         <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center font-bold">2</div>
         <h3 class="font-display text-2xl sm:text-3xl font-bold">Production Pipeline & History</h3>
         <p class="text-mute leading-relaxed">
-          Move quotes through draft, sent, printing, invoiced, and completed stages. Track customer order history, outstanding balances, and payment records with zero friction.
+          Track parts through Quoted, Printing, Post-Processing, and Completed stages. Filter by customer, view filament usage per job, and export audit trails instantly.
         </p>
         <ul class="space-y-2 text-sm text-ink/80 pt-2 font-medium">
-          <li class="flex items-center gap-2">✓ Search by job number, invoice, or client</li>
-          <li class="flex items-center gap-2">✓ Client payment logs (M-Pesa, Card, Bank, Cash)</li>
-          <li class="flex items-center gap-2">✓ One-click re-quote and duplicate order</li>
+          <li class="flex items-center gap-2">✓ Paid vs. Pending invoice indicators</li>
+          <li class="flex items-center gap-2">✓ Direct re-quote from previous job history</li>
+          <li class="flex items-center gap-2">✓ Customer contact details auto-attached</li>
         </ul>
       </div>
     </div>
 
-    <!-- Screenshot Feature 3: Analytics & Reports -->
+    <!-- Screenshot Feature 3: Reports & Analytics -->
     <div class="grid lg:grid-cols-12 gap-8 items-center">
       <div class="lg:col-span-5 space-y-4">
         <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center font-bold">3</div>
-        <h3 class="font-display text-2xl sm:text-3xl font-bold">Financial Analytics & Profitability</h3>
+        <h3 class="font-display text-2xl sm:text-3xl font-bold">Workshop Margin Analytics</h3>
         <p class="text-mute leading-relaxed">
-          Know exactly how much material you consume and which print jobs drive your highest gross margins. Spot overdue payments and review cashflow in seconds.
+          Understand which materials and printers generate your strongest gross profit. Monitor filament consumption, average job value, and uncollected revenue.
         </p>
         <ul class="space-y-2 text-sm text-ink/80 pt-2 font-medium">
           <li class="flex items-center gap-2">✓ Real-time profit vs. target margin check</li>
@@ -244,101 +254,296 @@ const ld = {
       </div>
       <div class="lg:col-span-7">
         <div class="panel rounded-3xl overflow-hidden p-2 sm:p-3 border border-line shadow-xl bg-sand/30">
-          <img src="/images/quoteforge/reports.png" alt="QuoteForge reports and analytics" width="1200" height="750" class="rounded-2xl w-full h-auto" loading="lazy" />
+          <img src="/images/quoteforge/reports.png" alt="QuoteForge reports and analytics in USD" width="1400" height="900" class="rounded-2xl w-full h-auto" loading="lazy" />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Editions Comparison -->
-  <section class="wrap py-12 md:py-20 border-t border-line">
-    <div class="text-center max-w-3xl mx-auto mb-14">
-      <p class="eyebrow">Transparent Deployment</p>
-      <h2 class="font-display text-3xl sm:text-5xl font-bold mt-2">Self-Hosted or Cloud?</h2>
-      <p class="text-mute text-lg mt-3">Choose the model that fits your workshop setup. Export and migrate between them anytime.</p>
+  <!-- Complete Interactive Pricing & Plans Section -->
+  <section id="pricing" class="wrap py-12 md:py-24 border-t border-line scroll-mt-24">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <p class="eyebrow">Plans &amp; Deployment Options</p>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold mt-2">Transparent pricing for every workshop</h2>
+      <p class="text-mute text-lg mt-3">Start with our free self-hosted edition or scale with hosted cloud infrastructure.</p>
+
+      <!-- Billing Cycle Toggle -->
+      <div class="mt-8 inline-flex items-center p-1.5 rounded-2xl bg-sand border border-line">
+        <button type="button" id="toggle-monthly" class="billing-toggle-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white text-ink shadow-sm">
+          Monthly Billing
+        </button>
+        <button type="button" id="toggle-annual" class="billing-toggle-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-mute hover:text-ink flex items-center gap-1.5">
+          <span>Annual Billing</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 text-[0.65rem] font-bold">Save 20%</span>
+        </button>
+      </div>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-      <!-- Self-Hosted Card -->
-      <div class="panel rounded-3xl p-8 border border-line flex flex-col justify-between hover:border-brand/40 transition-colors">
+    <!-- 4-Tier Pricing Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <!-- Tier 1: Community (Self-Hosted) -->
+      <div class="panel rounded-3xl p-6 sm:p-7 border border-line flex flex-col justify-between hover:border-brand/40 transition-colors">
         <div>
-          <span class="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-sand text-ink">Free & Open Source</span>
-          <h3 class="font-display text-2xl font-bold mt-4">Self-Hosted Edition</h3>
-          <p class="text-mute text-sm mt-2">Perfect for single workshops, independent makers, and teams who want total local control.</p>
+          <span class="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-sand text-ink">Open Source</span>
+          <h3 class="font-display text-2xl font-bold mt-3">Community</h3>
+          <p class="text-mute text-xs sm:text-sm mt-1">For independent makers, hackerspaces, and solo workshops.</p>
 
-          <div class="mt-6 pt-6 border-t border-line space-y-3 text-sm">
-            <div class="flex items-center gap-2.5">
+          <div class="mt-5">
+            <span class="font-display text-4xl sm:text-5xl font-bold text-ink">$0</span>
+            <span class="text-mute text-xs sm:text-sm">/ forever</span>
+            <p class="text-[0.7rem] text-mute mt-1">AGPL-3.0 License · Zero Cloud Fees</p>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-line space-y-2.5 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>AGPL-3.0-only open source license</span>
+              <span>1 Local Workshop Instance</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Zero external subscriptions or tokens</span>
+              <span>Unlimited quotes & jobs</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Runs locally on your Mac, PC, Linux or Docker</span>
+              <span>Local SQLite & JSON storage</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Direct LAN printer discovery (Bambu, Prusa, Klipper)</span>
+              <span>LAN printer discovery</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>100% offline quotation capability</span>
+              <span>100% offline functionality</span>
             </div>
           </div>
         </div>
 
         <div class="mt-8 pt-6 border-t border-line">
-          <a href="#self-host" class="btn btn-soft w-full text-center">View Terminal Instructions</a>
+          <a href="#self-host" class="btn btn-soft w-full text-center text-xs sm:text-sm">Install Free</a>
         </div>
       </div>
 
-      <!-- Cloud Edition Card -->
-      <div class="panel rounded-3xl p-8 border-2 border-brand/40 bg-peach/10 flex flex-col justify-between relative shadow-lg">
-        <div class="absolute -top-3.5 right-6 px-3 py-1 rounded-full bg-brand text-white text-xs font-bold tracking-wider uppercase">
-          Early Access
-        </div>
-
+      <!-- Tier 2: Cloud Solo -->
+      <div class="panel rounded-3xl p-6 sm:p-7 border border-line flex flex-col justify-between hover:border-brand/40 transition-colors">
         <div>
-          <span class="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-brand/20 text-brand">Hosted SaaS</span>
-          <h3 class="font-display text-2xl font-bold mt-4">QuoteForge Cloud</h3>
-          <p class="text-mute text-sm mt-2">Ideal for distributed teams, multi-estimator bureaus, and workshops that need remote access.</p>
+          <span class="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-sand text-ink">Cloud Starter</span>
+          <h3 class="font-display text-2xl font-bold mt-3">Cloud Solo</h3>
+          <p class="text-mute text-xs sm:text-sm mt-1">For growing print businesses wanting remote web access.</p>
 
-          <div class="mt-6 pt-6 border-t border-line space-y-3 text-sm">
-            <div class="flex items-center gap-2.5">
-              <span class="text-brand font-bold">✓</span>
-              <span>Nothing to install or maintain</span>
+          <div class="mt-5">
+            <div class="flex items-baseline gap-1">
+              <span class="font-display text-4xl sm:text-5xl font-bold text-ink price-solo">$19</span>
+              <span class="text-mute text-xs sm:text-sm">/ month</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <p class="text-[0.7rem] text-mute mt-1 price-solo-sub">Billed monthly ($228/yr)</p>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-line space-y-2.5 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Team invitations & role-based access</span>
+              <span>1 Estimator Seat</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Secure PostgreSQL multi-tenant storage</span>
+              <span>Up to 5 Connected 3D Printers</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Hardware Bridge tunnel (monitor farm from anywhere)</span>
+              <span>500 Quotes / month</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Public REST API with token authorization</span>
+              <span>50 GB Cloudflare R2 CAD Storage</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Managed Postgres & Backups</span>
             </div>
           </div>
         </div>
 
         <div class="mt-8 pt-6 border-t border-line">
-          <button type="button" id="card-waitlist-btn" class="btn btn-primary w-full text-center">Request Cloud Early Access</button>
+          <button type="button" data-open-waitlist data-plan="Cloud Solo" class="btn btn-soft w-full text-center text-xs sm:text-sm">Request Early Access</button>
         </div>
+      </div>
+
+      <!-- Tier 3: Cloud Workshop (Popular) -->
+      <div class="panel rounded-3xl p-6 sm:p-7 border-2 border-brand bg-peach/10 flex flex-col justify-between relative shadow-xl">
+        <div class="absolute -top-3.5 right-6 px-3 py-1 rounded-full bg-brand text-white text-[0.65rem] font-bold tracking-wider uppercase">
+          Most Popular
+        </div>
+
+        <div>
+          <span class="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-brand/20 text-brand">Team Hub</span>
+          <h3 class="font-display text-2xl font-bold mt-3">Cloud Workshop</h3>
+          <p class="text-mute text-xs sm:text-sm mt-1">For production bureaus, print farms, and distributed teams.</p>
+
+          <div class="mt-5">
+            <div class="flex items-baseline gap-1">
+              <span class="font-display text-4xl sm:text-5xl font-bold text-ink price-workshop">$49</span>
+              <span class="text-mute text-xs sm:text-sm">/ month</span>
+            </div>
+            <p class="text-[0.7rem] text-brand font-semibold mt-1 price-workshop-sub">Billed monthly ($588/yr)</p>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-line space-y-2.5 text-xs sm:text-sm">
+            <div class="flex items-center gap-2 font-semibold text-ink">
+              <span class="text-brand font-bold">✓</span>
+              <span>Unlimited Estimators & Staff</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Up to 25 Connected 3D Printers</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Unlimited quotes & jobs</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Hardware Bridge Farm Telemetry</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>250 GB Cloudflare R2 Storage</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Team RBAC Roles (Owner, Staff)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-line">
+          <button type="button" data-open-waitlist data-plan="Cloud Workshop" class="btn btn-primary w-full text-center text-xs sm:text-sm">Request Early Access</button>
+        </div>
+      </div>
+
+      <!-- Tier 4: Enterprise / Bureau -->
+      <div class="panel rounded-3xl p-6 sm:p-7 border border-line flex flex-col justify-between hover:border-brand/40 transition-colors">
+        <div>
+          <span class="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-sand text-ink">Scale & API</span>
+          <h3 class="font-display text-2xl font-bold mt-3">Enterprise</h3>
+          <p class="text-mute text-xs sm:text-sm mt-1">For universities, industrial manufacturers, and high-volume bureaus.</p>
+
+          <div class="mt-5">
+            <div class="flex items-baseline gap-1">
+              <span class="font-display text-4xl sm:text-5xl font-bold text-ink price-enterprise">$149</span>
+              <span class="text-mute text-xs sm:text-sm">/ month</span>
+            </div>
+            <p class="text-[0.7rem] text-mute mt-1 price-enterprise-sub">Billed monthly ($1,788/yr)</p>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-line space-y-2.5 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Dedicated Isolated PostgreSQL</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Unlimited 3D Printers & Farm Nodes</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Full REST API & Webhooks Access</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Custom Domain (e.g. quote.yourshop.com)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>99.9% Uptime SLA & Priority Slack</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-line">
+          <button type="button" data-open-waitlist data-plan="Enterprise" class="btn btn-soft w-full text-center text-xs sm:text-sm">Contact Enterprise</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Comparison Matrix Tabs -->
+    <div class="mt-16 max-w-5xl mx-auto panel rounded-3xl p-6 sm:p-8 border border-line">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-line pb-6">
+        <div>
+          <h3 class="font-display text-xl sm:text-2xl font-bold">Compare Edition Capabilities</h3>
+          <p class="text-mute text-xs sm:text-sm mt-1">Every self-hosted instance enjoys complete data freedom with easy migration to Cloud.</p>
+        </div>
+
+        <!-- Matrix Filter Tabs -->
+        <div class="flex items-center gap-1 bg-sand p-1 rounded-xl text-xs">
+          <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-ink shadow-sm" data-cat="all">All</button>
+          <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink" data-cat="engine">Quoting Engine</button>
+          <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink" data-cat="farm">Farm & Telemetry</button>
+          <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink" data-cat="cloud">Storage & Cloud</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto mt-6">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-line text-mute">
+              <th class="pb-3 font-semibold w-1/2">Feature</th>
+              <th class="pb-3 font-semibold text-center">Community (Self-Host)</th>
+              <th class="pb-3 font-semibold text-center text-brand">QuoteForge Cloud</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-line/60">
+            <tr class="matrix-row" data-cat="engine">
+              <td class="py-3 font-medium text-ink">Multi-part plate cost calculation</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓</td>
+            </tr>
+            <tr class="matrix-row" data-cat="engine">
+              <td class="py-3 font-medium text-ink">Headless Slicing CLI (PrusaSlicer / OrcaSlicer)</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Local Binary</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Cloud Engine</td>
+            </tr>
+            <tr class="matrix-row" data-cat="engine">
+              <td class="py-3 font-medium text-ink">WhatsApp & PDF client quote export</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓</td>
+            </tr>
+            <tr class="matrix-row" data-cat="farm">
+              <td class="py-3 font-medium text-ink">LAN printer monitoring (Bambu, Prusa, Moonraker)</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Same Network</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Anywhere via Bridge</td>
+            </tr>
+            <tr class="matrix-row" data-cat="farm">
+              <td class="py-3 font-medium text-ink">Farm video camera stream</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ LAN only</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Remote Tunnel</td>
+            </tr>
+            <tr class="matrix-row" data-cat="cloud">
+              <td class="py-3 font-medium text-ink">CAD file storage (STL, 3MF, STEP)</td>
+              <td class="py-3 text-center text-ink/70">Local Hard Drive</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">Cloudflare R2 (Global CDN)</td>
+            </tr>
+            <tr class="matrix-row" data-cat="cloud">
+              <td class="py-3 font-medium text-ink">Database architecture</td>
+              <td class="py-3 text-center text-ink/70">Local SQLite file</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">Isolated PostgreSQL</td>
+            </tr>
+            <tr class="matrix-row" data-cat="cloud">
+              <td class="py-3 font-medium text-ink">Automated daily snapshots & point-in-time recovery</td>
+              <td class="py-3 text-center text-ink/70">Self-Managed Cron</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">Automated Managed</td>
+            </tr>
+            <tr class="matrix-row" data-cat="cloud">
+              <td class="py-3 font-medium text-ink">Full data portability export (JSON/CSV)</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ 1-Click Export</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ 1-Click Export</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
   <!-- Modal: Cloud Waitlist / Early Access -->
-  <div id="waitlist-modal" class="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm grid place-items-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div id="waitlist-modal" class="fixed inset-0 z-50 bg-ink/70 backdrop-blur-sm hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="bg-cream rounded-3xl border border-line shadow-2xl p-6 sm:p-8 max-w-lg w-full relative">
       <button type="button" id="close-modal-btn" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-sand grid place-items-center text-ink/70 hover:text-ink transition-colors" aria-label="Close modal">
         ✕
@@ -367,15 +572,26 @@ const ld = {
         </div>
 
         <div>
-          <label for="wl-printers" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1">How many 3D printers do you run?</label>
-          <select id="wl-printers" name="printers" class="w-full px-4 py-2.5 rounded-xl border border-line bg-white text-ink text-sm focus:outline-none focus:border-brand">
-            <option value="1-3">1 to 3 printers</option>
-            <option value="4-10">4 to 10 printers (Small Farm)</option>
-            <option value="10+">10+ printers (Commercial Hub)</option>
+          <label for="wl-plan" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1">Interested Plan</label>
+          <select id="wl-plan" name="plan" class="w-full px-4 py-2.5 rounded-xl border border-line bg-white text-ink text-sm focus:outline-none focus:border-brand">
+            <option value="Cloud Workshop">Cloud Workshop ($49/mo) — Most Popular</option>
+            <option value="Cloud Solo">Cloud Solo ($19/mo)</option>
+            <option value="Enterprise">Enterprise / Bureau ($149/mo)</option>
+            <option value="Custom">Custom Deployment</option>
           </select>
         </div>
 
-        <button type="submit" id="wl-submit" class="btn btn-primary w-full !py-3 text-sm font-semibold mt-2">
+        <div>
+          <label for="wl-printers" class="block text-xs font-bold uppercase tracking-wider text-mute mb-1">How many 3D printers do you run?</label>
+          <select id="wl-printers" name="printers" class="w-full px-4 py-2.5 rounded-xl border border-line bg-white text-ink text-sm focus:outline-none focus:border-brand">
+            <option value="1-3">1 to 3 printers</option>
+            <option value="4-10" selected>4 to 10 printers</option>
+            <option value="11-25">11 to 25 printers</option>
+            <option value="25+">25+ printers (Commercial Farm)</option>
+          </select>
+        </div>
+
+        <button type="submit" id="wl-submit" class="btn btn-primary w-full !py-3 font-semibold mt-2">
           Submit Early Access Request
         </button>
 
@@ -383,136 +599,225 @@ const ld = {
       </form>
     </div>
   </div>
-</Layout>
 
-<script>
-  // Tab switcher for terminal commands
-  const tabs = document.querySelectorAll<HTMLButtonElement>(".term-tab");
-  const contents = document.querySelectorAll(".term-content");
+  <script is:inline>
+    // Resilient click event delegation for tabs, modals, copy, and matrix
+    document.addEventListener('click', async (e) => {
+      // 1. Terminal Tab Switching
+      const termTab = e.target.closest('.term-tab');
+      if (termTab) {
+        e.preventDefault();
+        const targetId = termTab.getAttribute('data-target');
+        document.querySelectorAll('.term-tab').forEach((tab) => {
+          tab.classList.remove('active-tab', 'bg-white/15', 'text-white');
+          tab.classList.add('text-cream/60');
+        });
+        termTab.classList.add('active-tab', 'bg-white/15', 'text-white');
+        termTab.classList.remove('text-cream/60');
 
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const targetId = tab.dataset.target;
-      tabs.forEach((t) => {
-        t.classList.remove("active-tab", "text-cream");
-        t.classList.add("text-cream/60");
-      });
-      tab.classList.add("active-tab", "text-cream");
-      tab.classList.remove("text-cream/60");
+        document.querySelectorAll('.term-content').forEach((content) => {
+          if (content.id === targetId) {
+            content.classList.remove('hidden');
+          } else {
+            content.classList.add('hidden');
+          }
+        });
+        return;
+      }
 
-      contents.forEach((c) => {
-        if (c.id === targetId) {
-          c.classList.remove("hidden");
+      // 2. Terminal Copy Button
+      const copyBtn = e.target.closest('#copy-term-btn');
+      if (copyBtn) {
+        e.preventDefault();
+        const activeContent = document.querySelector('.term-content:not(.hidden)');
+        if (!activeContent) return;
+        const text = Array.from(activeContent.querySelectorAll('.select-all, pre, p'))
+          .map((el) => el.innerText.trim())
+          .filter((t) => t && !t.startsWith('#'))
+          .join('\n');
+
+        const copyLabel = document.getElementById('copy-text');
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          if (copyLabel) copyLabel.textContent = 'Copied! ✓';
+          setTimeout(() => { if (copyLabel) copyLabel.textContent = 'Copy'; }, 2000);
+        } catch (_) {
+          if (copyLabel) copyLabel.textContent = 'Failed';
+          setTimeout(() => { if (copyLabel) copyLabel.textContent = 'Copy'; }, 2000);
+        }
+        return;
+      }
+
+      // 3. Early Access Modal Triggers
+      const openModalBtn = e.target.closest('[data-open-waitlist], #open-waitlist-btn, #card-waitlist-btn');
+      if (openModalBtn) {
+        e.preventDefault();
+        const plan = openModalBtn.getAttribute('data-plan') || 'Cloud Workshop';
+        const planSelect = document.getElementById('wl-plan');
+        if (planSelect) planSelect.value = plan;
+
+        const modal = document.getElementById('waitlist-modal');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        }
+        return;
+      }
+
+      // 4. Close Modal Triggers
+      const closeBtn = e.target.closest('#close-modal-btn');
+      const modal = document.getElementById('waitlist-modal');
+      if (closeBtn || e.target === modal) {
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+        return;
+      }
+
+      // 5. Billing Cycle Toggle (Monthly vs Annual)
+      const toggleMonthly = e.target.closest('#toggle-monthly');
+      const toggleAnnual = e.target.closest('#toggle-annual');
+      if (toggleMonthly || toggleAnnual) {
+        const isAnnual = !!toggleAnnual;
+        const btnM = document.getElementById('toggle-monthly');
+        const btnA = document.getElementById('toggle-annual');
+
+        if (isAnnual) {
+          btnA.className = 'billing-toggle-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white text-ink shadow-sm flex items-center gap-1.5';
+          btnM.className = 'billing-toggle-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-mute hover:text-ink';
+          
+          document.querySelector('.price-solo').textContent = '$15';
+          document.querySelector('.price-solo-sub').textContent = 'Billed annually ($180/yr · Save 20%)';
+          document.querySelector('.price-workshop').textContent = '$39';
+          document.querySelector('.price-workshop-sub').textContent = 'Billed annually ($468/yr · Save 20%)';
+          document.querySelector('.price-enterprise').textContent = '$119';
+          document.querySelector('.price-enterprise-sub').textContent = 'Billed annually ($1,428/yr · Save 20%)';
         } else {
-          c.classList.add("hidden");
+          btnM.className = 'billing-toggle-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white text-ink shadow-sm';
+          btnA.className = 'billing-toggle-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-mute hover:text-ink flex items-center gap-1.5';
+          
+          document.querySelector('.price-solo').textContent = '$19';
+          document.querySelector('.price-solo-sub').textContent = 'Billed monthly ($228/yr)';
+          document.querySelector('.price-workshop').textContent = '$49';
+          document.querySelector('.price-workshop-sub').textContent = 'Billed monthly ($588/yr)';
+          document.querySelector('.price-enterprise').textContent = '$149';
+          document.querySelector('.price-enterprise-sub').textContent = 'Billed monthly ($1,788/yr)';
+        }
+        return;
+      }
+
+      // 6. Matrix Category Tabs
+      const matrixTab = e.target.closest('.matrix-tab');
+      if (matrixTab) {
+        const cat = matrixTab.getAttribute('data-cat');
+        document.querySelectorAll('.matrix-tab').forEach((t) => {
+          t.className = 'matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink';
+        });
+        matrixTab.className = 'matrix-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-ink shadow-sm';
+
+        document.querySelectorAll('.matrix-row').forEach((row) => {
+          if (cat === 'all' || row.getAttribute('data-cat') === cat) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+    });
+
+    // Escape Key to close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('waitlist-modal');
+        if (modal && !modal.classList.contains('hidden')) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      }
+    });
+
+    // Waitlist Form Submit Handler
+    const form = document.getElementById('waitlist-form');
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('wl-submit');
+        const status = document.getElementById('wl-status');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Submitting…';
+        }
+        if (status) {
+          status.classList.remove('hidden');
+          status.textContent = 'Registering your workshop…';
+        }
+
+        const data = new FormData(form);
+        const payload = {
+          name: data.get('name'),
+          service: 'QuoteForge Cloud Early Access',
+          material: `Plan: ${data.get('plan')} | Workshop: ${data.get('company')} (${data.get('printers')})`,
+          quantity: '1',
+          message: `Work Email: ${data.get('email')} — Registered for QuoteForge Cloud ${data.get('plan')} waitlist.`
+        };
+
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) throw new Error('Status ' + res.status);
+
+          if (status) {
+            status.className = 'text-xs text-center font-bold text-accent mt-3';
+            status.textContent = '✓ You are on the waitlist! We will be in touch shortly.';
+          }
+          form.reset();
+          setTimeout(() => {
+            const modal = document.getElementById('waitlist-modal');
+            if (modal) {
+              modal.classList.add('hidden');
+              modal.classList.remove('flex');
+            }
+            if (status) status.classList.add('hidden');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit Early Access Request';
+            }
+          }, 3000);
+        } catch (_) {
+          if (status) {
+            status.className = 'text-xs text-center font-bold text-brand mt-3';
+            status.textContent = '✓ Request registered! We will send your early access invite.';
+          }
+          setTimeout(() => {
+            const modal = document.getElementById('waitlist-modal');
+            if (modal) {
+              modal.classList.add('hidden');
+              modal.classList.remove('flex');
+            }
+            if (status) status.classList.add('hidden');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit Early Access Request';
+            }
+          }, 2500);
         }
       });
-    });
-  });
-
-  // Copy command button
-  const copyBtn = document.getElementById("copy-term-btn");
-  const copyText = document.getElementById("copy-text");
-
-  if (copyBtn && copyText) {
-    copyBtn.addEventListener("click", async () => {
-      const activeContent = document.querySelector(".term-content:not(.hidden)");
-      if (!activeContent) return;
-      
-      const textToCopy = (activeContent.textContent || "")
-        .split("\n")
-        .filter((l) => !l.trim().startsWith("#") && l.trim().length > 0)
-        .join("\n")
-        .trim();
-
-      try {
-        await navigator.clipboard.writeText(textToCopy);
-        copyText.textContent = "Copied! ✓";
-        setTimeout(() => { copyText.textContent = "Copy"; }, 2000);
-      } catch (err) {
-        copyText.textContent = "Failed";
-        setTimeout(() => { copyText.textContent = "Copy"; }, 2000);
-      }
-    });
-  }
-
-  // Early access modal logic
-  const modal = document.getElementById("waitlist-modal")!;
-  const openBtn = document.getElementById("open-waitlist-btn");
-  const cardBtn = document.getElementById("card-waitlist-btn");
-  const closeBtn = document.getElementById("close-modal-btn");
-  const form = document.getElementById("waitlist-form") as HTMLFormElement;
-  const status = document.getElementById("wl-status")!;
-  const submitBtn = document.getElementById("wl-submit") as HTMLButtonElement;
-
-  const openModal = () => { modal.classList.remove("hidden"); };
-  const closeModal = () => { modal.classList.add("hidden"); };
-
-  if (openBtn) openBtn.addEventListener("click", openModal);
-  if (cardBtn) cardBtn.addEventListener("click", openModal);
-  if (closeBtn) closeBtn.addEventListener("click", closeModal);
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !modal.classList.contains("hidden")) closeModal();
-  });
-
-  // Form submission
-  if (form) {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting…";
-      status.classList.remove("hidden");
-      status.textContent = "Registering request…";
-
-      const data = new FormData(form);
-      const payload = {
-        name: data.get("name"),
-        service: "QuoteForge Cloud Early Access",
-        material: `Workshop: ${data.get("company")} (Printers: ${data.get("printers")})`,
-        quantity: "1",
-        message: `Work Email: ${data.get("email")} — Requested QuoteForge Cloud Early Access invite.`
-      };
-
-      try {
-        const res = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) throw new Error("Server returned " + res.status);
-
-        status.className = "text-xs text-center font-bold text-accent mt-3";
-        status.textContent = "✓ You are on the waitlist! We will be in touch shortly.";
-        form.reset();
-        setTimeout(() => {
-          closeModal();
-          status.classList.add("hidden");
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit Early Access Request";
-        }, 3000);
-      } catch (err) {
-        status.className = "text-xs text-center font-bold text-brand mt-3";
-        status.textContent = "Request received! We will send your invite shortly.";
-        setTimeout(() => {
-          closeModal();
-          status.classList.add("hidden");
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit Early Access Request";
-        }, 2500);
-      }
-    });
-  }
-</script>
-
-<style>
-  .active-tab {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-  }
-</style>
+    }
+  </script>
+</Layout>
