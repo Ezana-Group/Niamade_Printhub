@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "printhub-africa",
+  "compatibility_date": "2024-11-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "pages_build_output_dir": "./dist",
+  // Top-level settings define production
+  "vars": {
+    "ENVIRONMENT": "production",
+    "SANITY_PROJECT_ID": "m7x6icn3",
+    "SANITY_DATASET": "production"
+  },
+  // The previews block defines settings used during 'wrangler preview'
+  "previews": {
+    "vars": {
+      "ENVIRONMENT": "preview",
+      "SANITY_PROJECT_ID": "m7x6icn3",
+      "SANITY_DATASET": "production"
+    }
+  }
+}
