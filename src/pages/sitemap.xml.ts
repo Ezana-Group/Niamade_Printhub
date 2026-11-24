@@ -12,8 +12,6 @@ const staticPages: Array<{
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/services/", priority: "0.9", changefreq: "weekly" },
   { path: "/shop/", priority: "0.9", changefreq: "daily" },
-  { path: "/quoteforge/", priority: "0.9", changefreq: "weekly" },
-  { path: "/quoteforge/docs/", priority: "0.8", changefreq: "weekly" },
   { path: "/custom/", priority: "0.8", changefreq: "weekly" },
   { path: "/for-business/", priority: "0.8", changefreq: "weekly" },
   { path: "/bookings/", priority: "0.8", changefreq: "weekly" },
