@@ -397,15 +397,19 @@ const ld = {
             </div>
             <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Unlimited quotes & jobs</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-brand font-bold">✓</span>
               <span>Hardware Bridge Farm Telemetry</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>250 GB Cloudflare R2 Storage</span>
+              <span>Accounting Export (QuickBooks & Xero CSV)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Outbound Webhooks (Zapier & Make Automation)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>250 GB Cloudflare R2 CAD Storage</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
@@ -445,7 +449,15 @@ const ld = {
             </div>
             <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
-              <span>Full REST API & Webhooks Access</span>
+              <span>Full Two-Way REST API & Webhooks</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Real-time Material Inventory Sync (ERP/MRP)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brand font-bold">✓</span>
+              <span>Custom Katana MRP & Odoo Bridge Support</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-brand font-bold">✓</span>
@@ -478,6 +490,7 @@ const ld = {
           <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink" data-cat="engine">Quoting Engine</button>
           <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink" data-cat="farm">Farm & Telemetry</button>
           <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink" data-cat="cloud">Storage & Cloud</button>
+          <button type="button" class="matrix-tab px-3 py-1.5 rounded-lg text-mute hover:text-ink" data-cat="integrations">ERP & Finance</button>
         </div>
       </div>
 
@@ -535,6 +548,26 @@ const ld = {
               <td class="py-3 font-medium text-ink">Full data portability export (JSON/CSV)</td>
               <td class="py-3 text-center text-emerald-600 font-bold">✓ 1-Click Export</td>
               <td class="py-3 text-center text-emerald-600 font-bold">✓ 1-Click Export</td>
+            </tr>
+            <tr class="matrix-row" data-cat="integrations">
+              <td class="py-3 font-medium text-ink">Accounting Export (QuickBooks & Xero formatted CSV)</td>
+              <td class="py-3 text-center text-ink/70">Manual CSV</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Automated 1-Click</td>
+            </tr>
+            <tr class="matrix-row" data-cat="integrations">
+              <td class="py-3 font-medium text-ink">Outbound Webhooks (Zapier, Make.com, n8n)</td>
+              <td class="py-3 text-center text-mute">—</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Workshop & Enterprise</td>
+            </tr>
+            <tr class="matrix-row" data-cat="integrations">
+              <td class="py-3 font-medium text-ink">Programmatic REST API (Bearer auth)</td>
+              <td class="py-3 text-center text-ink/70">Local Network Only</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Global Production API</td>
+            </tr>
+            <tr class="matrix-row" data-cat="integrations">
+              <td class="py-3 font-medium text-ink">Raw Material Inventory Deduction (Katana MRP / Odoo)</td>
+              <td class="py-3 text-center text-mute">—</td>
+              <td class="py-3 text-center text-emerald-600 font-bold">✓ Enterprise Bridge</td>
             </tr>
           </tbody>
         </table>
