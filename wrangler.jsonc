@@ -1,12 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "printhub-africa",
+  "main": "src/worker.ts",
   "compatibility_date": "2024-11-01",
   "compatibility_flags": [
     "nodejs_compat"
   ],
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS"
   },
   "pages_build_output_dir": "./dist",
   // Top-level settings define production
@@ -14,7 +16,8 @@
     "ENVIRONMENT": "production",
     "SANITY_PROJECT_ID": "m7x6icn3",
     "SANITY_DATASET": "production",
-    "PUBLIC_CLARITY_PROJECT_ID": "ziney1t17t"
+    "PUBLIC_CLARITY_PROJECT_ID": "ziney1t17t",
+    "PUBLIC_PAYSTACK_KEY": "pk_live_dc267934d2c2b11d8c613d110d6af0d20faf7446"
   },
   // The previews block defines settings used during 'wrangler preview'
   "previews": {
@@ -22,7 +25,8 @@
       "ENVIRONMENT": "preview",
       "SANITY_PROJECT_ID": "m7x6icn3",
       "SANITY_DATASET": "production",
-      "PUBLIC_CLARITY_PROJECT_ID": "ziney1t17t"
+      "PUBLIC_CLARITY_PROJECT_ID": "ziney1t17t",
+      "PUBLIC_PAYSTACK_KEY": "pk_live_dc267934d2c2b11d8c613d110d6af0d20faf7446"
     }
   }
 }

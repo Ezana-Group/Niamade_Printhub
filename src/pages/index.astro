@@ -82,7 +82,7 @@ const ld = {
   logo: `${site.url}/logo.png`,
   priceRange: "KES 300 - KES 15,000",
   currenciesAccepted: "KES",
-  paymentAccepted: ["M-Pesa", "Cash"],
+  paymentAccepted: ["M-Pesa", "Credit Card", "Debit Card", "Paystack", "Cash"],
   description: "Made-to-order 3D printing in Eldoret, Kenya by PrintHub Africa, a Niamade Hub company: personalised gifts, branded business pieces, souvenirs and custom parts, with delivery across Kenya.",
   address: {
     "@type": "PostalAddress",
@@ -242,7 +242,7 @@ const ld = {
       {[
         { icon: "whatsapp", t: "We interrogate the idea first", d: "What is it for? Where will it live? Which axis takes the load? We pick the right polymer before turning on the heaters." },
         { icon: "check", t: "Finished with intention", d: "Layer lines are fine for prototypes, but for displays we sand, prime, smooth and paint until it looks injection-molded." },
-        { icon: "mpesa", t: "Pay the Kenyan way", d: "Clear prices in KES, zero hidden import fees, and payment by M-Pesa. Design is quoted separately from print so you always know." },
+        { icon: "mpesa", t: "Pay the Kenyan way", d: "Clear prices in KES, zero hidden import fees, and instant online payment via M-Pesa or Card through Paystack." },
       ].map((x) => (
         <div class="rounded-4xl bg-sand p-7"><span class="w-12 h-12 rounded-2xl bg-card grid place-items-center text-brand"><Icon name={x.icon} size={24} /></span><h3 class="font-display text-2xl mt-5">{x.t}</h3><p class="text-mute mt-2">{x.d}</p></div>))}
     </div>

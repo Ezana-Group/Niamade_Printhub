@@ -464,6 +464,7 @@ const {
       email: formData.get("email"),
       amount: totalKobo,
       currency: "KES",
+      channels: ["mobile_money", "card", "bank_transfer"],
       ref: paystackRef,
       firstname: customerName.split(" ")[0],
       lastname: customerName.split(" ").slice(1).join(" ") || "",

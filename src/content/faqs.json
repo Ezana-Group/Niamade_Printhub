@@ -5,7 +5,7 @@
     { "group": "Ordering", "q": "Which file types can I send?", "a": "STL, OBJ, STEP and 3MF. STEP is best when dimensions must be exact. If you only have a sketch or a photo, send that and we will take it from there." },
     { "group": "Ordering", "q": "Can I change the size, colour or design?", "a": "Message us with what you would like and we will confirm what is possible and the price. Custom work is quoted after we assess your request." },
     { "group": "Ordering", "q": "How big can a print be?", "a": "Tell us the size you need and we will confirm. Larger objects can often be printed in sections and joined together." },
-    { "group": "Payment", "q": "How do I pay?", "a": "By M-Pesa. Design work is paid before we issue the print quote. Custom print jobs usually need a deposit before printing starts, with the balance due before dispatch." },
+    { "group": "Payment", "q": "How do I pay?", "a": "You can pay instantly online via Paystack using M-Pesa STK push (enter your PIN directly on your phone) or any Visa, Mastercard, or Apple Pay. For custom quotes and bespoke CAD projects, we also accept direct M-Pesa." },
     { "group": "Payment", "q": "How is a print priced?", "a": "By the material used and the print time, plus finishing and quantity. We confirm your price after we have assessed what you need." },
     { "group": "Payment", "q": "Are the prices in the shop final?", "a": "Shop prices are a guide. Custom work and any changes are quoted after we assess your request, so you always know the price before you commit." },
     { "group": "Payment", "q": "Is it cheaper to order in bulk?", "a": "Usually, yes. Larger batches cost less per piece, so ask about batch pricing for events, teams and shops." },

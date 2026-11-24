@@ -1,0 +1,157 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site, wa } from "../data/site";
+---
+<Layout
+  title="Payment Successful | PrintHub Africa"
+  description="Your payment via Paystack was successful. Your 3D printed order has been queued for production."
+  robots="noindex, nofollow"
+>
+  <section class="wrap pt-12 sm:pt-16 pb-24 text-center">
+    <div class="mx-auto max-w-xl">
+      <!-- Animated / Stylized Success Icon -->
+      <div class="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-emerald-100 text-emerald-600 mb-6 shadow-sm border border-emerald-200">
+        <svg class="w-10 h-10 sm:w-12 sm:h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <!-- Badge -->
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Payment Confirmed via Paystack
+        </span>
+      </div>
+
+      <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-ink">Payment received! 🎉</h1>
+      <p class="mt-3 text-base sm:text-lg text-mute" id="confirm-product">Your order is on its way to our 3D print queue in Eldoret.</p>
+      
+      <!-- Order & Transaction Reference Pill -->
+      <div class="mt-4 inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-2xl bg-sand/70 border border-line text-xs sm:text-sm font-mono text-ink">
+        <span class="text-mute font-sans">Reference:</span>
+        <strong id="confirm-ref" class="font-bold">Generating...</strong>
+        <span id="confirm-paystack-ref-wrap" class="hidden text-mute font-sans">· Paystack: <strong id="confirm-paystack-ref" class="text-ink"></strong></span>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="mt-8 panel p-6 sm:p-8 text-left space-y-4 bg-card border border-line rounded-3xl shadow-xs" id="order-summary" style="display:none">
+        <h2 class="font-display text-xl sm:text-2xl font-bold text-ink pb-2 border-b border-line/70">Order Summary</h2>
+        <dl class="divide-y divide-line/70" id="summary-rows"></dl>
+      </div>
+
+      <!-- Next Steps Timeline -->
+      <div class="mt-8 rounded-3xl bg-sand/60 border border-line p-6 sm:p-8 text-left">
+        <h2 class="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
+          <span>What happens next?</span>
+        </h2>
+        <ol class="mt-4 space-y-3.5 text-sm sm:text-base text-ink/85">
+          <li class="flex items-start gap-3">
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-brand text-cream text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+            <span><strong>Model Slicing & Machine Scheduling:</strong> We verify geometry, assign polymers, and schedule machine runtime (usually within 1 hour).</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-brand text-cream text-xs font-bold flex items-center justify-center mt-0.5">2</span>
+            <span><strong>Direct Maker WhatsApp Updates:</strong> We will send you progress photos as your piece prints on the build plate.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-brand text-cream text-xs font-bold flex items-center justify-center mt-0.5">3</span>
+            <span><strong>Quality Inspection & Dispatch:</strong> Hand-finished, boxed, and handed to the courier or made ready for studio collection in Eldoret.</span>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-8 flex flex-col sm:flex-row flex-wrap justify-center gap-3.5">
+        <a id="btn-print-receipt" href="/print/receipt/" target="_blank" rel="noopener" class="btn !bg-ink !text-cream hover:!bg-black text-sm sm:text-base font-bold py-3 px-5 rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zM9 9h6m-6 4h6m-7-8h8a2 2 0 012 2v2H7V7a2 2 0 012-2z"/></svg>
+          Print / Download Receipt
+        </a>
+        <a id="btn-wa-followup" href={wa("Hi PrintHub, I just completed my payment via Paystack. I would like to confirm my order.")} target="_blank" rel="noopener" class="btn btn-wa text-sm sm:text-base font-bold py-3 px-5 rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Chat on WhatsApp
+        </a>
+        <a href="/shop/" class="btn btn-soft text-sm sm:text-base font-bold py-3 px-5 rounded-2xl">
+          Return to Shop
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Handle Paystack query parameters (?reference=... or ?trxref=... or ?ref=...)
+  const p = new URLSearchParams(location.search);
+  const ref = p.get("ref") || p.get("reference") || p.get("trxref") || "PHB-" + Date.now().toString().slice(-6);
+  const paystackRef = p.get("paystackRef") || p.get("reference") || p.get("trxref") || "";
+  const product = p.get("product");
+  const name = p.get("name");
+  const qty = p.get("qty") || "1";
+  const size = p.get("size");
+  const colour = p.get("colour");
+  const delivery = p.get("delivery");
+  const amount = p.get("amount");
+
+  const elProduct = document.getElementById("confirm-product");
+  if (elProduct && product) {
+    elProduct.textContent = `Your order for "${product}" is on its way to our 3D print queue in Eldoret.`;
+  }
+
+  const elRef = document.getElementById("confirm-ref");
+  if (elRef) {
+    elRef.textContent = ref;
+  }
+
+  if (paystackRef && paystackRef !== ref) {
+    const elWrap = document.getElementById("confirm-paystack-ref-wrap");
+    const elPRef = document.getElementById("confirm-paystack-ref");
+    if (elWrap && elPRef) {
+      elPRef.textContent = paystackRef;
+      elWrap.classList.remove("hidden");
+    }
+  }
+
+  // Personalize Receipt link
+  const printReceiptBtn = document.getElementById("btn-print-receipt") as HTMLAnchorElement | null;
+  if (printReceiptBtn) {
+    printReceiptBtn.href = `/print/receipt/?${p.toString()}`;
+  }
+
+  // Personalize WhatsApp link
+  const followUpBtn = document.getElementById("btn-wa-followup") as HTMLAnchorElement | null;
+  if (followUpBtn) {
+    const text = encodeURIComponent(
+      `🛍️ PAID ORDER CONFIRMATION — PrintHub Africa\n\n` +
+      `Reference: ${ref}\n` +
+      (paystackRef ? `Paystack Ref: ${paystackRef}\n` : "") +
+      (product ? `Product: ${product}\n` : "") +
+      (qty ? `Qty: ${qty}\n` : "") +
+      (amount ? `Amount Paid: KES ${Number(amount).toLocaleString()}\n` : "") +
+      `Status: ✅ PAID\n\n` +
+      `Hi, I just completed payment on the website and would like to follow up on my order!`
+    );
+    followUpBtn.href = `https://wa.me/254792732929?text=${text}`;
+  }
+
+  // Order summary block
+  const summary = document.getElementById("order-summary");
+  const rows = document.getElementById("summary-rows");
+  if (summary && rows && (product || name || amount)) {
+    summary.style.display = "block";
+    const items: [string, string | null][] = [
+      ["Product", product || "Custom 3D Print"],
+      ["Quantity", qty],
+      ["Size", size],
+      ["Colour", colour],
+      ["Delivery / Collection", delivery],
+      ["Amount Paid", amount ? `KES ${Number(amount).toLocaleString()}` : null],
+      ["Payment Status", "✅ Paid via Paystack (M-Pesa / Card)"],
+      ["Customer Name", name],
+      ["Order Reference", ref],
+    ];
+    rows.innerHTML = items
+      .filter(([, v]) => v && v !== "null")
+      .map(([k, v]) => `<div class="grid grid-cols-2 gap-4 py-3"><dt class="font-semibold text-sm sm:text-base text-ink">${k}</dt><dd class="text-sm sm:text-base text-mute font-medium">${v}</dd></div>`)
+      .join("");
+  }
+</script>

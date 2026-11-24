@@ -330,7 +330,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
               <div class="space-y-4">
                 
                 <!-- Option A: Paystack Instant STK Push & Card (Default) -->
-                <label class="payment-card relative block p-5 rounded-2xl border-2 border-brand bg-brand/5 cursor-pointer transition-all shadow-xs">
+                <label class="payment-card relative block p-5 sm:p-6 rounded-2xl border-2 border-brand bg-brand/5 cursor-pointer transition-all shadow-xs">
                   <div class="flex items-start justify-between gap-3">
                     <div class="flex items-start gap-3.5">
                       <input
@@ -338,16 +338,38 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                         name="payment_choice"
                         value="paystack"
                         checked
-                        class="mt-1.5 accent-brand w-5 h-5"
+                        class="mt-1.5 accent-brand w-5 h-5 shrink-0"
                       />
-                      <div>
-                        <p class="font-bold text-ink text-base sm:text-lg flex items-center gap-2">
-                          Instant M-Pesa STK Push & Card
+                      <div class="space-y-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                          <p class="font-bold text-ink text-base sm:text-lg">
+                            Instant M-Pesa STK Push & Card
+                          </p>
                           <span class="text-xs bg-emerald-600 text-white font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Fastest</span>
+                          <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0ba4db] bg-[#0ba4db]/10 px-2.5 py-0.5 rounded-full border border-[#0ba4db]/25">
+                            <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            Verified Paystack Gateway
+                          </span>
+                        </div>
+                        <p class="text-sm text-ink/75 leading-relaxed">
+                          Enter your PIN directly on your phone when the M-Pesa STK prompt appears, or pay with any Visa, Mastercard, or Apple Pay.
                         </p>
-                        <p class="text-sm text-ink/75 mt-1 leading-relaxed">
-                          Enter your PIN on your phone to complete payment immediately. Also accepts Visa, Mastercard, and Apple Pay.
-                        </p>
+                        <!-- Accepted Payment Methods Badges -->
+                        <div class="flex flex-wrap items-center gap-2 pt-2">
+                          <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Safaricom M-Pesa
+                          </span>
+                          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200">
+                            💳 Visa & Mastercard
+                          </span>
+                          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-stone-100 text-stone-800 border border-stone-200">
+                            Apple Pay
+                          </span>
+                          <span class="text-xs text-mute font-medium ml-auto hidden sm:inline-flex items-center gap-1">
+                            🔒 256-Bit Bank Encryption
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -426,10 +448,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
                   <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                   </svg>
-                  <span id="submit-btn-text">Pay with M-Pesa / Card</span>
+                  <span id="submit-btn-text">Pay with Paystack (M-Pesa / Card)</span>
                 </button>
                 <p class="text-center text-xs sm:text-sm text-mute mt-3.5 flex items-center justify-center gap-1.5">
-                  <span>🔒 Handled securely by Paystack. PrintHub never stores your M-Pesa PIN or card details.</span>
+                  <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  <span>Secured by Paystack. PCI-DSS Level 1 certified. PrintHub never sees or stores your M-Pesa PIN or card details.</span>
                 </p>
               </div>
 
@@ -671,7 +696,7 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
       if (methodChoice === "manual") {
         submitBtnText.textContent = `Complete Order (KES ${total.toLocaleString()})`;
       } else {
-        submitBtnText.textContent = `Pay KES ${total.toLocaleString()} with M-Pesa / Card`;
+        submitBtnText.textContent = `Pay KES ${total.toLocaleString()} via Paystack (M-Pesa / Card)`;
       }
     }
   }
@@ -1003,10 +1028,13 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
 
     // Flow B: Paystack Instant STK Push & Card
     if (!paystackKey || !paystackKey.startsWith("pk_")) {
-      const waFallback = encodeURIComponent(
-        `🛍️ DIRECT ORDER — PrintHub Africa\n\nProduct: ${productName}\nQty: ${currentQty}\nSubtotal: KES ${subtotalKes.toLocaleString()}\nDelivery (${selectedCity}): KES ${deliveryFeeKes.toLocaleString()}\nTotal: KES ${totalKes.toLocaleString()}\nCustomer: ${name} (${phone})\nAddress: ${fullDeliveryString}`
-      );
-      window.open(`https://wa.me/${whatsappNum}?text=${waFallback}`, "_blank");
+      showError("Paystack Public Key (PUBLIC_PAYSTACK_KEY) is not configured yet. Set it in .env or Sanity Studio. Routing order to WhatsApp...");
+      setTimeout(() => {
+        const waFallback = encodeURIComponent(
+          `🛍️ DIRECT ORDER — PrintHub Africa\n\nProduct: ${productName}\nQty: ${currentQty}\nSubtotal: KES ${subtotalKes.toLocaleString()}\nDelivery (${selectedCity}): KES ${deliveryFeeKes.toLocaleString()}\nTotal: KES ${totalKes.toLocaleString()}\nCustomer: ${name} (${phone})\nAddress: ${fullDeliveryString}`
+        );
+        window.open(`https://wa.me/${whatsappNum}?text=${waFallback}`, "_blank");
+      }, 1200);
       return;
     }
 
@@ -1054,8 +1082,9 @@ const hasManualMpesa = Boolean(site.mpesaTillNumber || site.mpesaPaybillNumber);
       const handler = (window as any).PaystackPop.setup({
         key: paystackKey,
         email,
-        amount: totalKes * 100, // in kobo
+        amount: totalKes * 100, // in kobo / cents
         currency: "KES",
+        channels: ["mobile_money", "card", "bank_transfer"],
         ref: paystackRef,
         firstname: name.split(" ")[0],
         lastname: name.split(" ").slice(1).join(" ") || "",
