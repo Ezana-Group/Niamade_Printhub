@@ -13,14 +13,16 @@
   "vars": {
     "ENVIRONMENT": "production",
     "SANITY_PROJECT_ID": "m7x6icn3",
-    "SANITY_DATASET": "production"
+    "SANITY_DATASET": "production",
+    "PUBLIC_CLARITY_PROJECT_ID": "ziney1t17t"
   },
   // The previews block defines settings used during 'wrangler preview'
   "previews": {
     "vars": {
       "ENVIRONMENT": "preview",
       "SANITY_PROJECT_ID": "m7x6icn3",
-      "SANITY_DATASET": "production"
+      "SANITY_DATASET": "production",
+      "PUBLIC_CLARITY_PROJECT_ID": "ziney1t17t"
     }
   }
 }

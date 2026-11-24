@@ -68,7 +68,7 @@ export const site = {
   googleSiteVerification: "wCWYBxjCrZbXaBiDU1aioTUMNUC7wAjEBIpVFX5rrwk",
   googleAnalyticsId: "G-DPPDS1G5P1",
   googleAdsId: "AW-18115096382",
-  clarityProjectId: _sanitySettings?.clarityProjectId || process.env.PUBLIC_CLARITY_PROJECT_ID || import.meta.env?.PUBLIC_CLARITY_PROJECT_ID || import.meta.env?.PUBLIC_CLARITY_ID || "",
+  clarityProjectId: _sanitySettings?.clarityProjectId || process.env.PUBLIC_CLARITY_PROJECT_ID || import.meta.env?.PUBLIC_CLARITY_PROJECT_ID || import.meta.env?.PUBLIC_CLARITY_ID || "ziney1t17t",
   // Payments & Checkout
   paystackPublicKey: _sanitySettings?.paystackPublicKey || process.env.PUBLIC_PAYSTACK_KEY || import.meta.env?.PUBLIC_PAYSTACK_KEY || "",
   enableCheckout: _sanitySettings?.enableCheckout ?? true,
