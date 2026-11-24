@@ -1,0 +1,230 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Icon from "../../components/Icon.astro";
+import { site, wa, waMessages } from "../../data/site";
+import { services } from "../../data/services";
+
+const pageTitle = "3D Printing & Design Services in Kenya | PrintHub Africa";
+const pageDesc = "Explore professional 3D printing services across Kenya: on-demand custom printing, rapid engineering prototyping, small batch manufacturing, broken part replacement, 3D CAD design, and architectural scale models.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": `${site.url}/#business`,
+      "name": "PrintHub Africa",
+      "url": site.url,
+      "telephone": site.phone,
+      "email": site.email,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": site.city,
+        "addressCountry": "KE"
+      },
+      "priceRange": "$$",
+      "image": `${site.url}/og.png`
+    },
+    {
+      "@type": "ItemList",
+      "name": "PrintHub Africa 3D Printing & Fabrication Services",
+      "itemListElement": services.map((s, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "item": {
+          "@type": "Service",
+          "name": s.title,
+          "description": s.metaDescription,
+          "url": `${site.url}/services/${s.slug}/`,
+          "provider": {
+            "@id": `${site.url}/#business`
+          }
+        }
+      }))
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDesc} jsonLd={schema}>
+  <!-- Hero Section -->
+  <section class="wrap pt-10 sm:pt-14 pb-12 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sand text-ink text-xs font-bold uppercase tracking-wider mb-4 border border-line">
+      <span>Industrial Additive Manufacturing</span>
+    </div>
+    
+    <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-ink max-w-4xl mx-auto leading-[1.1]">
+      Professional 3D Printing & CAD Services <span class="text-brand">in Kenya</span>
+    </h1>
+
+    <p class="mt-5 text-lg sm:text-xl text-mute max-w-2xl mx-auto leading-relaxed">
+      From single rapid prototypes to low-volume production batches and discontinued replacement parts. High-speed, precision additive manufacturing with fast delivery across Kenya.
+    </p>
+
+    <!-- CTAs -->
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5 sm:gap-4">
+      <a href="/custom/" class="btn btn-primary !py-3.5 !px-6 text-base font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+        <Icon name="upload" size={18} />
+        <span>Request Instant Quote</span>
+      </a>
+      <a href={wa("Hi PrintHub, I have a project inquiry and would like to discuss your 3D printing services.")} target="_blank" rel="noopener" class="btn btn-wa !py-3.5 !px-6 text-base font-semibold flex items-center gap-2 shadow-sm">
+        <Icon name="whatsapp" size={18} />
+        <span>Chat with an Engineer</span>
+      </a>
+      <a href="/bookings/" class="btn btn-soft !py-3.5 !px-5 text-base font-medium text-mute hover:text-ink flex items-center gap-1.5">
+        <Icon name="calendar" size={17} />
+        <span>Book Studio Session</span>
+      </a>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto text-left">
+      <div class="panel p-4 rounded-2xl border border-line">
+        <p class="text-xs uppercase font-bold text-mute tracking-wider">Speed</p>
+        <p class="font-display text-xl sm:text-2xl font-bold text-ink mt-0.5">24 – 48 Hours</p>
+        <p class="text-xs text-mute mt-1">Average prototype dispatch</p>
+      </div>
+      <div class="panel p-4 rounded-2xl border border-line">
+        <p class="text-xs uppercase font-bold text-mute tracking-wider">Materials</p>
+        <p class="font-display text-xl sm:text-2xl font-bold text-ink mt-0.5">5+ Polymers</p>
+        <p class="text-xs text-mute mt-1">PLA+, PETG, TPU, ABS, Carbon</p>
+      </div>
+      <div class="panel p-4 rounded-2xl border border-line">
+        <p class="text-xs uppercase font-bold text-mute tracking-wider">Capacity</p>
+        <p class="font-display text-xl sm:text-2xl font-bold text-ink mt-0.5">1 to 500+ Units</p>
+        <p class="text-xs text-mute mt-1">Zero tooling or mold fees</p>
+      </div>
+      <div class="panel p-4 rounded-2xl border border-line">
+        <p class="text-xs uppercase font-bold text-mute tracking-wider">Logistics</p>
+        <p class="font-display text-xl sm:text-2xl font-bold text-ink mt-0.5">Nationwide</p>
+        <p class="text-xs text-mute mt-1">Doorstep courier across Kenya</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="wrap py-12 border-t border-line">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="eyebrow">Our Capabilities</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink mt-2">Specialized Fabrication Solutions</h2>
+      <p class="text-mute text-sm sm:text-base mt-2">Click any service below to view detailed specifications, process workflows, materials, and sample pricing.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {services.map((s) => (
+        <article class="panel p-6 sm:p-7 rounded-3xl border border-line hover:border-brand/40 hover:shadow-lg transition-all flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="text-[0.7rem] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-sand text-ink group-hover:bg-brand/10 group-hover:text-brand transition-colors">
+                {s.badge}
+              </span>
+              <span class="text-xs font-semibold text-mute">
+                ⏱ {s.turnaround}
+              </span>
+            </div>
+
+            <h3 class="font-display text-xl font-bold text-ink group-hover:text-brand transition-colors">
+              <a href={`/services/${s.slug}/`} class="focus:outline-none">
+                {s.title}
+              </a>
+            </h3>
+
+            <p class="text-xs sm:text-sm text-mute mt-2.5 leading-relaxed">
+              {s.heroBlurb}
+            </p>
+
+            <!-- Key Features / Highlights -->
+            <ul class="mt-5 space-y-2 text-xs text-ink/80 border-t border-line/60 pt-4">
+              {s.benefits.slice(0, 3).map((b) => (
+                <li class="flex items-start gap-2">
+                  <span class="text-brand font-bold mt-0.5">✓</span>
+                  <span><strong>{b.title}:</strong> {b.text.slice(0, 65)}…</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-5 border-t border-line flex items-center justify-between">
+            <div>
+              <p class="text-[0.68rem] uppercase font-bold text-mute tracking-wider">Pricing</p>
+              <p class="font-display text-sm font-bold text-ink">{s.startingPrice}</p>
+            </div>
+
+            <a href={`/services/${s.slug}/`} class="btn btn-soft !py-2 !px-4 text-xs font-semibold group-hover:bg-brand group-hover:text-white group-hover:border-brand transition-all flex items-center gap-1">
+              <span>View Service</span>
+              <span>→</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Materials & Quality Engineering -->
+  <section class="wrap py-12 border-t border-line">
+    <div class="panel rounded-3xl p-8 sm:p-10 border border-line bg-peach/15">
+      <div class="grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7">
+          <span class="eyebrow">Engineering Grade Polymers</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mt-2">Right Material for the Right Job</h2>
+          <p class="text-mute text-sm sm:text-base mt-2 leading-relaxed">
+            We don't use brittle hobby plastics for functional applications. Every project is matched with the polymer that fulfills your physical requirements:
+          </p>
+
+          <div class="grid sm:grid-cols-2 gap-4 mt-6">
+            <div class="bg-white/80 p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink text-sm flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span>PETG (Tough & Weatherproof)</span>
+              </p>
+              <p class="text-xs text-mute mt-1">High impact strength, UV resistant, and heat-tolerant up to 75°C. Perfect for outdoor brackets and engine bay mounts.</p>
+            </div>
+            <div class="bg-white/80 p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink text-sm flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                <span>TPU 95A (Flexible Elastomer)</span>
+              </p>
+              <p class="text-xs text-mute mt-1">Rubber-like flexibility and shock absorption. Ideal for gaskets, anti-vibration feet, bumper covers, and protective sleeves.</p>
+            </div>
+            <div class="bg-white/80 p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink text-sm flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                <span>PLA+ (High Detail & Rigidity)</span>
+              </p>
+              <p class="text-xs text-mute mt-1">Crisp surface finish and tight tolerances. Excellent for architectural models, aesthetic enclosures, and prototypes.</p>
+            </div>
+            <div class="bg-white/80 p-4 rounded-2xl border border-line">
+              <p class="font-bold text-ink text-sm flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <span>ABS / ASA (Automotive & Heat)</span>
+              </p>
+              <p class="text-xs text-mute mt-1">Superior heat resistance up to 95°C and easy acetone vapor smoothing for mirror-gloss finished parts.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white p-6 sm:p-7 rounded-2xl border border-line shadow-sm space-y-4">
+          <h3 class="font-display text-lg font-bold text-ink">Have a Custom Project in Mind?</h3>
+          <p class="text-xs sm:text-sm text-mute leading-relaxed">
+            Send us your CAD file, dimensions, or a photo of your broken part. We provide a prompt feasibility check and pricing breakdown.
+          </p>
+
+          <div class="space-y-2.5 pt-2">
+            <a href="/custom/" class="btn btn-primary w-full text-center text-sm font-semibold !py-3 flex items-center justify-center gap-2">
+              <Icon name="upload" size={17} />
+              <span>Upload 3D Model (.STL / .STEP)</span>
+            </a>
+            <a href={wa("Hi PrintHub, I'd like a quick quote for a 3D printing project.")} target="_blank" rel="noopener" class="btn btn-wa w-full text-center text-sm font-semibold !py-3 flex items-center justify-center gap-2">
+              <Icon name="whatsapp" size={17} />
+              <span>Send Specs on WhatsApp</span>
+            </a>
+          </div>
+
+          <p class="text-[0.72rem] text-center text-mute pt-1">
+            Accepting M-Pesa & Card • Delivery throughout Kenya
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

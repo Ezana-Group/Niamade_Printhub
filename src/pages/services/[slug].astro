@@ -1,0 +1,346 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Icon from "../../components/Icon.astro";
+import { site, wa } from "../../data/site";
+import { services, type ServiceItem } from "../../data/services";
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props as { service: ServiceItem };
+
+// Schema.org Structured Data: Service + BreadcrumbList + FAQPage
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": `${site.url}/services/${service.slug}/#service`,
+      "name": service.title,
+      "serviceType": service.shortTitle,
+      "description": service.metaDescription,
+      "url": `${site.url}/services/${service.slug}/`,
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "PrintHub Africa",
+        "url": site.url,
+        "telephone": site.phone,
+        "email": site.email,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": site.city,
+          "addressCountry": "KE"
+        }
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Kenya"
+      },
+      "offers": {
+        "@type": "Offer",
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "priceCurrency": "KES",
+          "description": service.startingPrice
+        }
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": site.url
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": `${site.url}/services/`
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": service.shortTitle,
+          "item": `${site.url}/services/${service.slug}/`
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": service.faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": f.a
+        }
+      }))
+    }
+  ]
+};
+
+const otherServices = services.filter((s) => s.slug !== service.slug);
+---
+
+<Layout title={service.seoTitle} description={service.metaDescription} jsonLd={schema}>
+  <!-- Breadcrumbs & Hero Header -->
+  <section class="wrap pt-8 sm:pt-12 pb-10">
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-mute mb-5">
+      <a href="/" class="hover:text-ink transition-colors">Home</a>
+      <span>/</span>
+      <a href="/services/" class="hover:text-ink transition-colors">Services</a>
+      <span>/</span>
+      <span class="text-ink font-semibold">{service.shortTitle}</span>
+    </nav>
+
+    <div class="grid lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sand text-ink text-xs font-bold uppercase tracking-wider mb-3.5 border border-line">
+          <span>{service.badge}</span>
+        </div>
+
+        <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.12]">
+          {service.title}
+        </h1>
+
+        <p class="mt-4 text-base sm:text-lg text-mute leading-relaxed max-w-2xl">
+          {service.heroBlurb}
+        </p>
+
+        <!-- Turnaround and Pricing Highlights -->
+        <div class="mt-6 flex flex-wrap items-center gap-4 text-xs sm:text-sm">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-peach/40 border border-brand/20 text-ink font-semibold">
+            <span class="text-brand font-bold">⏱ Turnaround:</span>
+            <span>{service.turnaround}</span>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-sand border border-line text-ink font-semibold">
+            <span class="text-mute font-bold">💰 Pricing:</span>
+            <span>{service.startingPrice}</span>
+          </div>
+          <div class="inline-flex items-center gap-1.5 text-mute text-xs">
+            <span>🇰🇪 Doorstep delivery anywhere in Kenya</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
+          <a
+            href={wa(`Hi PrintHub, I'm interested in your ${service.title} service. Here are my project details:`)}
+            target="_blank"
+            rel="noopener"
+            class="btn btn-wa !py-3.5 !px-6 text-sm sm:text-base font-semibold flex items-center gap-2 shadow-sm"
+          >
+            <Icon name="whatsapp" size={18} />
+            <span>Request Quote on WhatsApp</span>
+          </a>
+          <a href="/custom/" class="btn btn-primary !py-3.5 !px-5 text-sm sm:text-base font-semibold flex items-center gap-2 shadow-sm">
+            <Icon name="upload" size={17} />
+            <span>Upload 3D CAD File</span>
+          </a>
+          <a href="/bookings/" class="btn btn-soft !py-3.5 !px-5 text-sm sm:text-base font-medium text-mute hover:text-ink flex items-center gap-1.5">
+            <Icon name="calendar" size={16} />
+            <span>Book Consultation</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Summary Card -->
+      <div class="lg:col-span-4 panel p-6 rounded-3xl border border-line bg-cream/70 space-y-4">
+        <h3 class="font-display text-base font-bold text-ink">Service Highlights</h3>
+        <ul class="space-y-2.5 text-xs text-ink/80">
+          <li class="flex items-center gap-2">
+            <span class="text-brand font-bold">✓</span>
+            <span>Engineered on high-speed CoreXY 3D printers</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-brand font-bold">✓</span>
+            <span>Pre-print geometry & manifold wall inspection</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-brand font-bold">✓</span>
+            <span>Payment via M-Pesa or Card</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-brand font-bold">✓</span>
+            <span>Pickup in Eldoret or courier across Kenya</span>
+          </li>
+        </ul>
+
+        <div class="pt-4 border-t border-line">
+          <p class="text-[0.68rem] uppercase font-bold text-mute tracking-wider mb-2">Recommended Materials</p>
+          <div class="flex flex-wrap gap-1.5">
+            {service.materialsRecommended.map((m) => (
+              <span class="px-2.5 py-1 rounded-lg bg-sand text-ink text-xs font-medium">
+                {m}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Benefits Grid -->
+  <section class="wrap py-12 border-t border-line">
+    <div class="max-w-2xl mb-8">
+      <span class="eyebrow">Why PrintHub</span>
+      <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mt-1">
+        Why Choose Our {service.shortTitle} Service
+      </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {service.benefits.map((b) => (
+        <div class="panel p-5 sm:p-6 rounded-2xl border border-line bg-white/70">
+          <p class="font-display text-base font-bold text-ink flex items-center gap-2">
+            <span class="text-brand font-bold">✓</span>
+            <span>{b.title}</span>
+          </p>
+          <p class="text-xs sm:text-sm text-mute mt-2 leading-relaxed">
+            {b.text}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Capabilities & Process Side-by-Side -->
+  <section class="wrap py-12 border-t border-line">
+    <div class="grid lg:grid-cols-12 gap-10">
+      <!-- Capabilities Table -->
+      <div class="lg:col-span-6 space-y-4">
+        <div>
+          <span class="eyebrow">Technical Specs</span>
+          <h2 class="font-display text-2xl font-bold text-ink mt-1">Capabilities & Specifications</h2>
+        </div>
+
+        <div class="panel rounded-2xl border border-line overflow-hidden">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <tbody class="divide-y divide-line/60">
+              {service.capabilities.map((c) => (
+                <tr>
+                  <td class="py-3 px-4 font-semibold text-ink bg-sand/30 w-1/3">{c.name}</td>
+                  <td class="py-3 px-4 text-ink/80">{c.detail}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Typical Applications -->
+        <div class="panel p-5 rounded-2xl border border-line mt-6">
+          <h3 class="font-display text-sm font-bold text-ink mb-2">Common Applications:</h3>
+          <ul class="space-y-1.5 text-xs text-ink/80">
+            {service.applications.map((app) => (
+              <li class="flex items-start gap-2">
+                <span class="text-brand font-bold mt-0.5">•</span>
+                <span>{app}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- Process Workflow -->
+      <div class="lg:col-span-6 space-y-4">
+        <div>
+          <span class="eyebrow">Workflow</span>
+          <h2 class="font-display text-2xl font-bold text-ink mt-1">How It Works (3 Steps)</h2>
+        </div>
+
+        <div class="space-y-4">
+          {service.processSteps.map((p) => (
+            <div class="panel p-5 rounded-2xl border border-line flex items-start gap-4">
+              <span class="w-8 h-8 rounded-xl bg-brand text-white font-bold text-sm flex items-center justify-center shrink-0">
+                {p.step}
+              </span>
+              <div>
+                <h3 class="font-display text-base font-bold text-ink">{p.title}</h3>
+                <p class="text-xs sm:text-sm text-mute mt-1 leading-relaxed">{p.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Callout Banner -->
+        <div class="p-5 rounded-2xl bg-peach/30 border border-brand/20 mt-6 flex items-center justify-between gap-4">
+          <div>
+            <p class="font-display text-sm font-bold text-ink">Ready to start this project?</p>
+            <p class="text-xs text-mute mt-0.5">We respond to file inquiries within 1 hour during business hours.</p>
+          </div>
+          <a href="/custom/" class="btn btn-primary !py-2.5 !px-4 text-xs font-semibold shrink-0">
+            Get Started
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion Section (Boosts Google FAQ Rich Snippets) -->
+  <section class="wrap py-12 border-t border-line">
+    <div class="max-w-2xl mb-8">
+      <span class="eyebrow">Frequently Asked Questions</span>
+      <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mt-1">
+        Questions About Our {service.shortTitle}
+      </h2>
+      <p class="text-xs sm:text-sm text-mute mt-1">Have another question? Reach out to our engineers directly on WhatsApp anytime.</p>
+    </div>
+
+    <div class="space-y-3 max-w-3xl">
+      {service.faqs.map((f, idx) => (
+        <details class="group panel rounded-2xl border border-line p-5 open:bg-sand/20 transition-all cursor-pointer">
+          <summary class="font-display text-sm sm:text-base font-bold text-ink flex items-center justify-between gap-4 list-none">
+            <span>{f.q}</span>
+            <span class="text-brand font-bold text-lg group-open:rotate-45 transition-transform">＋</span>
+          </summary>
+          <p class="text-xs sm:text-sm text-mute mt-3 leading-relaxed border-t border-line/50 pt-3">
+            {f.a}
+          </p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- Related Services Carousel / Grid -->
+  <section class="wrap py-12 border-t border-line">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <span class="eyebrow">Explore More</span>
+        <h2 class="font-display text-xl sm:text-2xl font-bold text-ink mt-1">Related Fabrication Services</h2>
+      </div>
+      <a href="/services/" class="text-xs font-semibold text-brand hover:underline">View All Services →</a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {otherServices.slice(0, 3).map((os) => (
+        <div class="panel p-5 rounded-2xl border border-line hover:border-brand/40 transition-colors flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span class="font-bold text-mute uppercase tracking-wider">{os.badge}</span>
+              <span class="font-medium text-mute">{os.turnaround}</span>
+            </div>
+            <h3 class="font-display text-base font-bold text-ink">
+              <a href={`/services/${os.slug}/`} class="hover:text-brand transition-colors">
+                {os.title}
+              </a>
+            </h3>
+            <p class="text-xs text-mute mt-2 line-clamp-2">{os.heroBlurb}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-line flex items-center justify-between">
+            <span class="text-xs font-bold text-ink">{os.startingPrice}</span>
+            <a href={`/services/${os.slug}/`} class="text-xs font-semibold text-brand hover:underline">
+              Learn more →
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
